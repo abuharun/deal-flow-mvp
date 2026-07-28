@@ -9,40 +9,45 @@ interface StepMeta {
 
 export const STEP_META: Record<StepKey, StepMeta> = {
   problem: {
-    title: 'Problem',
-    question: 'What problem do you solve, and for whom?',
-    hint: 'Be concrete: who feels this pain, how often, and what it costs them today. Plain words beat pitch language.',
+    title: 'Muammo',
+    question: 'Qanday muammoni va kim uchun hal qilasiz?',
+    hint: "Aniq yozing: bu og'riqni kim, qanchalik tez-tez his qiladi va bu unga bugun qanchaga tushadi. Oddiy so'zlar pitch tilidan kuchliroq.",
     placeholder:
-      'e.g. Restaurants in Tashkent buy produce through phone calls and cash at the bazaar. Prices swing 20% week to week and owners cannot see what they spend…',
+      "Masalan: Toshkentdagi restoranlar mahsulotni bozordan telefon qo'ng'irog'i va naqd pul bilan sotib oladi. Narxlar haftasiga 20% o'zgaradi va egalari qancha xarajat qilayotganini ko'ra olmaydi…",
   },
   product: {
-    title: 'Product',
-    question: 'What have you built, and how does it solve the problem?',
-    hint: 'Describe what actually exists today — not the roadmap. How do customers use it, and how do you make money?',
-    placeholder: 'e.g. An ordering app connecting restaurants to vetted wholesale suppliers. One order before 22:00, delivered by 07:00, one invoice. We take 6%…',
+    title: 'Mahsulot',
+    question: 'Nima qurdingiz va u muammoni qanday hal qiladi?',
+    hint: "Bugungi kunda haqiqatda mavjud narsani yozing — reja emas. Mijozlar undan qanday foydalanadi va siz qanday pul topasiz?",
+    placeholder:
+      "Masalan: Restoranlarni tekshirilgan ulgurji yetkazib beruvchilar bilan bog'laydigan buyurtma ilovasi. 22:00 gacha bitta buyurtma, 07:00 gacha yetkazma, bitta hisob-faktura. Biz 6% olamiz…",
   },
   market: {
-    title: 'Market',
-    question: 'How big is the opportunity?',
-    hint: 'Size the market honestly, bottom-up if you can. Who else competes for this money, including "do nothing"?',
-    placeholder: 'e.g. 12,000 food-service businesses in Tashkent spending $8–15k/month on procurement — roughly a $600M annual flow…',
+    title: 'Bozor',
+    question: 'Imkoniyat qanchalik katta?',
+    hint: "Bozorni halol baholang, iloji bo'lsa quyidan yuqoriga hisoblab. Bu pul uchun yana kim raqobatlashadi — \"hech narsa qilmaslik\" ham shu jumlaga kiradi?",
+    placeholder:
+      "Masalan: Toshkentda 12 000 umumiy ovqatlanish korxonasi xaridga oyiga $8–15 ming sarflaydi — yiliga qariyb $600M lik oqim…",
   },
   traction: {
-    title: 'Traction',
-    question: 'What proof do you have that this works?',
-    hint: 'Numbers over adjectives: customers, revenue, growth rate, retention. If you are pre-revenue, say so plainly — honesty reads better than spin.',
-    placeholder: 'e.g. Live 9 months. 214 restaurants order weekly. GMV last month $412,000, growing 18% month over month. Churn under 3%…',
+    title: 'Natijalar',
+    question: 'Bu ishlayotganiga qanday isbotingiz bor?',
+    hint: "Sifatlar emas, raqamlar: mijozlar, daromad, o'sish sur'ati, mijozlarning qolishi. Hali daromad bo'lmasa, ochiq ayting — halollik bo'rttirishdan yaxshiroq o'qiladi.",
+    placeholder:
+      "Masalan: 9 oydan beri ishlaymiz. 214 restoran har hafta buyurtma beradi. O'tgan oy GMV $412 000, oyiga 18% o'sish. Churn 3% dan past…",
   },
   team: {
-    title: 'Team',
-    question: 'Who is building this, and why you?',
-    hint: 'Founders, their relevant history, who is full-time, and how ownership is split. Investors fund teams more than ideas.',
-    placeholder: 'e.g. CEO ran supply for a café chain for five years; CTO built logistics routing at Uzum. Both full-time, holding 82% combined…',
+    title: 'Jamoa',
+    question: 'Buni kim qurmoqda va nega aynan siz?',
+    hint: "Asoschilar, ularning tegishli tajribasi, kim to'liq stavkada ishlashi va ulushlar qanday taqsimlangani. Investorlar g'oyadan ko'ra jamoaga pul beradi.",
+    placeholder:
+      "Masalan: CEO besh yil kafelar tarmog'ining ta'minotini boshqargan; CTO Uzumda logistika marshrutlashini qurgan. Ikkalasi to'liq stavkada, birgalikda 82% ulush…",
   },
   ask: {
-    title: 'The Ask',
-    question: 'How much are you raising, and what will it buy?',
-    hint: 'Amount, equity, and what the money achieves. Mention anything already committed.',
-    placeholder: 'e.g. Raising $500,000 seed for 12% to expand to two more cities and hire two sales leads. $180,000 already committed…',
+    title: "So'rov",
+    question: 'Qancha jalb qilyapsiz va bu pul nimaga sarflanadi?',
+    hint: "Summa, ulush va bu mablag' nimaga erishtirishi. Allaqachon kelishilgan investitsiyalarni ham ayting.",
+    placeholder:
+      "Masalan: Yana ikki shaharga kengayish va ikki savdo rahbarini yollash uchun 12% evaziga $500 000 seed jalb qilmoqdamiz. $180 000 allaqachon kelishilgan…",
   },
 }

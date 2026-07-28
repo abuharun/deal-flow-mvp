@@ -21,17 +21,17 @@ export default function FounderVerdict() {
   return (
     <article aria-labelledby="verdict-heading">
       <p className="status-chip" style={{ color: 'var(--green-ink)' }}>
-        Decision: {DECISION_LABEL[verdict.decision]}
+        Qaror: {DECISION_LABEL[verdict.decision]}
       </p>
       <h1 id="verdict-heading" style={{ marginTop: 14 }}>
-        Your verdict for {founderStartup.name}
+        {founderStartup.name} uchun xulosangiz
       </h1>
       <p className="muted">
-        Reviewed and signed by the partner · sent {formatDate(verdict.sentAt!)}
+        Hamkor tomonidan ko'rib chiqilgan va imzolangan · yuborildi {formatDate(verdict.sentAt!)}
       </p>
 
       <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', margin: '18px 0' }}>
-        <div className="lang-toggle" role="group" aria-label="Verdict language">
+        <div className="lang-toggle" role="group" aria-label="Xulosa tili">
           {LANGS.map((l) => (
             <button
               key={l}
@@ -44,7 +44,7 @@ export default function FounderVerdict() {
           ))}
         </div>
         <Link to={`/apply/verdict/letter.pdf?lang=${lang}`} className="btn btn-secondary btn-sm">
-          Download official letter (PDF)
+          Rasmiy xatni yuklab olish (PDF)
         </Link>
       </div>
 
@@ -54,22 +54,22 @@ export default function FounderVerdict() {
 
       {lang !== 'en' && (
         <p className="faint" style={{ marginTop: 12 }}>
-          The English original is always available —{' '}
+          Inglizcha asl nusxa har doim mavjud —{' '}
           <button
             type="button"
             className="btn btn-quiet btn-sm"
             style={{ display: 'inline-flex' }}
             onClick={() => setParams({ lang: 'en' })}
           >
-            view English original
+            inglizcha asl nusxani ko'rish
           </button>
         </p>
       )}
 
       <hr className="divider" />
       <p className="muted" style={{ maxWidth: 560 }}>
-        Questions about this decision? Reply from your account email and the partner will explain their
-        thinking. <Link to="/apply">Back to My Startup</Link>
+        Bu qaror bo'yicha savolingiz bormi? Hisobingizdagi emaildan javob yozing — hamkor o'z
+        mulohazasini tushuntiradi. <Link to="/apply">Mening startapimga qaytish</Link>
       </p>
     </article>
   )

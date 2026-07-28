@@ -10,7 +10,7 @@ export function SignalTag({ signal, overridden }: { signal: Signal; overridden?:
     <span className={cx('tag', `tag-${signal}`)}>
       <Icon />
       {SIGNAL_LABEL[signal]}
-      {overridden && <span className="visually-hidden">(re-tagged by the partner)</span>}
+      {overridden && <span className="visually-hidden">(hamkor tomonidan qayta belgilangan)</span>}
     </span>
   )
 }
@@ -21,7 +21,7 @@ export function StageBadge({ stage }: { stage: Stage }) {
 
 export function Wordmark({ to = '/', sub }: { to?: string; sub?: string }) {
   return (
-    <Link to={to} className="wordmark" aria-label="Oqim — home">
+    <Link to={to} className="wordmark" aria-label="Oqim — bosh sahifa">
       <span className="mark-wave" aria-hidden="true">
         <WaveIcon />
       </span>
@@ -32,7 +32,7 @@ export function Wordmark({ to = '/', sub }: { to?: string; sub?: string }) {
 }
 
 /** Marks simulated AI output. The framing is a product principle, not decoration. */
-export function AiBadge({ children = 'Simulated AI · guidance, not a verdict' }: { children?: string }) {
+export function AiBadge({ children = "Simulyatsiya qilingan AI · bu yo'l-yo'riq, xulosa emas" }: { children?: string }) {
   return (
     <span className="ai-badge">
       <SparkIcon />
@@ -42,6 +42,6 @@ export function AiBadge({ children = 'Simulated AI · guidance, not a verdict' }
 }
 
 /** Marks stubbed/simulated actions so demo boundaries stay honest. */
-export function StubTag({ children = 'Simulated' }: { children?: string }) {
+export function StubTag({ children = 'Simulyatsiya' }: { children?: string }) {
   return <span className="stub-tag">{children}</span>
 }

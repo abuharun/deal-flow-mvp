@@ -35,7 +35,7 @@ function LogoutButton() {
         navigate('/')
       }}
     >
-      Log out
+      Chiqish
     </button>
   )
 }
@@ -46,11 +46,11 @@ export function FounderShell() {
   return (
     <div className="founder-shell">
       <a className="skip-link" href="#main">
-        Skip to content
+        Asosiy mazmunga o'tish
       </a>
       <header className="founder-header">
-        <Wordmark to="/apply" sub="for founders" />
-        <nav aria-label="Account" className="vc-utility">
+        <Wordmark to="/apply" sub="asoschilar uchun" />
+        <nav aria-label="Hisob" className="vc-utility">
           <NavLink to="/apply/account" className="btn btn-quiet btn-sm">
             <PersonIcon size={15} /> {state.session?.name.split(' ')[0]}
           </NavLink>
@@ -70,21 +70,21 @@ export function VcShell() {
   return (
     <div className="vc-shell">
       <a className="skip-link" href="#main">
-        Skip to content
+        Asosiy mazmunga o'tish
       </a>
       <header className="vc-header">
-        <Wordmark to="/app" sub="partner" />
-        <nav className="vc-nav" aria-label="Primary">
+        <Wordmark to="/app" sub="hamkor" />
+        <nav className="vc-nav" aria-label="Asosiy">
           <NavLink to="/app" end className={navClass}>
             Pipeline
           </NavLink>
           <NavLink to="/app/startups" className={navClass}>
-            Startups
+            Startaplar
           </NavLink>
         </nav>
         <div className="vc-utility">
           <NavLink to="/app/settings" className="btn btn-quiet btn-sm">
-            Settings
+            Sozlamalar
           </NavLink>
           <LogoutButton />
         </div>
@@ -92,15 +92,15 @@ export function VcShell() {
       <main id="main" className="vc-main">
         <Outlet />
       </main>
-      <nav className="mobile-tabbar" aria-label="Primary">
+      <nav className="mobile-tabbar" aria-label="Asosiy">
         <NavLink to="/app" end className={navClass}>
           <BoardIcon /> Pipeline
         </NavLink>
         <NavLink to="/app/startups" className={navClass}>
-          <ListIcon /> Startups
+          <ListIcon /> Startaplar
         </NavLink>
         <NavLink to="/app/settings" className={navClass}>
-          <PersonIcon /> Account
+          <PersonIcon /> Hisob
         </NavLink>
       </nav>
     </div>

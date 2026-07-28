@@ -12,15 +12,15 @@ export default function Settings() {
 
   return (
     <div className="settings-grid">
-      <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Settings</h1>
+      <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Sozlamalar</h1>
 
       <section className="card" aria-labelledby="s-profile">
         <h2 id="s-profile" style={{ fontSize: '1.05rem' }}>
-          Profile
+          Profil
         </h2>
         <dl style={{ margin: 0, display: 'grid', gap: 8 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-            <dt className="muted">Name</dt>
+            <dt className="muted">Ism</dt>
             <dd style={{ margin: 0, fontWeight: 580 }}>{state.session?.name}</dd>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
@@ -28,8 +28,8 @@ export default function Settings() {
             <dd style={{ margin: 0 }}>{state.session?.email}</dd>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-            <dt className="muted">Role</dt>
-            <dd style={{ margin: 0 }}>Reviewing partner — Uzbekistan pilot</dd>
+            <dt className="muted">Rol</dt>
+            <dd style={{ margin: 0 }}>Ko'rib chiquvchi hamkor — O'zbekiston piloti</dd>
           </div>
         </dl>
       </section>
@@ -37,28 +37,28 @@ export default function Settings() {
       <section className="card" aria-labelledby="s-letter">
         <div className="panel-title">
           <h2 id="s-letter" style={{ fontSize: '1.05rem', margin: 0 }}>
-            Verdict letters
+            Xulosa xatlari
           </h2>
-          <StubTag>Demo — display only</StubTag>
+          <StubTag>Demo — faqat ko'rsatish uchun</StubTag>
         </div>
         <div className="field" style={{ marginBottom: 0 }}>
-          <label htmlFor="sig-name">Signature on letters</label>
-          <input id="sig-name" className="input" defaultValue={`${state.session?.name} — Partner, Oqim`} />
-          <p className="hint">Appears in the sign-off of every verdict letter you send.</p>
+          <label htmlFor="sig-name">Xatlardagi imzo</label>
+          <input id="sig-name" className="input" defaultValue={`${state.session?.name} — Oqim hamkori`} />
+          <p className="hint">Siz yuboradigan har bir xulosa xatining imzo qismida chiqadi.</p>
         </div>
       </section>
 
       <section className="card" aria-labelledby="s-notify">
         <div className="panel-title">
           <h2 id="s-notify" style={{ fontSize: '1.05rem', margin: 0 }}>
-            Notifications
+            Bildirishnomalar
           </h2>
-          <StubTag>Demo — display only</StubTag>
+          <StubTag>Demo — faqat ko'rsatish uchun</StubTag>
         </div>
         {[
-          ['New submissions land in the pipeline', true],
-          ['Daily digest of the New column', true],
-          ['Founder replies to a sent verdict', false],
+          ["Pipeline'ga yangi arizalar tushganda", true],
+          ["«Yangi» ustunining kunlik xulosasi", true],
+          ["Asoschi yuborilgan xulosaga javob berganda", false],
         ].map(([label, on]) => (
           <label key={label as string} style={{ display: 'flex', gap: 10, alignItems: 'center', padding: '6px 0' }}>
             <input type="checkbox" defaultChecked={on as boolean} style={{ width: 17, height: 17, accentColor: 'var(--brand)' }} />
@@ -69,11 +69,11 @@ export default function Settings() {
 
       <section className="card" aria-labelledby="s-demo">
         <h2 id="s-demo" style={{ fontSize: '1.05rem' }}>
-          Demo controls
+          Demo boshqaruvi
         </h2>
         <p className="muted">
-          Reset restores the seeded pipeline and clears the demo founder's submission and any decisions
-          you've made.
+          Qayta o'rnatish namunaviy pipeline'ni tiklaydi hamda demo asoschining arizasini va siz qabul
+          qilgan qarorlarni o'chiradi.
         </p>
         {confirmReset ? (
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -83,18 +83,18 @@ export default function Settings() {
               onClick={() => {
                 resetDemo()
                 setConfirmReset(false)
-                toast('Demo data reset to the seeded state.')
+                toast("Demo ma'lumotlari dastlabki holatiga qaytarildi.")
               }}
             >
-              Yes, reset everything
+              Ha, hammasini qayta o'rnatish
             </button>
             <button type="button" className="btn btn-secondary" onClick={() => setConfirmReset(false)}>
-              Cancel
+              Bekor qilish
             </button>
           </div>
         ) : (
           <button type="button" className="btn btn-secondary" onClick={() => setConfirmReset(true)}>
-            Reset demo data
+            Demo ma'lumotlarini qayta o'rnatish
           </button>
         )}
       </section>
@@ -108,7 +108,7 @@ export default function Settings() {
             navigate('/')
           }}
         >
-          Log out
+          Chiqish
         </button>
       </div>
     </div>

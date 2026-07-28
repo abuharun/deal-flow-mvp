@@ -15,10 +15,10 @@ export const VALIDATION_FEE = '$199'
 
 export function makeVerification(): VerificationItem[] {
   return [
-    { id: 'revenue', label: 'Revenue proof matches the claim', hint: 'Bank statement or payment-provider export', done: false },
-    { id: 'captable', label: 'Cap table is clean', hint: 'Founder equity intact, no broken ownership', done: false },
-    { id: 'references', label: 'Founder references check out', hint: 'Two independent references contacted', done: false },
-    { id: 'registry', label: 'Company registration verified', hint: 'State registry lookup matches the filing', done: false },
+    { id: 'revenue', label: "Daromad isboti da'voga mos", hint: "Bank ko'chirmasi yoki to'lov provayderi eksporti", done: false },
+    { id: 'captable', label: 'Kapital jadvali (cap table) toza', hint: "Asoschilar ulushi butun, egalik tuzilmasi buzilmagan", done: false },
+    { id: 'references', label: 'Asoschi haqidagi tavsiyalar tasdiqlandi', hint: "Ikki mustaqil tavsiyachi bilan bog'lanildi", done: false },
+    { id: 'registry', label: "Kompaniya ro'yxatdan o'tgani tekshirildi", hint: "Davlat reestri ma'lumoti hujjatlarga mos", done: false },
   ]
 }
 
@@ -45,403 +45,403 @@ interface SeedSpec {
 const SPECS: SeedSpec[] = [
   {
     name: 'Xarid',
-    oneLiner: 'B2B procurement marketplace for restaurants and cafés',
-    sector: 'B2B Marketplace',
+    oneLiner: "Restoran va kafelar uchun B2B ta'minot marketpleysi",
+    sector: 'B2B marketpleys',
     fundingStage: 'Seed',
-    founder: { name: 'Aziza Karimova', email: 'aziza@xarid.uz', city: 'Tashkent', language: 'uz' },
+    founder: { name: 'Aziza Karimova', email: 'aziza@xarid.uz', city: 'Toshkent', language: 'uz' },
     submittedAt: '2026-07-26T09:40:00Z',
     stage: 'new',
     signal: 'high',
     raw: {
       problem:
-        'Restaurants in Tashkent buy produce, meat and dry goods from Chorsu bazaar through personal relationships and cash. Prices swing 20% week to week, there are no receipts, and a chef spends two hours every morning calling suppliers. Owners cannot see what they actually spend.',
+        "Toshkentdagi restoranlar sabzavot, go'sht va quruq mahsulotlarni Chorsu bozoridan tanish-bilishchilik va naqd pul orqali sotib oladi. Narxlar haftadan haftaga 20% gacha o'zgaradi, hech qanday chek yo'q, oshpaz esa har kuni ertalab ikki soatini yetkazib beruvchilarga qo'ng'iroq qilishga sarflaydi. Egalari aslida qancha xarajat qilayotganini ko'ra olmaydi.",
       product:
-        'Xarid is an ordering app connecting restaurants to vetted wholesale suppliers. The restaurant places one order before 22:00; we consolidate across suppliers and deliver before 07:00 with a single itemized invoice. We take a 6% margin on the basket.',
+        "Xarid — restoranlarni tekshirilgan ulgurji yetkazib beruvchilar bilan bog'laydigan buyurtma ilovasi. Restoran 22:00 gacha bitta buyurtma beradi; biz uni yetkazib beruvchilar bo'yicha jamlab, 07:00 gacha yagona batafsil hisob-faktura bilan yetkazib beramiz. Savatdan 6% marja olamiz.",
       market:
-        'There are roughly 12,000 registered food-service businesses in Tashkent alone and 40,000+ nationwide. Food procurement for a mid-size restaurant runs $8,000–15,000 per month. We estimate a $600M annual procurement flow in Tashkent.',
+        "Toshkentning o'zida 12 000 ga yaqin, mamlakat bo'ylab 40 000 dan ortiq ro'yxatdan o'tgan umumiy ovqatlanish korxonasi bor. O'rta restoranning oziq-ovqat xaridi oyiga $8 000–15 000 ni tashkil qiladi. Toshkentdagi yillik xarid oqimini $600M deb baholaymiz.",
       traction:
-        'Live for 9 months. 214 restaurants order at least weekly; 61 order daily. GMV last month was $412,000 with $24,700 gross revenue for us. Month-over-month GMV growth has averaged 18% for six months. Churn is under 3% monthly.',
+        "9 oydan beri ishlaymiz. 214 ta restoran kamida haftada bir marta, 61 tasi har kuni buyurtma beradi. O'tgan oy GMV $412 000, bizning yalpi daromadimiz $24 700 bo'ldi. So'nggi olti oyda GMV o'sishi o'rtacha oyiga 18%. Oylik churn 3% dan past.",
       team:
-        'Aziza Karimova (CEO) ran supply for the Bon! café chain for five years. Rustam Aliyev (CTO) built logistics routing at Uzum. Six staff total, three in the delivery-ops team. Both founders are full-time and hold 82% combined.',
+        "Aziza Karimova (CEO) besh yil davomida Bon! kafelar tarmog'ining ta'minotini boshqargan. Rustam Aliyev (CTO) Uzumda logistika marshrutlash tizimini qurgan. Jami olti xodim, uchtasi yetkazib berish jamoasida. Ikkala asoschi ham to'liq stavkada ishlaydi va birgalikda 82% ulushga ega.",
       ask:
-        'Raising $500,000 seed for 12% to expand to Samarkand and Bukhara, hire two sales leads, and build supplier-side inventory tooling. $180,000 committed from two local angels.',
+        "Samarqand va Buxoroga kengayish, ikki savdo rahbarini yollash hamda yetkazib beruvchilar uchun ombor vositalarini qurish maqsadida 12% evaziga $500 000 seed jalb qilmoqdamiz. Ikki mahalliy angel-investordan $180 000 kelishilgan.",
     },
-    metrics: { revenue: '$24.7k gross / mo', growth: '+18% GMV MoM', ask: '$500k seed' },
-    recHeadline: 'Worth a close look soon',
+    metrics: { revenue: '$24.7k yalpi / oy', growth: '+18% GMV oyiga', ask: '$500k seed' },
+    recHeadline: "Tez orada sinchiklab ko'rishga arziydi",
     recRationale: [
-      'Reported revenue and 18% monthly GMV growth are strong for this pipeline; verify against payment exports.',
-      'Both founders have directly relevant domain experience; references should be straightforward to check.',
-      'This is a starting point for your review, not an assessment of the business itself.',
+      "Ko'rsatilgan daromad va oyiga 18% GMV o'sishi bu pipeline uchun kuchli natija; to'lov eksportlari bilan solishtiring.",
+      "Ikkala asoschida ham bevosita soha tajribasi bor; tavsiyalarni tekshirish qiyin bo'lmasa kerak.",
+      "Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.",
     ],
     attachments: [
-      { label: 'Pitch deck', kind: 'deck', fileName: 'xarid-seed-deck.pdf' },
-      { label: 'Revenue proof', kind: 'revenue', fileName: 'payme-export-jun.xlsx' },
+      { label: 'Pitch-dek', kind: 'deck', fileName: 'xarid-seed-deck.pdf' },
+      { label: 'Daromad isboti', kind: 'revenue', fileName: 'payme-export-jun.xlsx' },
       { label: 'Data room', kind: 'dataroom', fileName: 'drive.google.com/xarid-dataroom' },
     ],
   },
   {
     name: 'TezYol',
-    oneLiner: 'Digital freight matching for long-haul trucking across Central Asia',
-    sector: 'Logistics',
+    oneLiner: "Markaziy Osiyo bo'ylab uzoq masofali yuk tashish uchun raqamli yuk birjasi",
+    sector: 'Logistika',
     fundingStage: 'Seed',
-    founder: { name: 'Bekzod Rahimov', email: 'bekzod@tezyol.uz', city: 'Tashkent', language: 'ru' },
+    founder: { name: 'Bekzod Rahimov', email: 'bekzod@tezyol.uz', city: 'Toshkent', language: 'ru' },
     submittedAt: '2026-07-25T14:10:00Z',
     stage: 'new',
     signal: 'high',
     raw: {
       problem:
-        'A truck driving Tashkent to Almaty returns empty 40% of the time because freight matching happens over Telegram groups and phone calls with dispatchers taking 15–20% commission. Shippers cannot track cargo and drivers wait days to get paid.',
+        "Toshkentdan Almatiga qatnovchi yuk mashinasi 40% hollarda bo'sh qaytadi, chunki yuk topish Telegram guruhlari va telefon qo'ng'iroqlari orqali, 15–20% komissiya oladigan dispetcherlar qo'lida. Yuk jo'natuvchilar yukni kuzata olmaydi, haydovchilar esa haqini olish uchun kunlab kutadi.",
       product:
-        'TezYol matches verified shippers with verified carriers, handles documents digitally, and pays the driver within 48 hours of proof of delivery — we take 8%. GPS tracking comes from a cheap dashboard phone mount and our driver app.',
+        "TezYol tekshirilgan yuk jo'natuvchilarni tekshirilgan tashuvchilar bilan biriktiradi, hujjatlarni raqamli yuritadi va yetkazilganlik isbotidan keyin 48 soat ichida haydovchiga pul to'laydi — biz 8% olamiz. GPS kuzatuv arzon telefon ushlagichi va haydovchi ilovamiz orqali ishlaydi.",
       market:
-        'Uzbekistan moves 60% of its trade by road. The domestic and cross-border trucking market is estimated at $2.1B annually. Fragmented: the largest fleet owner has under 200 trucks.',
+        "O'zbekiston savdo yuklarining 60% ini avtomobil yo'llari orqali tashiydi. Ichki va xalqaro yuk tashish bozori yiliga $2.1B ga baholanadi. Bozor juda tarqoq: eng yirik avtopark egasida 200 tadan kam mashina bor.",
       traction:
-        'Launched 11 months ago. 1,840 registered drivers, 96 active shippers. Completed 3,100 shipments; last month 640 shipments and $92,000 in take. Growing 14% monthly. Kazakhstan corridor opened in May and is already 20% of volume.',
+        "11 oy oldin ishga tushdik. 1 840 ro'yxatdan o'tgan haydovchi, 96 faol yuk jo'natuvchi. 3 100 ta yetkazma bajarildi; o'tgan oy 640 ta yetkazma va $92 000 komissiya daromadi. Oyiga 14% o'sish. May oyida ochilgan Qozog'iston yo'nalishi allaqachon hajmning 20% ini beradi.",
       team:
-        'Bekzod Rahimov (CEO) was operations director at a 120-truck fleet. Elyor G‘aniyev (CTO) ex-EPAM. Nine people. Founders hold 74%.',
+        "Bekzod Rahimov (CEO) 120 mashinali avtoparkda operatsiyalar direktori bo'lgan. Elyor G'aniyev (CTO) — sobiq EPAM xodimi. To'qqiz kishi. Asoschilar ulushi 74%.",
       ask:
-        'Raising $750,000 for 15% to fund the driver fast-payment float, expand the Kazakhstan corridor, and hire a compliance lead for cross-border documents.',
+        "Haydovchilarga tez to'lov fondini moliyalashtirish, Qozog'iston yo'nalishini kengaytirish va xalqaro hujjatlar bo'yicha komplayens rahbarini yollash uchun 15% evaziga $750 000 jalb qilmoqdamiz.",
     },
-    metrics: { revenue: '$92k take / mo', growth: '+14% MoM', ask: '$750k seed' },
-    recHeadline: 'Worth a close look soon',
+    metrics: { revenue: '$92k komissiya / oy', growth: '+14% oyiga', ask: '$750k seed' },
+    recHeadline: "Tez orada sinchiklab ko'rishga arziydi",
     recRationale: [
-      'Volume and revenue figures are substantial; the fast-payment float is the main financial risk to probe.',
-      'Cross-border expansion claims should be checked against actual Kazakhstan shipment records.',
-      'This is a starting point for your review, not an assessment of the business itself.',
+      "Hajm va daromad raqamlari salmoqli; tez to'lov fondi — tekshirilishi kerak bo'lgan asosiy moliyaviy xavf.",
+      "Xalqaro kengayish da'volarini Qozog'iston bo'yicha haqiqiy yetkazma yozuvlari bilan solishtirish kerak.",
+      "Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.",
     ],
     attachments: [
-      { label: 'Pitch deck', kind: 'deck', fileName: 'tezyol-deck-v4.pdf' },
-      { label: 'Revenue proof', kind: 'revenue', fileName: 'shipments-ledger-2026.xlsx' },
+      { label: 'Pitch-dek', kind: 'deck', fileName: 'tezyol-deck-v4.pdf' },
+      { label: 'Daromad isboti', kind: 'revenue', fileName: 'shipments-ledger-2026.xlsx' },
     ],
   },
   {
     name: 'BilimPay',
-    oneLiner: 'Installment financing for professional courses and bootcamps',
+    oneLiner: "Kasbiy kurslar va bootcamplar uchun bo'lib to'lash",
     sector: 'Fintech · EdTech',
     fundingStage: 'Pre-seed',
-    founder: { name: 'Nodira Yusupova', email: 'nodira@bilimpay.uz', city: 'Tashkent', language: 'uz' },
+    founder: { name: 'Nodira Yusupova', email: 'nodira@bilimpay.uz', city: 'Toshkent', language: 'uz' },
     submittedAt: '2026-07-24T08:05:00Z',
     stage: 'new',
     signal: 'medium',
     raw: {
       problem:
-        'IT bootcamps in Tashkent cost $800–1,500 up front — three to five months of an average salary. Banks will not finance course fees, so schools lose half their qualified applicants at the payment step.',
+        "Toshkentdagi IT bootcamplar oldindan $800–1 500 turadi — bu o'rtacha oylikning uch-besh oyligi. Banklar kurs to'lovini moliyalashtirmaydi, shu bois o'quv markazlari malakali nomzodlarning yarmini aynan to'lov bosqichida yo'qotadi.",
       product:
-        'BilimPay lets a student split tuition over 6–12 months. We pay the school up front minus a 9% discount and collect from the student. Underwriting uses employment status, a guarantor, and the school completion-rate data we collect.',
+        "BilimPay talabaga kontrakt pulini 6–12 oyga bo'lib to'lash imkonini beradi. Biz o'quv markaziga 9% chegirma bilan oldindan to'laymiz va pulni talabadan yig'amiz. Skoring bandlik holati, kafil va biz yig'adigan kursni tugatish ko'rsatkichlariga tayanadi.",
       market:
-        'An estimated 90,000 people in Uzbekistan pay for professional courses annually, roughly a $70M tuition market and growing fast with IT-park tax incentives.',
+        "O'zbekistonda yiliga taxminan 90 000 kishi kasbiy kurslar uchun pul to'laydi — bu qariyb $70M lik kontrakt bozori va IT-park soliq imtiyozlari tufayli tez o'smoqda.",
       traction:
-        'Piloting with 4 schools for 5 months. 312 loans issued, $214,000 originated. Default rate so far 4.1%, but the oldest cohort is only five months in. Two schools asked to expand to all their intakes.',
+        "5 oydan beri 4 ta o'quv markazi bilan pilot yuritamiz. 312 ta kredit berildi, jami $214 000. Hozircha defolt darajasi 4.1%, ammo eng eski kohorta atigi besh oylik. Ikki markaz barcha guruhlariga kengaytirishni so'radi.",
       team:
-        'Nodira Yusupova (CEO) was a credit-risk analyst at Kapitalbank for six years. Hiring a CTO — the product currently runs on a contracted development shop. Founder holds 95%.',
+        "Nodira Yusupova (CEO) olti yil Kapitalbankda kredit-risk tahlilchisi bo'lgan. CTO qidirilmoqda — mahsulot hozircha pudrat asosidagi dasturchilar jamoasida ishlab chiqilgan. Asoschi ulushi 95%.",
       ask:
-        'Raising $300,000 pre-seed for 10%, mainly for the lending book and the first in-house engineering hires.',
+        "Asosan kredit portfeli va ilk shtatdagi muhandislarni yollash uchun 10% evaziga $300 000 pre-seed jalb qilmoqdamiz.",
     },
-    metrics: { revenue: '$214k originated', growth: '4 school pilots', ask: '$300k pre-seed' },
-    recHeadline: 'Promising, with open questions',
+    metrics: { revenue: '$214k kredit berilgan', growth: "4 o'quv markazi piloti", ask: '$300k pre-seed' },
+    recHeadline: 'Istiqbolli, ammo ochiq savollar bor',
     recRationale: [
-      'Origination volume is real, but default data is too young to trust — treat the 4.1% figure as provisional.',
-      'No technical co-founder; the outsourced build is a risk worth raising directly.',
-      'This is a starting point for your review, not an assessment of the business itself.',
+      "Kredit hajmi haqiqiy, ammo defolt ma'lumotlari ishonch uchun hali juda yosh — 4.1% raqamini dastlabki deb qabul qiling.",
+      "Texnik hammuassis yo'q; autsors qilingan mahsulot — bevosita ko'tarishga arziydigan xavf.",
+      "Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.",
     ],
     attachments: [
-      { label: 'Pitch deck', kind: 'deck', fileName: 'bilimpay-preseed.pdf' },
-      { label: 'Loan-book export', kind: 'revenue', fileName: 'loan-tape-jul.csv' },
+      { label: 'Pitch-dek', kind: 'deck', fileName: 'bilimpay-preseed.pdf' },
+      { label: 'Kredit portfeli eksporti', kind: 'revenue', fileName: 'loan-tape-jul.csv' },
     ],
   },
   {
     name: 'Navbat',
-    oneLiner: 'Appointment and queue management for private clinics',
+    oneLiner: 'Xususiy klinikalar uchun qabul va navbat boshqaruvi',
     sector: 'HealthTech SaaS',
     fundingStage: 'Pre-seed',
-    founder: { name: 'Malika Azimova', email: 'malika@navbat.uz', city: 'Samarkand', language: 'ru' },
+    founder: { name: 'Malika Azimova', email: 'malika@navbat.uz', city: 'Samarqand', language: 'ru' },
     submittedAt: '2026-07-22T11:30:00Z',
     stage: 'new',
     signal: 'medium',
     raw: {
       problem:
-        'Private clinics in Uzbekistan book patients by phone into paper journals. Double-bookings and no-shows waste roughly a fifth of doctor hours, and patients queue in hallways for hours with no visibility.',
+        "O'zbekistondagi xususiy klinikalar bemorlarni telefon orqali qog'oz jurnallarga yozadi. Ikki marta yozilishlar va kelmay qolishlar shifokor vaqtining qariyb beshdan birini bekor sarflaydi, bemorlar esa yo'laklarda soatlab, hech qanday ma'lumotsiz navbat kutib o'tiradi.",
       product:
-        'A clinic-side scheduling dashboard plus a patient Telegram bot for booking, reminders, and live queue position. Clinics pay $49/month per location. Setup takes one afternoon and works on the receptionist’s existing computer.',
+        "Klinika uchun qabul jadvali paneli hamda bemorlar uchun yozilish, eslatma va jonli navbat o'rnini ko'rsatadigan Telegram-bot. Klinikalar har bir filial uchun oyiga $49 to'laydi. O'rnatish yarim kun oladi va qabulxonadagi mavjud kompyuterda ishlaydi.",
       market:
-        'Around 6,500 licensed private clinics in Uzbekistan; we can reach 2,000 of them in the four largest cities. At $49/month that is a $3.8M serviceable market — small alone, but the wedge into clinic payments and records.',
+        "O'zbekistonda 6 500 ga yaqin litsenziyalangan xususiy klinika bor; to'rtta yirik shaharda ulardan 2 000 tasiga yeta olamiz. Oyiga $49 dan bu $3.8M lik xizmat ko'rsatiladigan bozor — o'zi kichik, lekin klinika to'lovlari va yozuvlariga kirish eshigi.",
       traction:
-        '38 paying clinics after 7 months, $1,860 MRR, about 9% monthly growth. No-show rates at our clinics dropped from 22% to 9%. Churned 3 clinics, all single-doctor practices.',
+        "7 oyda 38 ta to'lovchi klinika, $1 860 MRR, oyiga qariyb 9% o'sish. Bizning klinikalarimizda kelmay qolish 22% dan 9% ga tushdi. 3 klinika ketdi — barchasi bitta shifokorli amaliyotlar.",
       team:
-        'Malika Azimova (CEO) managed operations for a 3-clinic dental group. Aibek Salimov (CTO) built the product solo, ex-freelancer. Both full-time, 100% founder-owned.',
+        "Malika Azimova (CEO) 3 filialli stomatologiya tarmog'ining operatsiyalarini boshqargan. Aibek Salimov (CTO) mahsulotni yolg'iz qurgan, sobiq frilanser. Ikkalasi ham to'liq stavkada, ulush 100% asoschilarda.",
       ask:
-        'Raising $150,000 for 8% to hire two sales reps for Tashkent and build the payments module clinics keep asking for.',
+        "Toshkent uchun ikki sotuv mutaxassisini yollash va klinikalar so'rayotgan to'lov modulini qurish uchun 8% evaziga $150 000 jalb qilmoqdamiz.",
     },
-    metrics: { revenue: '$1.9k MRR', growth: '+9% MoM', ask: '$150k pre-seed' },
-    recHeadline: 'Promising, with open questions',
+    metrics: { revenue: '$1.9k MRR', growth: '+9% oyiga', ask: '$150k pre-seed' },
+    recHeadline: 'Istiqbolli, ammo ochiq savollar bor',
     recRationale: [
-      'Retention and the measured no-show improvement are genuine signal at this scale.',
-      'The stated SaaS market is small; the payments wedge is the venture case — probe how real it is.',
-      'This is a starting point for your review, not an assessment of the business itself.',
+      "Mijozlarning qolishi va o'lchangan kelmay qolish kamayishi bu miqyos uchun haqiqiy signal.",
+      "Ko'rsatilgan SaaS bozori kichik; venchur imkoniyat — to'lovlar yo'nalishi. Uning qanchalik realligini so'rang.",
+      "Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.",
     ],
-    attachments: [{ label: 'Pitch deck', kind: 'deck', fileName: 'navbat-deck.pdf' }],
+    attachments: [{ label: 'Pitch-dek', kind: 'deck', fileName: 'navbat-deck.pdf' }],
   },
   {
     name: 'AgroSensor',
-    oneLiner: 'Soil-moisture sensors and irrigation advice for cotton farms',
+    oneLiner: "Paxta fermalari uchun tuproq namligi sensorlari va sug'orish maslahati",
     sector: 'AgriTech',
     fundingStage: 'Pre-seed',
-    founder: { name: 'Jasur Toshpulatov', email: 'jasur@agrosensor.uz', city: 'Fergana', language: 'uz' },
+    founder: { name: 'Jasur Toshpulatov', email: 'jasur@agrosensor.uz', city: "Farg'ona", language: 'uz' },
     submittedAt: '2026-07-20T16:45:00Z',
     stage: 'new',
     signal: 'low',
     raw: {
       problem:
-        'Cotton farms over-irrigate by 30–40% because watering follows fixed schedules, not soil data. Water quotas are tightening every year and the Aral basin restrictions will make flood irrigation economically impossible within a decade.',
+        "Paxta fermalari 30–40% ortiqcha sug'oradi, chunki suv tuproq ma'lumotiga emas, qat'iy jadvalga qarab beriladi. Suv kvotalari yildan yilga qattiqlashmoqda, Orol havzasi cheklovlari esa o'n yil ichida bostirib sug'orishni iqtisodiy jihatdan imkonsiz qiladi.",
       product:
-        'A LoRa soil-moisture probe we assemble locally for $60 in parts, plus an SMS advisory service telling the farm manager when and how much to irrigate. We have built 25 prototype units and run one field trial on a partner farm.',
+        "Mahalliy sharoitda $60 lik ehtiyot qismlardan yig'iladigan LoRa tuproq namligi zondi hamda ferma boshqaruvchisiga qachon va qancha sug'orishni aytadigan SMS-maslahat xizmati. 25 ta prototip qurdik va hamkor fermada bitta dala sinovi o'tkazdik.",
       market:
-        'Uzbekistan has about 1M hectares under cotton across roughly 80,000 farming units, mostly state-quota clusters. Selling requires cluster-level or government contracts.',
+        "O'zbekistonda qariyb 80 000 fermer xo'jaligiga bo'lingan 1 mln gektar paxta maydoni bor, asosan davlat kvotali klasterlar. Sotish uchun klaster darajasidagi yoki davlat shartnomalari kerak.",
       traction:
-        'One completed field trial on 40 hectares showed 24% water reduction with no yield loss — strong result, but a single season on a single farm. No revenue yet. Two clusters signed letters of interest, not contracts.',
+        "40 gektarda yakunlangan bitta dala sinovi hosilni yo'qotmasdan suvni 24% tejashni ko'rsatdi — kuchli natija, ammo bitta fermadagi bitta mavsum xolos. Hali daromad yo'q. Ikki klaster niyat xatini imzoladi, shartnoma emas.",
       team:
-        'Jasur Toshpulatov (CEO) is an irrigation engineer, PhD from TIIAME. Working alone with two part-time students. Currently employed part-time at the institute.',
+        "Jasur Toshpulatov (CEO) — irrigatsiya muhandisi, TIQXMMI (TIIAME) doktoranturasini tugatgan. Ikki yarim stavkali talaba bilan yolg'iz ishlaydi. Hozircha institutda yarim stavkada band.",
       ask:
-        'Raising $200,000 for 15% to manufacture 500 units and run three paid cluster pilots for the 2027 season.',
+        "500 ta qurilma ishlab chiqarish va 2027 mavsumi uchun uchta pullik klaster pilotini o'tkazish maqsadida 15% evaziga $200 000 jalb qilmoqdamiz.",
     },
-    metrics: { revenue: 'Pre-revenue', growth: '1 field trial', ask: '$200k pre-seed' },
-    recHeadline: 'Likely early for this pipeline',
+    metrics: { revenue: 'Hali daromadsiz', growth: '1 dala sinovi', ask: '$200k pre-seed' },
+    recHeadline: "Bu pipeline uchun hali erta ko'rinadi",
     recRationale: [
-      'No commercial traction is reported yet; the case rests on one field trial and letters of interest.',
-      'Solo, part-time founder selling into government-linked clusters is a hard combination — ask about full-time commitment.',
-      'This is a starting point for your review, not an assessment of the business itself.',
+      "Hali tijoriy natija ko'rsatilmagan; asos — bitta dala sinovi va niyat xatlari, xolos.",
+      "Davlat bilan bog'liq klasterlarga yolg'iz, yarim stavkali asoschining sotishi og'ir kombinatsiya — to'liq stavkaga o'tish rejasini so'rang.",
+      "Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.",
     ],
     attachments: [
-      { label: 'Pitch deck', kind: 'deck', fileName: 'agrosensor-deck.pdf' },
-      { label: 'Field-trial report', kind: 'other', fileName: 'trial-report-2026.pdf' },
+      { label: 'Pitch-dek', kind: 'deck', fileName: 'agrosensor-deck.pdf' },
+      { label: 'Dala sinovi hisoboti', kind: 'other', fileName: 'trial-report-2026.pdf' },
     ],
   },
   {
     name: 'OshMarket',
-    oneLiner: '30-minute grocery delivery from neighborhood dark stores',
-    sector: 'Consumer · Q-commerce',
+    oneLiner: "Mahalliy dark-store'lardan 30 daqiqada oziq-ovqat yetkazib berish",
+    sector: "Iste'mol · Q-commerce",
     fundingStage: 'Seed',
-    founder: { name: 'Sardor Umarov', email: 'sardor@oshmarket.uz', city: 'Tashkent', language: 'uz' },
+    founder: { name: 'Sardor Umarov', email: 'sardor@oshmarket.uz', city: 'Toshkent', language: 'uz' },
     submittedAt: '2026-07-17T10:20:00Z',
     stage: 'in-review',
     signal: 'medium',
     raw: {
       problem:
-        'Working families in Tashkent’s new residential districts are far from bazaars and big supermarkets. Existing delivery apps take 2–4 hours and substitute items without asking.',
+        "Toshkentning yangi turar-joy massivlaridagi ishlaydigan oilalar bozor va yirik supermarketlardan uzoqda yashaydi. Mavjud yetkazib berish ilovalari 2–4 soat oladi va mahsulotni so'ramasdan boshqasiga almashtiradi.",
       product:
-        'Three dark stores of 1,200 SKUs each, our own couriers on electric mopeds, 30-minute promise inside a 3km radius. Average basket $14, delivery fee $0.90, blended contribution margin currently −$0.40 per order.',
+        "Har biri 1 200 SKU li uchta dark-store, elektr mopedlardagi o'z kuryerlarimiz, 3 km radiusda 30 daqiqalik va'da. O'rtacha savat $14, yetkazish haqi $0.90, hozirgi aralash marja buyurtma boshiga −$0.40.",
       market:
-        'Tashkent metro area has 3M people; the districts we target hold 600,000 residents with above-average income. Grocery is a $1.5B market in the city.',
+        "Toshkent aglomeratsiyasida 3 mln aholi yashaydi; biz mo'ljallagan massivlarda daromadi o'rtachadan yuqori 600 000 aholi bor. Shahar bo'yicha oziq-ovqat bozori $1.5B.",
       traction:
-        '5,400 monthly active customers, 31,000 orders last month, $430,000 GMV. Orders grow 11% monthly. Unit economics are negative and improving: contribution margin was −$1.10 four months ago.',
+        "5 400 oylik faol mijoz, o'tgan oy 31 000 buyurtma, $430 000 GMV. Buyurtmalar oyiga 11% o'sadi. Yunit-ekonomika salbiy, lekin yaxshilanmoqda: to'rt oy oldin marja −$1.10 edi.",
       team:
-        'Sardor Umarov (CEO) previously launched Wolt operations in two Kazakh cities. Strong ops bench of four city managers. CTO is a technical lead promoted from within.',
+        "Sardor Umarov (CEO) avval ikki Qozog'iston shahrida Wolt operatsiyalarini yo'lga qo'ygan. To'rt shahar menejeridan iborat kuchli operatsion jamoa. CTO ichkaridan ko'tarilgan texnik rahbar.",
       ask:
-        'Raising $1.2M seed for 18% to reach contribution-margin breakeven at 8 stores and prove the model before a Series A.',
+        "8 ta do'konda marja bo'yicha o'zini qoplashga chiqish va Series A dan oldin modelni isbotlash uchun 18% evaziga $1.2M seed jalb qilmoqdamiz.",
     },
-    metrics: { revenue: '$430k GMV / mo', growth: '+11% MoM, CM −$0.40', ask: '$1.2M seed' },
-    recHeadline: 'Promising, with open questions',
+    metrics: { revenue: '$430k GMV / oy', growth: '+11% oyiga, marja −$0.40', ask: '$1.2M seed' },
+    recHeadline: 'Istiqbolli, ammo ochiq savollar bor',
     recRationale: [
-      'Scale and growth are real, but every order still loses money — the margin trajectory is the whole question.',
-      'Category has burned capital globally; ask what is structurally different here.',
-      'This is a starting point for your review, not an assessment of the business itself.',
+      "Miqyos va o'sish haqiqiy, ammo har bir buyurtma hali ham zarar keltiradi — butun savol marja trayektoriyasida.",
+      "Bu kategoriya dunyo bo'ylab katta kapital yoqib yuborgan; bu yerda tarkibiy jihatdan nima boshqacha ekanini so'rang.",
+      "Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.",
     ],
     attachments: [
-      { label: 'Pitch deck', kind: 'deck', fileName: 'oshmarket-seed.pdf' },
-      { label: 'Unit-economics model', kind: 'other', fileName: 'ue-model-jul.xlsx' },
+      { label: 'Pitch-dek', kind: 'deck', fileName: 'oshmarket-seed.pdf' },
+      { label: 'Yunit-ekonomika modeli', kind: 'other', fileName: 'ue-model-jul.xlsx' },
       { label: 'Data room', kind: 'dataroom', fileName: 'notion.so/oshmarket-dr' },
     ],
     verifiedIds: ['registry'],
   },
   {
     name: 'KassaBox',
-    oneLiner: 'Point-of-sale and automated tax compliance for small retailers',
+    oneLiner: "Kichik do'konlar uchun kassa tizimi va avtomatik soliq hisoboti",
     sector: 'Fintech SaaS',
     fundingStage: 'Seed',
-    founder: { name: 'Timur Ibragimov', email: 'timur@kassabox.uz', city: 'Tashkent', language: 'ru' },
+    founder: { name: 'Timur Ibragimov', email: 'timur@kassabox.uz', city: 'Toshkent', language: 'ru' },
     submittedAt: '2026-07-15T09:00:00Z',
     stage: 'in-review',
     signal: 'high',
     raw: {
       problem:
-        'Every retail point in Uzbekistan is legally required to run an online fiscal cash register, but the certified devices are clunky and the tax-report workflow still costs shops an accountant day per month. Fines for mistakes are severe.',
+        "O'zbekistondagi har bir savdo nuqtasi qonun bo'yicha onlayn fiskal kassa yuritishi shart, ammo sertifikatlangan qurilmalar noqulay, soliq hisoboti esa do'konlardan har oy bir kunlik buxgalter mehnatini talab qiladi. Xatolar uchun jarimalar juda og'ir.",
       product:
-        'An Android app turning any $80 phone into a certified fiscal register, with tax reports filed automatically. $12/month per point of sale. We hold one of four fiscal-operator licenses issued by the tax committee.',
+        "Istalgan $80 lik telefonni sertifikatlangan fiskal kassaga aylantiradigan Android ilova; soliq hisobotlari avtomatik topshiriladi. Har bir savdo nuqtasi uchun oyiga $12. Soliq qo'mitasi bergan to'rtta fiskal operator litsenziyasidan biri bizda.",
       market:
-        'Roughly 450,000 registered retail points must comply. At $12/month the reachable market is about $45M ARR. The license is a moat: the queue for new ones is over two years.',
+        "Qariyb 450 000 ro'yxatdan o'tgan savdo nuqtasi talabga bo'ysunishi kerak. Oyiga $12 dan yetib boriladigan bozor taxminan $45M ARR. Litsenziya — himoya devori: yangisini olish navbati ikki yildan uzun.",
       traction:
-        '6,800 paying points of sale, $79,000 MRR, growing 12% monthly for the last eight months. Net revenue retention 104%. Distribution through 40 accounting-firm partners who resell us to their clients.',
+        "6 800 to'lovchi savdo nuqtasi, $79 000 MRR, so'nggi sakkiz oyda oyiga 12% o'sish. Sof daromad ushlab qolish (NRR) 104%. Distributsiya — bizni mijozlariga qayta sotadigan 40 ta buxgalteriya firmasi orqali.",
       team:
-        'Timur Ibragimov (CEO) previously built and sold an accounting-software firm. CTO and CFO worked with him there. Fourteen staff. Founders hold 68% after an angel round.',
+        "Timur Ibragimov (CEO) avval buxgalteriya dasturlari kompaniyasini qurib sotgan. CTO va CFO u bilan o'sha yerda ishlagan. O'n to'rt xodim. Angel-raunddan keyin asoschilar ulushi 68%.",
       ask:
-        'Raising $900,000 seed for 12% to add payroll compliance and expand the accountant-partner channel nationally.',
+        "Ish haqi bo'yicha komplayens qo'shish va buxgalter-hamkorlar kanalini butun mamlakatga kengaytirish uchun 12% evaziga $900 000 seed jalb qilmoqdamiz.",
     },
-    metrics: { revenue: '$79k MRR', growth: '+12% MoM, NRR 104%', ask: '$900k seed' },
-    recHeadline: 'Worth a close look soon',
+    metrics: { revenue: '$79k MRR', growth: '+12% oyiga, NRR 104%', ask: '$900k seed' },
+    recHeadline: "Tez orada sinchiklab ko'rishga arziydi",
     recRationale: [
-      'Strong recurring revenue with a regulatory moat; the license claim is checkable and central — verify it.',
-      'Repeat founder with a prior exit in the same domain; references should be fast.',
-      'This is a starting point for your review, not an assessment of the business itself.',
+      "Regulyator himoyasi bilan kuchli takroriy daromad; litsenziya da'vosi markaziy va tekshirsa bo'ladigan fakt — tekshiring.",
+      "Xuddi shu sohada muvaffaqiyatli chiqishi bo'lgan takroriy asoschi; tavsiyalar tez tasdiqlansa kerak.",
+      "Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.",
     ],
     attachments: [
-      { label: 'Pitch deck', kind: 'deck', fileName: 'kassabox-seed-v2.pdf' },
-      { label: 'Revenue proof', kind: 'revenue', fileName: 'mrr-export-jul.csv' },
-      { label: 'Fiscal-operator license', kind: 'other', fileName: 'license-scan.pdf' },
+      { label: 'Pitch-dek', kind: 'deck', fileName: 'kassabox-seed-v2.pdf' },
+      { label: 'Daromad isboti', kind: 'revenue', fileName: 'mrr-export-jul.csv' },
+      { label: 'Fiskal operator litsenziyasi', kind: 'other', fileName: 'license-scan.pdf' },
     ],
     verifiedIds: ['registry', 'revenue'],
-    notes: 'license moat looks real, checked registry\nrev export matches claimed mrr within 2%\nstill need 2 partner refs from the accounting channel',
+    notes: "litsenziya himoyasi haqiqiyga o'xshaydi, reestrni tekshirdim\ndaromad eksporti aytilgan mrr bilan 2% farq ichida mos\nbuxgalteriya kanalidan yana 2 ta hamkor tavsiyasi kerak",
   },
   {
     name: 'SolarUz',
-    oneLiner: 'Financed rooftop solar for small factories and farms',
+    oneLiner: 'Kichik zavod va fermalar uchun moliyalashtirilgan tom usti quyosh panellari',
     sector: 'ClimateTech',
     fundingStage: 'Seed',
-    founder: { name: 'Dilnoza Saidova', email: 'dilnoza@solaruz.uz', city: 'Tashkent', language: 'uz' },
+    founder: { name: 'Dilnoza Saidova', email: 'dilnoza@solaruz.uz', city: 'Toshkent', language: 'uz' },
     submittedAt: '2026-07-02T13:15:00Z',
     stage: 'recommended',
     signal: 'high',
     raw: {
       problem:
-        'Small factories pay rising commercial electricity tariffs and suffer outages that stop production. Rooftop solar pays for itself in four years here, but no bank will finance it for a small business.',
+        "Kichik zavodlar o'sib borayotgan tijoriy elektr tariflarini to'laydi va ishlab chiqarishni to'xtatadigan uzilishlardan aziyat chekadi. Bu yerda tom usti quyosh paneli to'rt yilda o'zini qoplaydi, ammo hech bir bank kichik biznes uchun buni moliyalashtirmaydi.",
       product:
-        'We install rooftop solar at zero upfront cost and sell the electricity to the host under a 7-year power-purchase agreement priced 15% below grid tariff. After payback, we split further savings.',
+        "Biz quyosh panellarini oldindan to'lovsiz o'rnatamiz va elektr energiyasini xo'jayinga tarmoq tarifidan 15% arzon narxdagi 7 yillik elektr xarid shartnomasi (PPA) asosida sotamiz. O'zini qoplagach, keyingi tejamkorlikni bo'lishamiz.",
       market:
-        'Uzbekistan targets 25% renewable generation by 2030 with direct subsidies for distributed solar. We estimate 18,000 suitable commercial rooftops; average installation $40,000.',
+        "O'zbekiston 2030 yilgacha 25% qayta tiklanuvchi energiya maqsadini qo'ygan va taqsimlangan quyosh energetikasiga bevosita subsidiyalar beradi. 18 000 ga yaqin mos tijoriy tom bor deb baholaymiz; o'rtacha o'rnatish $40 000.",
       traction:
-        '23 installations operating, $1.1M deployed, $31,000 monthly recurring electricity revenue, zero payment defaults in 14 months. Pipeline of 61 signed letters of intent. Panel supply contracted with two Chinese manufacturers.',
+        "23 ta obyekt ishlamoqda, $1.1M sarflangan, oylik takroriy elektr daromadi $31 000, 14 oyda birorta to'lov defolti yo'q. 61 ta imzolangan niyat xatidan iborat navbat. Panel ta'minoti ikki Xitoy ishlab chiqaruvchisi bilan shartnoma qilingan.",
       team:
-        'Dilnoza Saidova (CEO) financed energy projects at the ADB for seven years. CTO ran industrial electrical installation for a decade. Eleven staff, three licensed installation crews.',
+        "Dilnoza Saidova (CEO) yetti yil OTBda (ADB) energetika loyihalarini moliyalashtirgan. CTO o'n yil sanoat elektromontajini boshqargan. O'n bir xodim, uchta litsenziyalangan o'rnatish brigadasi.",
       ask:
-        'Raising $2M ($800k equity for 10%, $1.2M debt facility) to fund the next 45 installations.',
+        "Keyingi 45 ta o'rnatishni moliyalashtirish uchun $2M jalb qilmoqdamiz ($800k ulush 10% evaziga, $1.2M qarz liniyasi).",
     },
-    metrics: { revenue: '$31k recurring / mo', growth: '23 sites, 0 defaults', ask: '$2M (equity+debt)' },
-    recHeadline: 'Worth a close look soon',
+    metrics: { revenue: '$31k takroriy / oy', growth: '23 obyekt, 0 defolt', ask: '$2M (ulush+qarz)' },
+    recHeadline: "Tez orada sinchiklab ko'rishga arziydi",
     recRationale: [
-      'Recurring revenue with zero defaults across 14 months is exceptional signal in this pipeline.',
-      'The model is capital-heavy; the equity/debt split and PPA enforceability deserve real scrutiny.',
-      'This is a starting point for your review, not an assessment of the business itself.',
+      "14 oy davomida birorta defoltisiz takroriy daromad — bu pipeline uchun favqulodda kuchli signal.",
+      "Model kapital talab qiladi; ulush/qarz nisbati va PPA shartnomalarining ijro etilishi jiddiy tekshiruvga loyiq.",
+      "Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.",
     ],
     attachments: [
-      { label: 'Pitch deck', kind: 'deck', fileName: 'solaruz-seed.pdf' },
-      { label: 'Revenue proof', kind: 'revenue', fileName: 'ppa-receipts-h1.xlsx' },
+      { label: 'Pitch-dek', kind: 'deck', fileName: 'solaruz-seed.pdf' },
+      { label: 'Daromad isboti', kind: 'revenue', fileName: 'ppa-receipts-h1.xlsx' },
       { label: 'Data room', kind: 'dataroom', fileName: 'drive.google.com/solaruz-dr' },
     ],
     verifiedIds: ['registry', 'revenue', 'references', 'captable'],
     decision: 'recommend',
     notes:
-      'best asset-backed deal in the pipe, rev verified against ppa receipts\nceo is the strongest founder ive met this quarter, adb background shows\nppa contract enforceability is the open legal q but local counsel says its fine\nif the debt facility falls through the equity alone doesnt fund the plan',
+      "pipeline'dagi eng yaxshi aktiv bilan ta'minlangan bitim, daromad ppa kvitansiyalari bilan tasdiqlandi\nceo bu chorakda ko'rgan eng kuchli asoschim, adb maktabi sezilib turibdi\nppa shartnomasining ijrosi ochiq huquqiy savol, lekin mahalliy yurist muammo yo'q deydi\nagar qarz liniyasi amalga oshmasa, ulush mablag'ining o'zi rejani qoplamaydi",
     verdictSentAt: '2026-07-10T15:00:00Z',
   },
   {
     name: 'DoriGo',
-    oneLiner: 'Licensed pharmacy delivery with cold-chain for insulin and biologics',
+    oneLiner: 'Insulin va biopreparatlar uchun sovuq zanjirli litsenziyalangan dorixona yetkazmasi',
     sector: 'HealthTech',
     fundingStage: 'Seed',
-    founder: { name: 'Kamola Rashidova', email: 'kamola@dorigo.uz', city: 'Tashkent', language: 'en' },
+    founder: { name: 'Kamola Rashidova', email: 'kamola@dorigo.uz', city: 'Toshkent', language: 'en' },
     submittedAt: '2026-06-20T10:00:00Z',
     stage: 'advanced',
     signal: 'high',
     raw: {
       problem:
-        'Patients with diabetes and chronic conditions in Uzbekistan travel across town to find medicines in stock, and cold-chain drugs like insulin are frequently spoiled by improper storage. There is no legal delivery option for prescription medicines.',
+        "O'zbekistonda diabet va surunkali kasalligi bor bemorlar dori izlab shahar kezadi, insulin kabi sovuq zanjir talab qiladigan dorilar esa noto'g'ri saqlash tufayli tez-tez yaroqsiz holga keladi. Retseptli dorilarni qonuniy yetkazib berish imkoni yo'q.",
       product:
-        'DoriGo is the first licensed pharmacy-delivery operator in the country: we hold the pharmacy license, run validated cold-chain couriers, and integrate with 120 partner pharmacies for inventory. Prescriptions are verified by our staff pharmacists in-app.',
+        "DoriGo — mamlakatdagi birinchi litsenziyalangan dorixona-yetkazma operatori: dorixona litsenziyasi bizda, validatsiyadan o'tgan sovuq zanjir kuryerlarimiz ishlaydi va zaxira uchun 120 hamkor dorixona bilan integratsiya qilganmiz. Retseptlarni ilovada shtatdagi farmatsevtlarimiz tekshiradi.",
       market:
-        'The retail pharmaceutical market in Uzbekistan is $1.8B and 70% of it is chronic-condition refills — exactly the recurring behavior delivery captures. Regional expansion to Kazakhstan doubles the market.',
+        "O'zbekiston chakana farmatsevtika bozori $1.8B va uning 70% i surunkali kasalliklar uchun takroriy xaridlar — yetkazib berish aynan shu takroriy xulq-atvorni egallaydi. Qozog'istonga mintaqaviy kengayish bozorni ikki baravar oshiradi.",
       traction:
-        '28,000 monthly orders, $610,000 GMV monthly, 19% take rate. 62% of orders are recurring refills. Growing 16% monthly. The health ministry cited us in its digital-health strategy.',
+        "Oyiga 28 000 buyurtma, $610 000 oylik GMV, 19% komissiya. Buyurtmalarning 62% i takroriy xaridlar. Oyiga 16% o'sish. Sog'liqni saqlash vazirligi raqamli salomatlik strategiyasida bizni misol qilib keltirgan.",
       team:
-        'Kamola Rashidova (CEO) is a pharmacist with an MBA from INSEAD; she previously led pharma distribution for a regional wholesaler. CTO ex-Yandex. Twenty-two staff including six licensed pharmacists.',
+        "Kamola Rashidova (CEO) — INSEAD MBA darajasiga ega farmatsevt; avval mintaqaviy ulgurji kompaniyada farma distributsiyasini boshqargan. CTO — sobiq Yandex xodimi. Olti litsenziyalangan farmatsevtni o'z ichiga olgan yigirma ikki xodim.",
       ask:
-        'Raising $1.5M seed for 14% to expand to five more cities and begin the Kazakhstan licensing process. Interested in US investors for the Series A path.',
+        "Yana beshta shaharga kengayish va Qozog'istonda litsenziyalash jarayonini boshlash uchun 14% evaziga $1.5M seed jalb qilmoqdamiz. Series A yo'li uchun AQSh investorlariga qiziqamiz.",
     },
-    metrics: { revenue: '$116k take / mo', growth: '+16% MoM, 62% recurring', ask: '$1.5M seed' },
-    recHeadline: 'Worth a close look soon',
+    metrics: { revenue: '$116k komissiya / oy', growth: '+16% oyiga, 62% takroriy', ask: '$1.5M seed' },
+    recHeadline: "Tez orada sinchiklab ko'rishga arziydi",
     recRationale: [
-      'Licensed moat plus recurring refill behavior is the strongest structural story in the current pipeline.',
-      'Founder is explicitly seeking the US path; fit for the Advance track if verification holds.',
-      'This is a starting point for your review, not an assessment of the business itself.',
+      "Litsenziya himoyasi va takroriy xarid xulq-atvori — joriy pipeline'dagi eng kuchli tarkibiy hikoya.",
+      "Asoschi AQSh yo'nalishini ochiq izlayapti; tekshiruvdan o'tsa, AQShga yo'llash uchun mos nomzod.",
+      "Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.",
     ],
     attachments: [
-      { label: 'Pitch deck', kind: 'deck', fileName: 'dorigo-seed.pdf' },
-      { label: 'Revenue proof', kind: 'revenue', fileName: 'orders-gmv-export.xlsx' },
-      { label: 'Pharmacy license', kind: 'other', fileName: 'dorigo-license.pdf' },
+      { label: 'Pitch-dek', kind: 'deck', fileName: 'dorigo-seed.pdf' },
+      { label: 'Daromad isboti', kind: 'revenue', fileName: 'orders-gmv-export.xlsx' },
+      { label: 'Dorixona litsenziyasi', kind: 'other', fileName: 'dorigo-license.pdf' },
       { label: 'Data room', kind: 'dataroom', fileName: 'drive.google.com/dorigo-dr' },
     ],
     verifiedIds: ['registry', 'revenue', 'references', 'captable'],
     decision: 'advance',
     notes:
-      'this is the one, license + cold chain is a real moat and rev checks out\nfounder presents at a us standard already, insead + pharma distribution\nrefs from two pharma wholesalers both glowing\nkz expansion makes the series a story continental not local',
+      "aynan izlagan bitimimiz, litsenziya + sovuq zanjir haqiqiy himoya, daromad tasdiqlandi\nasoschi allaqachon aqsh darajasida taqdimot qiladi, insead + farma distributsiyasi\nikki farma ulgurji kompaniyasidan tavsiya oldik, ikkalasi ham a'lo\nqozog'iston kengayishi series a hikoyasini mahalliy emas, kontinental qiladi",
     verdictSentAt: '2026-07-01T11:30:00Z',
   },
   {
     name: 'Mahalla',
-    oneLiner: 'Neighborhood super-app for community services and payments',
-    sector: 'Consumer Social',
+    oneLiner: "Mahalla xizmatlari va to'lovlari uchun super-ilova",
+    sector: "Iste'mol · Ijtimoiy",
     fundingStage: 'Pre-seed',
-    founder: { name: 'Otabek Nazarov', email: 'otabek@mahalla.app', city: 'Tashkent', language: 'uz' },
+    founder: { name: 'Otabek Nazarov', email: 'otabek@mahalla.app', city: 'Toshkent', language: 'uz' },
     submittedAt: '2026-06-28T12:00:00Z',
     stage: 'passed',
     signal: 'low',
     raw: {
       problem:
-        'Mahalla committees coordinate everything from utility issues to weddings through paper notices and word of mouth. Young residents are disconnected from their neighborhood institutions.',
+        "Mahalla qo'mitalari kommunal muammolardan to'ylargacha hamma narsani qog'oz e'lonlar va og'zaki gap orqali muvofiqlashtiradi. Yosh aholi o'z mahalla institutlaridan uzilib qolgan.",
       product:
-        'A super-app for neighborhoods: announcements, local services marketplace, utility payments, and community chat. We plan to monetize through payment fees and local business listings once we reach scale.',
+        "Mahallalar uchun super-ilova: e'lonlar, mahalliy xizmatlar bozori, kommunal to'lovlar va jamoa chati. Miqyosga chiqqach, to'lov komissiyalari va mahalliy biznes e'lonlari orqali pul topishni rejalashtirganmiz.",
       market:
-        'There are 9,000+ mahallas covering effectively the whole population of Uzbekistan — 36M people. If we become the default channel, the payments volume alone is billions.',
+        "O'zbekistonda 9 000 dan ortiq mahalla bor va ular amalda butun aholini — 36 mln kishini qamrab oladi. Agar asosiy kanalga aylansak, birgina to'lov aylanmasining o'zi milliardlab dollar.",
       traction:
-        'Launched 4 months ago in 12 mahallas. 3,400 registered users, about 400 weekly actives. No revenue yet; monetization starts at scale. A government partnership discussion is ongoing.',
+        "4 oy oldin 12 mahallada ishga tushdik. 3 400 ro'yxatdan o'tgan foydalanuvchi, haftasiga qariyb 400 faol. Hali daromad yo'q; monetizatsiya miqyosda boshlanadi. Davlat bilan hamkorlik muzokarasi davom etmoqda.",
       team:
-        'Otabek Nazarov (CEO), second-time founder — previous social app reached 50k downloads before shutting down. Two junior developers. Working from a government innovation-hub grant.',
+        "Otabek Nazarov (CEO) — ikkinchi marta asoschi; avvalgi ijtimoiy ilovasi yopilishidan oldin 50 ming yuklab olishga yetgan. Ikki kichik dasturchi. Davlat innovatsiya markazi grantida ishlaymiz.",
       ask:
-        'Raising $250,000 for 12% to expand to 200 mahallas and hire a growth lead.',
+        "200 mahallaga kengayish va o'sish bo'yicha rahbar yollash uchun 12% evaziga $250 000 jalb qilmoqdamiz.",
     },
-    metrics: { revenue: 'Pre-revenue', growth: '400 WAU', ask: '$250k pre-seed' },
-    recHeadline: 'Likely early for this pipeline',
+    metrics: { revenue: 'Hali daromadsiz', growth: '400 haftalik faol', ask: '$250k pre-seed' },
+    recHeadline: "Bu pipeline uchun hali erta ko'rinadi",
     recRationale: [
-      'No revenue and weekly actives are low relative to registrations; engagement is the open question.',
-      'Super-app scope this early usually signals unfocused product; ask what the single wedge is.',
-      'This is a starting point for your review, not an assessment of the business itself.',
+      "Daromad yo'q, haftalik faollar esa ro'yxatdan o'tganlarga nisbatan kam; ochiq savol — jalb etilganlik.",
+      "Bu bosqichdagi super-ilova qamrovi odatda fokussiz mahsulotdan darak beradi; yagona kirish nuqtasi nima ekanini so'rang.",
+      "Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.",
     ],
-    attachments: [{ label: 'Pitch deck', kind: 'deck', fileName: 'mahalla-deck.pdf' }],
+    attachments: [{ label: 'Pitch-dek', kind: 'deck', fileName: 'mahalla-deck.pdf' }],
     verifiedIds: ['registry'],
     decision: 'pass',
     notes:
-      'engagement is weak, 12% wau/reg after 4 months, thats a leaky product\nsuper app scope w/ 3 people isnt credible, no single wedge\nfounder is energetic and coachable tho, good instincts on community\nif they focus on one service and get to 40% wau id look again\nif utility payments alone show real repeat usage, reconsider',
+      "jalb etilganlik zaif, 4 oydan keyin haftalik faollar 12%, mahsulot suv o'tkazyapti\n3 kishilik jamoa bilan super-ilova qamrovi ishonarli emas, yagona yo'nalish yo'q\nlekin asoschi g'ayratli va o'rganuvchan, jamoa hissi bo'yicha instinktlari yaxshi\nagar bitta xizmatga fokus qilib haftalik faollikni 40% ga chiqarsa, yana ko'raman\nagar birgina kommunal to'lovlarning o'zi real takroriy foydalanish ko'rsatsa, qayta ko'rib chiqaman",
     verdictSentAt: '2026-07-08T09:45:00Z',
   },
   {
     name: 'Chevar',
-    oneLiner: 'Made-to-order marketplace for custom tailoring and traditional wear',
-    sector: 'Consumer Marketplace',
+    oneLiner: 'Buyurtma asosidagi tikuvchilik va milliy liboslar marketpleysi',
+    sector: "Iste'mol marketpleysi",
     fundingStage: 'Pre-seed',
-    founder: { name: 'Gulnora Vahidova', email: 'gulnora@chevar.uz', city: 'Bukhara', language: 'ru' },
+    founder: { name: 'Gulnora Vahidova', email: 'gulnora@chevar.uz', city: 'Buxoro', language: 'ru' },
     submittedAt: '2026-07-27T07:55:00Z',
     stage: 'new',
     signal: 'low',
     raw: {
       problem:
-        'Custom tailoring is a huge informal economy in Uzbekistan — wedding season alone keeps thousands of ateliers booked for months — but finding a good tailor is pure word of mouth and pricing is opaque.',
+        "Buyurtma tikuvchilik O'zbekistonda ulkan norasmiy iqtisodiyot — birgina to'y mavsumi minglab atelyelarni oylab band qiladi — ammo yaxshi chevar topish faqat og'zaki tavsiyaga bog'liq, narxlar esa noshaffof.",
       product:
-        'A marketplace where customers browse tailor portfolios, get fixed quotes, and pay through escrow released on fitting approval. We take 10%. An early idea: standardized measurement kits shipped to the customer.',
+        "Mijozlar chevar portfoliolarini ko'rib, qat'iy narx taklifini oladigan va o'lchov-sinovdan keyin ochiladigan eskrou orqali to'laydigan marketpleys. Biz 10% olamiz. Dastlabki g'oya: mijozga yuboriladigan standart o'lchov to'plamlari.",
       market:
-        'We estimate the custom-clothing market at $400M annually, concentrated around weddings and holidays. No digital player exists.',
+        "Buyurtma kiyim bozorini yiliga $400M deb baholaymiz; u asosan to'ylar va bayramlar atrofida jamlangan. Raqamli o'yinchi hali yo'q.",
       traction:
-        'Launched 6 weeks ago. 46 tailors onboarded, 28 completed orders, $2,100 GMV. Too early for cohorts. Instagram following of 18,000 built organically in two months.',
+        "6 hafta oldin ishga tushdik. 46 chevar ulandi, 28 buyurtma yakunlandi, $2 100 GMV. Kohortalar uchun hali juda erta. Ikki oyda organik yig'ilgan 18 000 lik Instagram auditoriyasi bor.",
       team:
-        'Gulnora Vahidova (CEO) ran a 6-person atelier for eight years and is a known name in Bukhara tailoring. No technical co-founder; the site is built on a no-code platform.',
+        "Gulnora Vahidova (CEO) sakkiz yil 6 kishilik atelyeni boshqargan va Buxoro tikuvchiligida taniqli nom. Texnik hammuassis yo'q; sayt no-code platformada qurilgan.",
       ask:
-        'Raising $120,000 for 10% to hire a developer, build the escrow flow properly, and expand to Tashkent before wedding season.',
+        "Dasturchi yollash, eskrou oqimini to'g'ri qurish va to'y mavsumidan oldin Toshkentga kengayish uchun 10% evaziga $120 000 jalb qilmoqdamiz.",
     },
-    metrics: { revenue: '$2.1k GMV total', growth: '6 weeks live', ask: '$120k pre-seed' },
-    recHeadline: 'Likely early for this pipeline',
+    metrics: { revenue: 'Jami $2.1k GMV', growth: '6 hafta ishlamoqda', ask: '$120k pre-seed' },
+    recHeadline: "Bu pipeline uchun hali erta ko'rinadi",
     recRationale: [
-      'Six weeks of data is not evaluable traction; the organic audience is the only distribution signal.',
-      'Domain-credible founder without technical capacity — the platform risk is immediate.',
-      'This is a starting point for your review, not an assessment of the business itself.',
+      "Olti haftalik ma'lumot baholanadigan natija emas; yagona distributsiya signali — organik auditoriya.",
+      "Sohada obro'li, ammo texnik salohiyatsiz asoschi — platforma xavfi darhol yuzaga chiqadi.",
+      "Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.",
     ],
-    attachments: [{ label: 'Pitch deck', kind: 'deck', fileName: 'chevar-intro.pdf' }],
+    attachments: [{ label: 'Pitch-dek', kind: 'deck', fileName: 'chevar-intro.pdf' }],
   },
 ]
 

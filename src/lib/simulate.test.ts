@@ -4,43 +4,55 @@ import { emptyDraft } from './store'
 
 describe('summarizeField', () => {
   it('takes the first two sentences', () => {
-    const out = summarizeField('First point here. Second point here. Third is dropped.')
-    expect(out).toBe('First point here. Second point here.')
+    const out = summarizeField('Birinchi fikr shu yerda. Ikkinchi fikr shu yerda. Uchinchisi tushib qoladi.')
+    expect(out).toBe('Birinchi fikr shu yerda. Ikkinchi fikr shu yerda.')
   })
 
   it('caps very long summaries with an ellipsis', () => {
-    const out = summarizeField('word '.repeat(200) + '.', 100)
+    const out = summarizeField("so'z ".repeat(200) + '.', 100)
     expect(out.length).toBeLessThanOrEqual(100)
     expect(out.endsWith('…')).toBe(true)
   })
 
-  it('handles missing input honestly', () => {
-    expect(summarizeField('')).toBe('Not provided by the founder.')
+  it('handles missing input honestly, in Uzbek', () => {
+    expect(summarizeField('')).toBe("Asoschi tomonidan to'ldirilmagan.")
   })
 })
 
 describe('recommendFromDraft', () => {
-  it('reads commercial traction as high signal', () => {
+  it('reads Uzbek-language commercial traction as high signal', () => {
     const draft = emptyDraft()
     draft.fields.traction =
-      'We have 200 paying customers, revenue is growing with strong retention and signed contracts.'
-    draft.fields.team = 'Two full-time founders with a decade of domain experience between them, plus four engineers hired from local unicorns.'
-    draft.revenue = '$24,000 / month'
+      "200 ta to'lovchi mijozimiz bor, daromad o'sib bormoqda va uchta yirik shartnoma imzolangan."
+    draft.fields.team =
+      "Ikkala asoschi to'liq stavkada, o'n yillik soha tajribasiga ega, yana to'rt muhandis mahalliy unikornlardan yollangan."
+    draft.revenue = '$24,000 / oy'
     const rec = recommendFromDraft(draft)
     expect(rec.signal).toBe('high')
     expect(rec.rationale.length).toBeGreaterThan(0)
   })
 
+  it('still understands English-language traction', () => {
+    const draft = emptyDraft()
+    draft.fields.traction =
+      'We have 200 paying customers, revenue is growing with strong retention and signed contracts.'
+    draft.fields.team =
+      'Two full-time founders with a decade of domain experience between them, plus four engineers hired from local unicorns.'
+    draft.revenue = '$24,000 / month'
+    const rec = recommendFromDraft(draft)
+    expect(rec.signal).toBe('high')
+  })
+
   it('reads a pre-revenue idea as low signal', () => {
     const draft = emptyDraft()
-    draft.fields.traction = 'No revenue yet, idea stage.'
+    draft.fields.traction = "Hali daromad yo'q, g'oya bosqichi."
     const rec = recommendFromDraft(draft)
     expect(rec.signal).toBe('low')
   })
 
   it('always frames itself as guidance, not a verdict', () => {
     const rec = recommendFromDraft(emptyDraft())
-    expect(rec.rationale.join(' ')).toMatch(/starting point/i)
+    expect(rec.rationale.join(' ')).toMatch(/boshlang'ich nuqta/i)
   })
 })
 

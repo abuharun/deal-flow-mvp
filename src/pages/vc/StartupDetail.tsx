@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useStore } from '../../lib/store'
-import { STEP_KEYS, type Decision, type Signal } from '../../lib/types'
+import { STEP_KEYS, type Attachment, type Decision, type Signal } from '../../lib/types'
 import { STEP_META } from '../founder/steps'
 import { DECISION_LABEL, SIGNAL_LABEL, formatDate, cx } from '../../lib/format'
 import { AiBadge, SignalTag, StageBadge, StubTag } from '../../components/ui'
@@ -9,10 +9,17 @@ import { CheckIcon, DocIcon } from '../../components/icons'
 import { LANG_LABEL } from '../../lib/compose'
 import { useToast } from '../../components/toast'
 
+const KIND_LABEL: Record<Attachment['kind'], string> = {
+  deck: 'taqdimot',
+  dataroom: 'data room',
+  revenue: 'daromad',
+  other: 'boshqa',
+}
+
 const DECISIONS: Array<{ value: Decision; sub: string }> = [
-  { value: 'recommend', sub: 'Put it forward to partner investors' },
-  { value: 'advance', sub: 'Begin the person-to-person US introduction' },
-  { value: 'pass', sub: 'An honest no, with the reason' },
+  { value: 'recommend', sub: 'Hamkor investorlarga taqdim etish' },
+  { value: 'advance', sub: 'AQShda shaxsiy tanishtiruvni boshlash' },
+  { value: 'pass', sub: "Halol «yo'q», sababi bilan" },
 ]
 
 export default function StartupDetail() {
@@ -31,9 +38,10 @@ export default function StartupDetail() {
   if (!startup) {
     return (
       <div className="card" style={{ textAlign: 'center', padding: 40 }}>
-        <h1 style={{ fontSize: '1.2rem' }}>Startup not found</h1>
+        <h1 style={{ fontSize: '1.2rem' }}>Startap topilmadi</h1>
         <p className="muted">
-          It may have been removed, or the link is wrong. <Link to="/app">Back to the pipeline</Link>
+          U olib tashlangan yoki havola noto'g'ri bo'lishi mumkin.{' '}
+          <Link to="/app">Pipeline'ga qaytish</Link>
         </p>
       </div>
     )
@@ -64,14 +72,14 @@ export default function StartupDetail() {
             <StageBadge stage={startup.stage} />
             <span className="faint">
               {startup.sector} · {startup.fundingStage} · {startup.founder.name}, {startup.founder.city} ·
-              submitted <span className="num">{formatDate(startup.submittedAt)}</span>
+              topshirilgan: <span className="num">{formatDate(startup.submittedAt)}</span>
             </span>
           </div>
         </div>
         <div style={{ display: 'grid', gap: 8, justifyItems: 'end' }}>
           <SignalTag signal={startup.signal} overridden={startup.signalOverridden} />
           <label className="faint" htmlFor="retag" style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-            Re-tag signal
+            Signalni qayta belgilash
             <select
               id="retag"
               className="select"
@@ -89,25 +97,25 @@ export default function StartupDetail() {
         </div>
       </header>
 
-      <nav className="detail-tabs" aria-label="On this page">
+      <nav className="detail-tabs" aria-label="Shu sahifada">
         <button type="button" onClick={() => scrollTo(reviewRef)}>
-          Review
+          Tahlil
         </button>
         <button type="button" onClick={() => scrollTo(verifyRef)}>
-          Verification <span className="num">{verifiedCount}/{startup.verification.length}</span>
+          Tekshiruv <span className="num">{verifiedCount}/{startup.verification.length}</span>
         </button>
         <button type="button" onClick={() => scrollTo(decideRef)}>
-          Decision
+          Qaror
         </button>
         <button type="button" onClick={() => scrollTo(composerRef)}>
-          Verdict
+          Xulosa
         </button>
       </nav>
 
       {sent && (
         <div className="sent-banner" style={{ marginBottom: 18 }}>
-          <CheckIcon /> Verdict sent to the founder on {formatDate(startup.verdict!.sentAt!)} — outcome
-          recorded as {DECISION_LABEL[startup.verdict!.decision]}.
+          <CheckIcon /> Xulosa asoschiga {formatDate(startup.verdict!.sentAt!)} kuni yuborildi —
+          natija sifatida {DECISION_LABEL[startup.verdict!.decision]} qayd etildi.
         </div>
       )}
 
@@ -127,16 +135,16 @@ export default function StartupDetail() {
           ))}
         </ul>
         <p className="faint" style={{ margin: '10px 0 0' }}>
-          Suggested: {SIGNAL_LABEL[startup.recommendation.signal].toLowerCase()} — the tag above is yours
-          to override.
+          Taklif: {SIGNAL_LABEL[startup.recommendation.signal].toLowerCase()} — yuqoridagi teg esa
+          sizniki, o'zgartirishingiz mumkin.
         </p>
       </section>
 
       <div className="metric-row">
         {[
-          ['Revenue', startup.metrics.revenue],
-          ['Growth', startup.metrics.growth],
-          ['Ask', startup.metrics.ask],
+          ['Daromad', startup.metrics.revenue],
+          ["O'sish", startup.metrics.growth],
+          ["So'rov", startup.metrics.ask],
         ].map(([label, value]) => (
           <div className="metric" key={label}>
             <span className="label">{label}</span>
@@ -151,9 +159,9 @@ export default function StartupDetail() {
           <section className="card ai-frame" aria-labelledby="summary-heading">
             <div className="panel-title">
               <h2 id="summary-heading" style={{ margin: 0, fontSize: '1.05rem' }}>
-                AI summary
+                AI qisqacha bayoni
               </h2>
-              <AiBadge>Simulated AI · standardized</AiBadge>
+              <AiBadge>Simulyatsiya qilingan AI · standartlashtirilgan</AiBadge>
             </div>
             {STEP_KEYS.map((k) => (
               <div className="summary-section" key={k}>
@@ -165,9 +173,9 @@ export default function StartupDetail() {
           <section className="card" aria-labelledby="raw-heading">
             <div className="panel-title">
               <h2 id="raw-heading" style={{ margin: 0, fontSize: '1.05rem' }}>
-                Raw founder inputs
+                Asoschining asl matni
               </h2>
-              <span className="faint">verbatim — nothing hidden</span>
+              <span className="faint">so'zma-so'z — hech narsa yashirilmagan</span>
             </div>
             {STEP_KEYS.map((k) => (
               <div className="summary-section" key={k}>
@@ -182,13 +190,13 @@ export default function StartupDetail() {
       {/* ---- Verification ---- */}
       <div ref={verifyRef} className="card section-block">
         <div className="panel-title">
-          <h2 style={{ margin: 0, fontSize: '1.05rem' }}>Verification</h2>
+          <h2 style={{ margin: 0, fontSize: '1.05rem' }}>Tekshiruv</h2>
           <span className="faint num" aria-live="polite">
-            {verifiedCount}/{startup.verification.length} verified
+            {verifiedCount}/{startup.verification.length} tekshirildi
           </span>
         </div>
         <p className="muted" style={{ marginTop: 0 }}>
-          The human proof-check — your name rides on this decision.
+          Insonning dalil tekshiruvi — bu qarorga sizning nomingiz tikilgan.
         </p>
         <ul className="check-list">
           {startup.verification.map((v) => (
@@ -210,8 +218,8 @@ export default function StartupDetail() {
 
       {/* ---- Decision + notes ---- */}
       <div ref={decideRef} className="card section-block">
-        <h2 style={{ fontSize: '1.05rem' }}>Decision</h2>
-        <div className="decision-options" role="group" aria-label="Pick a decision">
+        <h2 style={{ fontSize: '1.05rem' }}>Qaror</h2>
+        <div className="decision-options" role="group" aria-label="Qaror tanlang">
           {DECISIONS.map((d) => (
             <button
               key={d.value}
@@ -227,10 +235,10 @@ export default function StartupDetail() {
           ))}
         </div>
         <div className="field" style={{ marginBottom: 8 }}>
-          <label htmlFor="rough-notes">Rough notes — never shown to the founder</label>
+          <label htmlFor="rough-notes">Qoralama yozuvlar — asoschiga hech qachon ko'rsatilmaydi</label>
           <p className="hint">
-            Think in blunt shorthand; grammar be damned. Lines starting with “if …” become the “what
-            would change our answer” section.
+            Qisqa va ochiq yozing; grammatikaga qaramang. «agar …» bilan boshlangan qatorlar
+            «javobimizni nima o'zgartirishi mumkin» bo'limiga tushadi.
           </p>
           <textarea
             id="rough-notes"
@@ -238,7 +246,7 @@ export default function StartupDetail() {
             value={startup.notes}
             disabled={sent}
             onChange={(e) => setNotes(startup.id, e.target.value)}
-            placeholder={'e.g.\nrev checks out, license moat is real\nteam thin on sales side\nif they hire a commercial lead id reconsider'}
+            placeholder={"Masalan:\ndaromad tasdiqlandi, litsenziya himoyasi haqiqiy\njamoaning sotuv tomoni zaif\nagar tijorat rahbarini yollashsa qayta ko'raman"}
           />
         </div>
         {!sent && (
@@ -250,16 +258,16 @@ export default function StartupDetail() {
               compose(startup.id)
               setConfirmSend(false)
               setDraftLang('en')
-              toast('Draft composed from your notes.')
+              toast('Yozuvlaringizdan qoralama tayyorlandi.')
               setTimeout(() => scrollTo(composerRef), 50)
             }}
           >
-            {startup.verdict ? 'Re-compose from notes' : 'Compose verdict'}
+            {startup.verdict ? 'Yozuvlardan qayta tayyorlash' : 'Xulosa tayyorlash'}
           </button>
         )}
         {!canCompose && !sent && (
           <p className="faint" style={{ marginTop: 8 }}>
-            Pick a decision and write at least one line of notes to compose.
+            Xulosa tayyorlash uchun qaror tanlang va kamida bir qator yozuv yozing.
           </p>
         )}
       </div>
@@ -270,20 +278,20 @@ export default function StartupDetail() {
           <section className="card ai-frame" aria-labelledby="composer-heading">
             <div className="panel-title" style={{ flexWrap: 'wrap' }}>
               <h2 id="composer-heading" style={{ margin: 0, fontSize: '1.05rem' }}>
-                {sent ? 'Sent verdict' : 'Verdict draft'}
+                {sent ? 'Yuborilgan xulosa' : 'Xulosa qoralamasi'}
               </h2>
               <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-                {startup.verdict.edited && !sent && <StubTag>Edited by you</StubTag>}
-                <AiBadge>Drafted from your notes — you are the author of record</AiBadge>
+                {startup.verdict.edited && !sent && <StubTag>Siz tahrirlagansiz</StubTag>}
+                <AiBadge>Yozuvlaringizdan tayyorlandi — rasmiy muallif sizsiz</AiBadge>
               </div>
             </div>
 
-            <div className="lang-toggle" role="group" aria-label="Draft language" style={{ marginBottom: 12 }}>
+            <div className="lang-toggle" role="group" aria-label="Qoralama tili" style={{ marginBottom: 12 }}>
               <button type="button" aria-pressed={draftLang === 'en'} onClick={() => setDraftLang('en')}>
-                English original
+                Inglizcha asl nusxa
               </button>
               <button type="button" aria-pressed={draftLang === 'local'} onClick={() => setDraftLang('local')}>
-                {LANG_LABEL[startup.verdict.localLang]} (founder's language)
+                {LANG_LABEL[startup.verdict.localLang]} (asoschining tili)
               </button>
             </div>
 
@@ -292,7 +300,9 @@ export default function StartupDetail() {
                 <div className="verdict-draft">{startup.verdict.en}</div>
               ) : (
                 <div className="field">
-                  <label htmlFor="draft-en">Edit the draft in place — nothing sends until you say so</label>
+                  <label htmlFor="draft-en">
+                    Qoralamani shu yerda tahrirlang — siz aytmaguningizcha hech narsa yuborilmaydi
+                  </label>
                   <textarea
                     id="draft-en"
                     className="textarea verdict-textarea"
@@ -308,8 +318,8 @@ export default function StartupDetail() {
                 </div>
                 {!sent && (
                   <p className="faint" style={{ marginTop: 10 }}>
-                    Edits are made in the English original; re-compose regenerates this translation from
-                    your notes.
+                    Tahrirlar inglizcha asl nusxada qilinadi; qayta tayyorlash bu tarjimani
+                    yozuvlaringizdan qaytadan yaratadi.
                   </p>
                 )}
               </>
@@ -325,24 +335,24 @@ export default function StartupDetail() {
                       onClick={() => {
                         sendVerdict(startup.id)
                         setConfirmSend(false)
-                        toast('Verdict sent — the founder has been notified (simulated).')
+                        toast('Xulosa yuborildi — asoschi xabardor qilindi (simulyatsiya).')
                       }}
                     >
-                      Confirm — send to {startup.founder.name}
+                      Tasdiqlash — {startup.founder.name}ga yuborish
                     </button>
                     <button type="button" className="btn btn-secondary" onClick={() => setConfirmSend(false)}>
-                      Not yet
+                      Hozir emas
                     </button>
                   </>
                 ) : (
                   <button type="button" className="btn btn-primary" onClick={() => setConfirmSend(true)}>
-                    Send verdict
+                    Xulosani yuborish
                   </button>
                 )}
                 <span className="faint">
-                  Sending moves {startup.name} to{' '}
-                  <strong>{DECISION_LABEL[startup.verdict.decision]}</strong> and records the outcome.
-                  Nothing auto-sends.
+                  Yuborish {startup.name} kartasini{' '}
+                  <strong>{DECISION_LABEL[startup.verdict.decision]}</strong> bosqichiga o'tkazadi va
+                  natijani qayd etadi. Hech narsa avtomatik yuborilmaydi.
                 </span>
               </div>
             )}
@@ -350,12 +360,13 @@ export default function StartupDetail() {
         ) : (
           <section className="card" aria-labelledby="composer-heading">
             <h2 id="composer-heading" style={{ fontSize: '1.05rem' }}>
-              Verdict
+              Xulosa
             </h2>
             <p className="muted" style={{ margin: 0 }}>
-              Once you've decided and written your notes, <strong>Compose verdict</strong> turns them
-              into a clean, official letter in {startup.founder.name.split(' ')[0]}'s language — for you
-              to review, edit, and send. The AI never speaks to the founder unsupervised.
+              Qaror qilib, yozuvlaringizni yozganingizdan so'ng <strong>Xulosa tayyorlash</strong>{' '}
+              ularni {startup.founder.name.split(' ')[0]}ning tilida toza, rasmiy xatga aylantiradi —
+              siz ko'rib chiqasiz, tahrirlaysiz va yuborasiz. AI asoschi bilan hech qachon nazoratsiz
+              gaplashmaydi.
             </p>
           </section>
         )}
@@ -365,13 +376,13 @@ export default function StartupDetail() {
       <section className="card section-block" aria-labelledby="attach-heading">
         <div className="panel-title">
           <h2 id="attach-heading" style={{ margin: 0, fontSize: '1.05rem' }}>
-            Attachments &amp; links
+            Ilovalar va havolalar
           </h2>
-          <StubTag>Demo files — not downloadable</StubTag>
+          <StubTag>Demo fayllar — yuklab olinmaydi</StubTag>
         </div>
         {startup.attachments.length === 0 ? (
           <p className="muted" style={{ margin: 0 }}>
-            The founder attached no files.
+            Asoschi fayl biriktirmagan.
           </p>
         ) : (
           <ul className="attach-list">
@@ -381,7 +392,7 @@ export default function StartupDetail() {
                 <span>
                   <strong>{a.label}</strong> · {a.fileName}
                 </span>
-                <span className="kind">{a.kind}</span>
+                <span className="kind">{KIND_LABEL[a.kind]}</span>
               </li>
             ))}
           </ul>

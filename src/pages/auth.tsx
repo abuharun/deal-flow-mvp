@@ -29,15 +29,15 @@ function DemoRoleChooser() {
     navigate(role === 'founder' ? '/apply' : '/app')
   }
   return (
-    <div className="demo-roles" role="group" aria-label="Demo accounts">
+    <div className="demo-roles" role="group" aria-label="Demo hisoblar">
       <button type="button" className="demo-role-btn" onClick={() => enter('founder')}>
         <span className="demo-avatar" aria-hidden="true">
           DE
         </span>
         <span>
-          <strong>{FOUNDER_NAME}</strong> — Founder
+          <strong>{FOUNDER_NAME}</strong> — Asoschi
           <br />
-          <span className="faint">{FOUNDER_EMAIL} · submits a startup</span>
+          <span className="faint">{FOUNDER_EMAIL} · startap topshiradi</span>
         </span>
       </button>
       <button type="button" className="demo-role-btn" onClick={() => enter('vc')}>
@@ -45,9 +45,9 @@ function DemoRoleChooser() {
           LM
         </span>
         <span>
-          <strong>{VC_NAME}</strong> — VC Partner
+          <strong>{VC_NAME}</strong> — Venchur hamkori
           <br />
-          <span className="faint">{VC_EMAIL} · works the pipeline</span>
+          <span className="faint">{VC_EMAIL} · pipeline bilan ishlaydi</span>
         </span>
       </button>
     </div>
@@ -67,9 +67,10 @@ export function Login() {
   }
 
   return (
-    <AuthFrame title="Log in">
+    <AuthFrame title="Kirish">
       <p className="demo-note" style={{ marginBottom: 16 }}>
-        This is a product demo — any password works. Fastest path: pick a demo account below.
+        Bu mahsulot demosi — istalgan parol ishlaydi. Eng tez yo'l: quyidagi demo hisoblardan birini
+        tanlang.
       </p>
       <DemoRoleChooser />
       <hr className="divider" />
@@ -84,19 +85,20 @@ export function Login() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
+            placeholder="siz@misol.uz"
           />
         </div>
         <div className="field">
-          <label htmlFor="login-password">Password</label>
+          <label htmlFor="login-password">Parol</label>
           <input id="login-password" className="input" type="password" autoComplete="current-password" required />
         </div>
         <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-          Log in
+          Kirish
         </button>
       </form>
       <p className="faint" style={{ marginTop: 14 }}>
-        <Link to="/reset">Forgot password?</Link> · New here? <Link to="/signup">Sign up</Link>
+        <Link to="/reset">Parolni unutdingizmi?</Link> · Yangimisiz?{' '}
+        <Link to="/signup">Ro'yxatdan o'tish</Link>
       </p>
     </AuthFrame>
   )
@@ -113,31 +115,31 @@ export function Signup() {
   }
 
   return (
-    <AuthFrame title="Create your account">
-      <p className="muted">Founders sign up here. Investor access is by invitation.</p>
+    <AuthFrame title="Hisob yaratish">
+      <p className="muted">Asoschilar shu yerda ro'yxatdan o'tadi. Investorlar faqat taklif orqali kiradi.</p>
       <form onSubmit={submit}>
         <div className="field">
-          <label htmlFor="su-name">Full name</label>
+          <label htmlFor="su-name">To'liq ism</label>
           <input id="su-name" className="input" autoComplete="name" required placeholder="Dilshod Ergashev" />
         </div>
         <div className="field">
           <label htmlFor="su-email">Email</label>
-          <input id="su-email" className="input" type="email" autoComplete="email" required placeholder="you@example.com" />
+          <input id="su-email" className="input" type="email" autoComplete="email" required placeholder="siz@misol.uz" />
         </div>
         <div className="field">
-          <label htmlFor="su-password">Password</label>
+          <label htmlFor="su-password">Parol</label>
           <input id="su-password" className="input" type="password" autoComplete="new-password" required minLength={8} />
-          <p className="hint">At least 8 characters.</p>
+          <p className="hint">Kamida 8 ta belgi.</p>
         </div>
         <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-          Sign up
+          Ro'yxatdan o'tish
         </button>
       </form>
       <p className="demo-note" style={{ marginTop: 16 }}>
-        Demo: signing up logs you in as the demo founder, {FOUNDER_NAME}.
+        Demo: ro'yxatdan o'tsangiz, demo asoschi {FOUNDER_NAME} sifatida kirasiz.
       </p>
       <p className="faint" style={{ marginTop: 14 }}>
-        Already have an account? <Link to="/login">Log in</Link>
+        Hisobingiz bormi? <Link to="/login">Kirish</Link>
       </p>
     </AuthFrame>
   )
@@ -152,27 +154,28 @@ export function Reset() {
   }
 
   return (
-    <AuthFrame title="Reset your password">
+    <AuthFrame title="Parolni tiklash">
       {sent ? (
         <>
           <div className="sent-banner" role="status">
-            Reset link sent (simulated) — check your inbox.
+            Tiklash havolasi yuborildi (simulyatsiya) — pochtangizni tekshiring.
           </div>
           <p className="muted" style={{ marginTop: 14 }}>
-            In this demo no email is actually sent. <Link to="/login">Back to log in</Link>.
+            Bu demoda hech qanday email aslida yuborilmaydi.{' '}
+            <Link to="/login">Kirish sahifasiga qaytish</Link>.
           </p>
         </>
       ) : (
         <form onSubmit={submit}>
           <div className="field">
             <label htmlFor="rs-email">Email</label>
-            <input id="rs-email" className="input" type="email" autoComplete="email" required placeholder="you@example.com" />
+            <input id="rs-email" className="input" type="email" autoComplete="email" required placeholder="siz@misol.uz" />
           </div>
           <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-            Send reset link
+            Tiklash havolasini yuborish
           </button>
           <p className="faint" style={{ marginTop: 14 }}>
-            Remembered it? <Link to="/login">Log in</Link>
+            Esladingizmi? <Link to="/login">Kirish</Link>
           </p>
         </form>
       )}

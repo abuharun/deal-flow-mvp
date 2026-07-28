@@ -35,12 +35,12 @@ export default function Board() {
     <div>
       <div className="board-toolbar">
         <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Pipeline</h1>
-        <span className="faint num" aria-label={`Counts per stage: ${counts}`}>
+        <span className="faint num" aria-label={`Bosqichlar bo'yicha soni: ${counts}`}>
           {counts}
         </span>
         <span style={{ marginLeft: 'auto' }}>
           <Link to="/app/startups" className="btn btn-quiet btn-sm">
-            Search all startups →
+            Barcha startaplarni qidirish →
           </Link>
         </span>
       </div>
@@ -59,7 +59,7 @@ export default function Board() {
                 <span className="faint num">{cards.length}</span>
               </div>
               <div className="board-cards">
-                {cards.length === 0 && <p className="board-empty">Nothing here right now.</p>}
+                {cards.length === 0 && <p className="board-empty">Hozircha bu yer bo'sh.</p>}
                 {cards.map((s) => (
                   <button key={s.id} type="button" className="board-card" onClick={() => openCard(s)}>
                     <span className="name">
@@ -83,11 +83,11 @@ export default function Board() {
 
       <details className="passed-strip" open={highlighted === 'passed'}>
         <summary style={{ cursor: 'pointer', fontWeight: 620 }}>
-          Passed · <span className="num">{passed.length}</span>
+          Rad etilgan · <span className="num">{passed.length}</span>
           <span className="faint" style={{ fontWeight: 420 }}>
             {' '}
-            — collapsed to keep the board about active work; full history lives in{' '}
-            <Link to="/app/startups?stage=passed">Startups</Link>
+            — doska faol ishlar uchun qolishi maqsadida yig'ilgan; to'liq tarix{' '}
+            <Link to="/app/startups?stage=passed">Startaplar</Link> bo'limida
           </span>
         </summary>
         <div className="board-cards" style={{ marginTop: 10, maxWidth: 420 }}>
@@ -98,7 +98,7 @@ export default function Board() {
               <SignalTag signal={s.signal} overridden={s.signalOverridden} />
             </button>
           ))}
-          {passed.length === 0 && <p className="board-empty">No passed startups yet.</p>}
+          {passed.length === 0 && <p className="board-empty">Hozircha rad etilgan startaplar yo'q.</p>}
         </div>
       </details>
     </div>

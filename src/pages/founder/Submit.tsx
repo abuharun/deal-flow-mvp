@@ -8,9 +8,9 @@ import { StubTag } from '../../components/ui'
 import { DocIcon } from '../../components/icons'
 
 const SAMPLE_ATTACHMENTS: Attachment[] = [
-  { label: 'Pitch deck', kind: 'deck', fileName: 'my-pitch-deck.pdf' },
-  { label: 'Revenue proof', kind: 'revenue', fileName: 'bank-statement-export.xlsx' },
-  { label: 'Data-room link', kind: 'dataroom', fileName: 'drive.google.com/my-dataroom' },
+  { label: 'Pitch-dek', kind: 'deck', fileName: 'my-pitch-deck.pdf' },
+  { label: 'Daromad isboti', kind: 'revenue', fileName: 'bank-statement-export.xlsx' },
+  { label: 'Data room havolasi', kind: 'dataroom', fileName: 'drive.google.com/my-dataroom' },
 ]
 
 export default function Submit() {
@@ -48,8 +48,8 @@ function StepForm({ step }: { step: StepKey }) {
     if (!valid) {
       setError(
         step === 'problem' && !draft.startupName.trim()
-          ? 'Please add your startup name and answer the question before continuing.'
-          : 'Please answer this section before continuing — a blank section cannot be reviewed.',
+          ? "Davom etishdan oldin startap nomini kiriting va savolga javob bering."
+          : "Davom etishdan oldin bu bo'limga javob bering — bo'sh bo'limni ko'rib chiqib bo'lmaydi.",
       )
       return
     }
@@ -63,7 +63,7 @@ function StepForm({ step }: { step: StepKey }) {
 
   return (
     <div>
-      <nav aria-label="Submission progress">
+      <nav aria-label="Topshirish bosqichlari">
         <ol className="stepper">
           {STEP_KEYS.map((k) => {
             const done = draft.completed.includes(k)
@@ -84,7 +84,7 @@ function StepForm({ step }: { step: StepKey }) {
       </nav>
 
       <p className="faint" style={{ margin: '0 0 4px' }}>
-        Step {stepIndex + 1} of {STEP_KEYS.length}
+        {STEP_KEYS.length} bosqichdan {stepIndex + 1}-si
       </p>
       <h1 ref={headingRef} tabIndex={-1} style={{ fontSize: '1.6rem', outline: 'none' }}>
         {meta.question}
@@ -102,45 +102,45 @@ function StepForm({ step }: { step: StepKey }) {
         {step === 'problem' && (
           <>
             <div className="field">
-              <label htmlFor="f-name">Startup name</label>
+              <label htmlFor="f-name">Startap nomi</label>
               <input
                 id="f-name"
                 className="input"
                 value={draft.startupName}
                 onChange={(e) => updateDraft({ startupName: e.target.value })}
-                placeholder="e.g. Xarid"
+                placeholder="Masalan: Xarid"
                 autoComplete="organization"
               />
             </div>
             <div className="field">
-              <label htmlFor="f-oneliner">One-line description</label>
+              <label htmlFor="f-oneliner">Bir qatorli tavsif</label>
               <input
                 id="f-oneliner"
                 className="input"
                 value={draft.oneLiner}
                 onChange={(e) => updateDraft({ oneLiner: e.target.value })}
-                placeholder="e.g. B2B procurement marketplace for restaurants"
+                placeholder="Masalan: Restoranlar uchun B2B ta'minot marketpleysi"
               />
             </div>
             <div className="field">
-              <label htmlFor="f-sector">Sector</label>
+              <label htmlFor="f-sector">Soha</label>
               <input
                 id="f-sector"
                 className="input"
                 value={draft.sector}
                 onChange={(e) => updateDraft({ sector: e.target.value })}
-                placeholder="e.g. Fintech, Logistics, EdTech"
+                placeholder="Masalan: Fintech, Logistika, EdTech"
               />
             </div>
             <div className="field">
-              <label htmlFor="f-stage">Funding stage</label>
+              <label htmlFor="f-stage">Moliyalash bosqichi</label>
               <select
                 id="f-stage"
                 className="select"
                 value={draft.fundingStage}
                 onChange={(e) => updateDraft({ fundingStage: e.target.value })}
               >
-                <option value="">Choose…</option>
+                <option value="">Tanlang…</option>
                 <option>Pre-seed</option>
                 <option>Seed</option>
                 <option>Series A</option>
@@ -172,23 +172,23 @@ function StepForm({ step }: { step: StepKey }) {
         {step === 'traction' && (
           <>
             <div className="field">
-              <label htmlFor="f-revenue">Monthly revenue (if any)</label>
+              <label htmlFor="f-revenue">Oylik daromad (bo'lsa)</label>
               <input
                 id="f-revenue"
                 className="input"
                 value={draft.revenue}
                 onChange={(e) => updateDraft({ revenue: e.target.value })}
-                placeholder="e.g. $24,700 / month — or “pre-revenue”"
+                placeholder="Masalan: oyiga $24 700 — yoki «hali daromadsiz»"
               />
             </div>
             <div className="field">
-              <label htmlFor="f-growth">Growth</label>
+              <label htmlFor="f-growth">O'sish</label>
               <input
                 id="f-growth"
                 className="input"
                 value={draft.growth}
                 onChange={(e) => updateDraft({ growth: e.target.value })}
-                placeholder="e.g. +18% month over month"
+                placeholder="Masalan: oyiga +18%"
               />
             </div>
           </>
@@ -197,18 +197,18 @@ function StepForm({ step }: { step: StepKey }) {
         {step === 'ask' && (
           <>
             <div className="field">
-              <label htmlFor="f-ask">Raise amount, in short</label>
+              <label htmlFor="f-ask">Jalb qilinayotgan summa, qisqacha</label>
               <input
                 id="f-ask"
                 className="input"
                 value={draft.ask}
                 onChange={(e) => updateDraft({ ask: e.target.value })}
-                placeholder="e.g. $500k seed"
+                placeholder="Masalan: $500k seed"
               />
             </div>
             <fieldset style={{ border: 'none', padding: 0, margin: '0 0 18px' }}>
               <legend style={{ fontWeight: 580, fontSize: '0.92rem', padding: 0, marginBottom: 6 }}>
-                Attachments <StubTag>Demo upload — files aren't stored</StubTag>
+                Ilovalar <StubTag>Demo yuklash — fayllar saqlanmaydi</StubTag>
               </legend>
               {draft.attachments.length > 0 && (
                 <ul className="attach-list" style={{ marginBottom: 10 }}>
@@ -223,9 +223,9 @@ function StepForm({ step }: { step: StepKey }) {
                         className="btn btn-quiet btn-sm"
                         style={{ marginLeft: 'auto' }}
                         onClick={() => removeDraftAttachment(a.fileName)}
-                        aria-label={`Remove ${a.label}`}
+                        aria-label={`${a.label} faylini olib tashlash`}
                       >
-                        Remove
+                        Olib tashlash
                       </button>
                     </li>
                   ))}
@@ -241,7 +241,7 @@ function StepForm({ step }: { step: StepKey }) {
                     className="btn btn-secondary btn-sm"
                     onClick={() => addDraftAttachment(s)}
                   >
-                    + Attach {s.label.toLowerCase()}
+                    + {s.label} biriktirish
                   </button>
                 ))}
               </div>
@@ -251,22 +251,22 @@ function StepForm({ step }: { step: StepKey }) {
 
         <div aria-live="polite" className="autosave-note">
           {draft.updatedAt
-            ? 'Saved on this device — you can leave and come back anytime.'
-            : 'Your answers save automatically as you type.'}
+            ? "Shu qurilmada saqlandi — istalgan payt chiqib, keyin qaytishingiz mumkin."
+            : 'Javoblaringiz yozganingiz sari avtomatik saqlanadi.'}
         </div>
 
         <div className="step-actions">
           {stepIndex > 0 ? (
             <Link to={`/apply/submit?step=${STEP_KEYS[stepIndex - 1]}`} className="btn btn-secondary">
-              Back
+              Orqaga
             </Link>
           ) : (
             <Link to="/apply" className="btn btn-quiet">
-              Save &amp; exit
+              Saqlash va chiqish
             </Link>
           )}
           <button type="submit" className="btn btn-primary">
-            {stepIndex === STEP_KEYS.length - 1 ? 'Continue to payment' : 'Continue'}
+            {stepIndex === STEP_KEYS.length - 1 ? "To'lovga o'tish" : 'Davom etish'}
           </button>
         </div>
       </form>

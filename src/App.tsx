@@ -17,10 +17,10 @@ function NotFound() {
   return (
     <div className="auth-wrap">
       <div className="card" style={{ textAlign: 'center', maxWidth: 380 }}>
-        <h1 style={{ fontSize: '1.4rem' }}>Page not found</h1>
-        <p className="muted">That link doesn't go anywhere.</p>
+        <h1 style={{ fontSize: '1.4rem' }}>Sahifa topilmadi</h1>
+        <p className="muted">Bu havola hech qayerga olib bormaydi.</p>
         <Link to="/" className="btn btn-primary">
-          Back to the start
+          Bosh sahifaga qaytish
         </Link>
       </div>
     </div>

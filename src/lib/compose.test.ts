@@ -11,11 +11,18 @@ const BASE: ComposeInput = {
   dateLabel: '8 July 2026',
 }
 
+const BASE_UZ_NOTES =
+  "jalb etilganlik zaif\njamoada sotuv rahbari yo'q\nagar tijorat rahbarini yollashsa qayta ko'raman"
+
 describe('polishLine', () => {
   it('expands shorthand, capitalizes, and punctuates', () => {
     expect(polishLine('- rev is real w/ receipts')).toBe('Revenue is real with receipts.')
     expect(polishLine('imo mkt is small')).toBe('In our view market is small.')
     expect(polishLine('cant scale b/c ops')).toBe("Can't scale because ops.")
+  })
+
+  it('capitalizes and punctuates Uzbek notes untouched by shorthand', () => {
+    expect(polishLine('daromad haqiqiy, isbot bor')).toBe('Daromad haqiqiy, isbot bor.')
   })
 
   it('keeps existing terminal punctuation', () => {
@@ -33,6 +40,13 @@ describe('polishNotes', () => {
     expect(reasons).toHaveLength(2)
     expect(changers).toHaveLength(1)
     expect(changers[0]).toMatch(/^If they hire a commercial lead/)
+  })
+
+  it('routes Uzbek "agar …" lines to the changers section', () => {
+    const { reasons, changers } = polishNotes(BASE_UZ_NOTES)
+    expect(reasons).toHaveLength(2)
+    expect(changers).toHaveLength(1)
+    expect(changers[0]).toMatch(/^Agar tijorat rahbarini yollashsa/)
   })
 
   it('splits a single multi-sentence line into sentences', () => {
@@ -63,11 +77,22 @@ describe('composeVerdict', () => {
   })
 
   it('renders the frame in the founder language', () => {
-    const uz = composeVerdict({ ...BASE, lang: 'uz' })
+    const uz = composeVerdict({ ...BASE, notes: BASE_UZ_NOTES, lang: 'uz' })
     expect(uz).toContain('Hurmatli Otabek Nazarov,')
     expect(uz).toContain('Sabablarimiz:')
+    expect(uz).toContain("Javobimizni nima o'zgartirishi mumkin:")
+    expect(uz).toContain("— Agar tijorat rahbarini yollashsa qayta ko'raman.")
     const ru = composeVerdict({ ...BASE, lang: 'ru' })
     expect(ru).toContain('Уважаемый(ая) Otabek Nazarov,')
+  })
+
+  it('keeps the Uzbek letter free of the demo note, which lives in en/ru instead', () => {
+    const uz = composeVerdict({ ...BASE, notes: BASE_UZ_NOTES, lang: 'uz' })
+    expect(uz).not.toContain('Demo')
+    const en = composeVerdict({ ...BASE, notes: BASE_UZ_NOTES, lang: 'en' })
+    expect(en).toContain('(Demo note:')
+    const ru = composeVerdict({ ...BASE, notes: BASE_UZ_NOTES, lang: 'ru' })
+    expect(ru).toContain('(Примечание демо:')
   })
 
   it('adds next steps for advance, and a resubmission path for pass', () => {

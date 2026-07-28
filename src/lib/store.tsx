@@ -18,7 +18,12 @@ import { summarizeDraft, recommendFromDraft, opaqueId } from './simulate'
 import { composeVerdict } from './compose'
 import { formatDateLong, DECISION_STAGE } from './format'
 
-const STORAGE_KEY = 'oqim:v1'
+/**
+ * v2 = Uzbek-localized seed content. Bumping the key retires stale English
+ * state persisted by earlier deploys; loadState migrates only the session.
+ */
+const STORAGE_KEY = 'oqim:v2'
+const LEGACY_STORAGE_KEYS = ['oqim:v1']
 
 export function emptyDraft(): SubmissionDraft {
   const fields = {} as Record<StepKey, string>
@@ -51,10 +56,24 @@ export function initialState(): AppState {
 export function loadState(): AppState {
   try {
     const rawJson = localStorage.getItem(STORAGE_KEY)
-    if (!rawJson) return initialState()
-    const parsed = JSON.parse(rawJson) as AppState
-    if (!Array.isArray(parsed.startups) || !parsed.draft) return initialState()
-    return parsed
+    if (rawJson) {
+      const parsed = JSON.parse(rawJson) as AppState
+      if (!Array.isArray(parsed.startups) || !parsed.draft) return initialState()
+      return parsed
+    }
+    // Older schema found: keep the user logged in, replace the stale English
+    // content with the current (Uzbek) seed, and retire the old key.
+    for (const key of LEGACY_STORAGE_KEYS) {
+      const legacyJson = localStorage.getItem(key)
+      if (!legacyJson) continue
+      localStorage.removeItem(key)
+      const legacy = JSON.parse(legacyJson) as Partial<AppState>
+      const role = legacy?.session?.role
+      if (legacy.session && (role === 'founder' || role === 'vc')) {
+        return { ...initialState(), session: legacy.session }
+      }
+    }
+    return initialState()
   } catch {
     return initialState()
   }
@@ -82,11 +101,11 @@ export function startupFromDraft(draft: SubmissionDraft, submittedAt: string): S
   const recommendation = recommendFromDraft(draft)
   return {
     id: opaqueId(`founder-${draft.startupName.toLowerCase() || 'untitled'}`),
-    name: draft.startupName || 'Untitled startup',
-    oneLiner: draft.oneLiner || 'No one-liner provided',
-    sector: draft.sector || 'Unspecified',
-    fundingStage: draft.fundingStage || 'Unspecified',
-    founder: { name: FOUNDER_NAME, email: FOUNDER_EMAIL, city: 'Tashkent', language: 'uz' },
+    name: draft.startupName || 'Nomsiz startap',
+    oneLiner: draft.oneLiner || 'Bir qatorli tavsif kiritilmagan',
+    sector: draft.sector || "Ko'rsatilmagan",
+    fundingStage: draft.fundingStage || "Ko'rsatilmagan",
+    founder: { name: FOUNDER_NAME, email: FOUNDER_EMAIL, city: 'Toshkent', language: 'uz' },
     submittedAt,
     stage: 'new',
     signal: recommendation.signal,
@@ -94,9 +113,9 @@ export function startupFromDraft(draft: SubmissionDraft, submittedAt: string): S
     summary: summarizeDraft(draft),
     raw: { ...draft.fields },
     metrics: {
-      revenue: draft.revenue || 'Not stated',
-      growth: draft.growth || 'Not stated',
-      ask: draft.ask.split(/[.\n]/)[0]?.trim() || 'Not stated',
+      revenue: draft.revenue || "Ko'rsatilmagan",
+      growth: draft.growth || "Ko'rsatilmagan",
+      ask: draft.ask.split(/[.\n]/)[0]?.trim() || "Ko'rsatilmagan",
     },
     recommendation,
     attachments: draft.attachments,
@@ -137,7 +156,7 @@ export function reducer(state: AppState, action: Action): AppState {
     case 'payment': {
       const payment: Payment = {
         id: `pay_${state.payments.length + 1}`,
-        label: `Validation fee — ${state.draft.startupName || 'submission'}`,
+        label: `Baholash to'lovi — ${state.draft.startupName || 'ariza'}`,
         amount: VALIDATION_FEE,
         status: action.ok ? 'paid' : 'failed',
         date: new Date().toISOString(),

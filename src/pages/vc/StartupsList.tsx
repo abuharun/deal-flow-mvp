@@ -57,26 +57,26 @@ export default function StartupsList() {
 
   return (
     <div>
-      <h1 style={{ fontSize: '1.5rem' }}>Startups</h1>
+      <h1 style={{ fontSize: '1.5rem' }}>Startaplar</h1>
       <p className="muted" style={{ marginTop: -6 }}>
-        The durable archive — every submission ever, searchable. The board is for acting; this is for
-        finding.
+        Doimiy arxiv — barcha topshirilgan arizalar, qidiruv bilan. Doska harakat uchun; bu yer topish
+        uchun.
       </p>
 
       <div className="list-toolbar" role="search">
         <input
           type="search"
           className="input search"
-          placeholder="Search name, summary, sector, founder…"
-          aria-label="Search startups"
+          placeholder="Nomi, xulosasi, sohasi, asoschisi bo'yicha qidiring…"
+          aria-label="Startaplarni qidirish"
           value={q}
           onChange={(e) => setParam('q', e.target.value)}
         />
         <label className="visually-hidden" htmlFor="filter-stage">
-          Filter by stage
+          Bosqich bo'yicha saralash
         </label>
         <select id="filter-stage" className="select" value={stage} onChange={(e) => setParam('stage', e.target.value)}>
-          <option value="">All stages</option>
+          <option value="">Barcha bosqichlar</option>
           {STAGE_ORDER.map((st) => (
             <option key={st} value={st}>
               {STAGE_LABEL[st]}
@@ -84,44 +84,44 @@ export default function StartupsList() {
           ))}
         </select>
         <label className="visually-hidden" htmlFor="filter-signal">
-          Filter by signal
+          Signal bo'yicha saralash
         </label>
         <select id="filter-signal" className="select" value={signal} onChange={(e) => setParam('signal', e.target.value)}>
-          <option value="">All signals</option>
-          <option value="high">High signal</option>
-          <option value="medium">Medium signal</option>
-          <option value="low">Low signal</option>
+          <option value="">Barcha signallar</option>
+          <option value="high">Kuchli signal</option>
+          <option value="medium">O'rtacha signal</option>
+          <option value="low">Past signal</option>
         </select>
         <label className="visually-hidden" htmlFor="filter-outcome">
-          Filter by outcome
+          Natija bo'yicha saralash
         </label>
         <select id="filter-outcome" className="select" value={outcome} onChange={(e) => setParam('outcome', e.target.value)}>
-          <option value="">All outcomes</option>
-          <option value="recommend">Recommended</option>
-          <option value="advance">Advanced to US</option>
-          <option value="pass">Passed</option>
-          <option value="undecided">Undecided</option>
+          <option value="">Barcha natijalar</option>
+          <option value="recommend">Tavsiya etilgan</option>
+          <option value="advance">AQShga yo'llangan</option>
+          <option value="pass">Rad etilgan</option>
+          <option value="undecided">Qaror qilinmagan</option>
         </select>
         <label className="visually-hidden" htmlFor="sort-by">
-          Sort
+          Tartiblash
         </label>
         <select id="sort-by" className="select" value={sort} onChange={(e) => setParam('sort', e.target.value)}>
-          <option value="recent">Newest first</option>
-          <option value="oldest">Oldest first</option>
-          <option value="signal">By signal</option>
-          <option value="name">By name</option>
+          <option value="recent">Avval yangilari</option>
+          <option value="oldest">Avval eskilari</option>
+          <option value="signal">Signal bo'yicha</option>
+          <option value="name">Nomi bo'yicha</option>
         </select>
       </div>
 
       <p className="faint" aria-live="polite">
-        {rows.length} {rows.length === 1 ? 'startup' : 'startups'}
+        {rows.length} ta startap
       </p>
 
       {rows.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: 40 }}>
-          <h2 style={{ fontSize: '1.1rem' }}>Nothing matches</h2>
+          <h2 style={{ fontSize: '1.1rem' }}>Hech narsa topilmadi</h2>
           <p className="muted" style={{ margin: 0 }}>
-            Try fewer filters, or a broader search term.
+            Filtrlarni kamaytirib yoki kengroq qidiruv so'zi bilan urinib ko'ring.
           </p>
         </div>
       ) : (
@@ -129,12 +129,12 @@ export default function StartupsList() {
           <table className="startup-table">
             <thead>
               <tr>
-                <th scope="col">Startup</th>
+                <th scope="col">Startap</th>
                 <th scope="col">Signal</th>
-                <th scope="col">Stage</th>
-                <th scope="col">Submitted</th>
-                <th scope="col">Revenue</th>
-                <th scope="col">Outcome</th>
+                <th scope="col">Bosqich</th>
+                <th scope="col">Topshirilgan</th>
+                <th scope="col">Daromad</th>
+                <th scope="col">Natija</th>
               </tr>
             </thead>
             <tbody>

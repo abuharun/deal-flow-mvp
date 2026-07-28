@@ -24,14 +24,14 @@ export default function Letter() {
     <div className="letter-page">
       <div className="no-print" style={{ display: 'flex', justifyContent: 'space-between', gap: 12, marginBottom: 18, flexWrap: 'wrap' }}>
         <Link to="/apply/verdict" className="btn btn-secondary btn-sm">
-          ← Back to verdict
+          ← Xulosaga qaytish
         </Link>
         <button type="button" className="btn btn-primary btn-sm" onClick={() => window.print()}>
-          Download PDF (via print)
+          PDF yuklab olish (chop etish orqali)
         </button>
       </div>
 
-      <article className="letter-sheet" lang={lang} aria-label="Official verdict letter">
+      <article className="letter-sheet" lang={lang} aria-label="Rasmiy xulosa xati">
         <div className="letter-brand">
           <span className="wordmark" style={{ fontSize: '1.2rem' }}>
             <span className="mark-wave" aria-hidden="true">
@@ -39,13 +39,13 @@ export default function Letter() {
             </span>
             oqim
           </span>
-          <span className="faint">Official verdict letter · {formatDateLong(verdict.sentAt!)}</span>
+          <span className="faint">Rasmiy xulosa xati · {formatDateLong(verdict.sentAt!)}</span>
         </div>
         <div className="letter-body">{text}</div>
         <hr className="divider" />
         <p className="faint">
-          Ref {founderStartup.id} · This letter records the decision of the reviewing partner on the
-          submission of {founderStartup.name}. Issued by Oqim, Tashkent.
+          Raqam: {founderStartup.id} · Ushbu xat ko'rib chiquvchi hamkorning {founderStartup.name}{' '}
+          startapi bo'yicha qarorini qayd etadi. Oqim tomonidan Toshkentda berilgan.
         </p>
       </article>
     </div>

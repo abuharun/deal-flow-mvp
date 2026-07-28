@@ -10,7 +10,7 @@ import { STEP_KEYS } from './types'
 /** Take the first ~2 sentences of a raw field, capped for card display. */
 export function summarizeField(raw: string, cap = 260): string {
   const text = raw.trim().replace(/\s+/g, ' ')
-  if (!text) return 'Not provided by the founder.'
+  if (!text) return "Asoschi tomonidan to'ldirilmagan."
   const sentences = text.split(/(?<=[.!?])\s+/)
   let out = sentences.slice(0, 2).join(' ')
   if (out.length > cap) out = out.slice(0, cap - 1).trimEnd() + '…'
@@ -23,8 +23,37 @@ export function summarizeDraft(draft: SubmissionDraft): Record<StepKey, string> 
   return summary
 }
 
-const POSITIVE = [/paying/i, /revenue/i, /customers?/i, /grow(th|ing)/i, /contract/i, /retention/i, /profit/i]
-const NEGATIVE = [/no revenue/i, /pre-?revenue/i, /idea stage/i, /not launched/i, /no users/i, /prototype only/i]
+// Uzbek and English keywords both count — founders paste from either language.
+const POSITIVE = [
+  /paying/i,
+  /revenue/i,
+  /customers?/i,
+  /grow(th|ing)/i,
+  /contract/i,
+  /retention/i,
+  /profit/i,
+  /daromad/i,
+  /mijoz/i,
+  /o['ʻ’]s(ish|moqda|ib)/i,
+  /shartnoma/i,
+  /foyda/i,
+  /to['ʻ’]lovchi/i,
+]
+const NEGATIVE = [
+  /no revenue/i,
+  /pre-?revenue/i,
+  /idea stage/i,
+  /not launched/i,
+  /no users/i,
+  /prototype only/i,
+  /daromad(imiz)? yo['ʻ’]q/i,
+  /hali daromad/i,
+  /daromadsiz/i,
+  /g['ʻ’]oya bosqichi/i,
+  /ishga tushmagan/i,
+  /foydalanuvchi yo['ʻ’]q/i,
+  /faqat prototip/i,
+]
 
 /** Rule-based readiness read. Ranks attention; it is guidance, never a verdict. */
 export function recommendFromDraft(draft: SubmissionDraft): Recommendation {
@@ -36,22 +65,22 @@ export function recommendFromDraft(draft: SubmissionDraft): Recommendation {
 
   const signal: Signal = score >= 4 ? 'high' : score >= 1 ? 'medium' : 'low'
   const headlines: Record<Signal, string> = {
-    high: 'Worth a close look soon',
-    medium: 'Promising, with open questions',
-    low: 'Likely early for this pipeline',
+    high: "Tez orada sinchiklab ko'rishga arziydi",
+    medium: 'Istiqbolli, ammo ochiq savollar bor',
+    low: "Bu pipeline uchun hali erta ko'rinadi",
   }
   const rationale: string[] = []
   rationale.push(
-    /revenue|paying/i.test(all)
-      ? 'The founder reports commercial traction; verify the revenue claim against proof.'
-      : 'No commercial traction is reported yet; the case rests on the market and the team.',
+    /revenue|paying|daromad|mijoz/i.test(all)
+      ? "Asoschi tijoriy natijalar haqida yozgan; daromad da'vosini isbot bilan solishtiring."
+      : "Hali tijoriy natija ko'rsatilmagan; asosiy tayanch — bozor va jamoa.",
   )
   rationale.push(
     draft.fields.team.trim().length > 120
-      ? 'The team section is substantive — check references during verification.'
-      : 'The team section is thin; ask who builds and who sells.',
+      ? "Jamoa bo'limi mazmunli yozilgan — tekshiruv bosqichida tavsiyalarni tekshiring."
+      : "Jamoa bo'limi juda qisqa; kim qurishini va kim sotishini so'rang.",
   )
-  rationale.push('This is a starting point for your review, not an assessment of the business itself.')
+  rationale.push("Bu ko'rib chiqishingiz uchun boshlang'ich nuqta — biznesning o'ziga berilgan baho emas.")
   return { signal, headline: headlines[signal], rationale }
 }
 

@@ -6,11 +6,15 @@ validation; simulated AI standardizes the submission and suggests a priority; a 
 reviews, verifies, decides, and sends a truthful, warmly-worded verdict in the founder's own
 language. **The AI drafts; the human is always the author of record.**
 
+**The interface is entirely in Uzbek (Latin script)** — the product's home market. Verdict letters
+are additionally readable in Russian and English, and the official English original of every verdict
+is preserved as the editable source of truth.
+
 This repository is a **complete, deployable frontend MVP** built from
 [`docs/DESIGN_BRIEF.md`](docs/DESIGN_BRIEF.md) and
 [`docs/INFORMATION_ARCHITECTURE.md`](docs/INFORMATION_ARCHITECTURE.md). There is no backend: all
-data is realistic seeded mock data, persisted to `localStorage`, so the full founder → VC → verdict
-loop is playable end-to-end in one browser.
+data is realistic seeded mock data (in Uzbek), persisted to `localStorage`, so the full
+founder → VC → verdict loop is playable end-to-end in one browser.
 
 ## Quick start
 
@@ -32,16 +36,17 @@ chooser; the email decides the role if you use the form:
 
 | Role | Demo identity | Email | Lands on |
 |------|---------------|-------|----------|
-| Founder | Dilshod Ergashev | `dilshod@oqim.demo` (any non-VC email works) | `/apply` — My Startup |
-| VC partner | Laylo Mirzaeva | `laylo@oqim.demo` | `/app` — Pipeline board |
+| Founder (Asoschi) | Dilshod Ergashev | `dilshod@oqim.demo` (any non-VC email works) | `/apply` — Mening startapim |
+| VC partner (Venchur hamkori) | Laylo Mirzaeva | `laylo@oqim.demo` | `/app` — Pipeline board |
 
 **The full loop, playable:** log in as the founder → submit the six-step form → pay the (stubbed)
-validation fee → your startup enters the VC pipeline as *New*. Log out, log in as the VC → open the
-card → verify, decide, write rough notes → *Compose verdict* → edit the draft → *Send*. Log back in
-as the founder → the verdict is waiting, in Uzbek/Russian/English, with a printable official letter.
+validation fee (*baholash to'lovi*) → your startup enters the VC pipeline as *Yangi* (New). Log out,
+log in as the VC → open the card → verify, decide, write rough notes → *Xulosa tayyorlash* (Compose
+verdict) → edit the draft → *Xulosani yuborish* (Send). Log back in as the founder → the verdict is
+waiting, in Uzbek/Russian/English, with a printable official letter.
 
-State is shared through `localStorage`; “Reset demo data” (in founder Account or VC Settings)
-restores the seeded pipeline.
+State is shared through `localStorage`; “Demo ma'lumotlarini qayta o'rnatish” (Reset demo data, in
+founder Hisob or VC Sozlamalar) restores the seeded pipeline.
 
 ## Routes
 
@@ -56,9 +61,9 @@ Founder (`/apply`, mobile-first, nearly nav-free):
 - `/apply/account` — profile, billing history, demo reset
 
 VC (`/app`, desktop-first, bottom tabs on mobile):
-- `/app` — Kanban pipeline (New / In Review / Recommended / Advanced; Passed collapsed behind a count); signal-sorted columns, per-stage counts; opening a New card moves it to In Review; `?stage=` deep-links a column
+- `/app` — Kanban pipeline (Yangi / Ko'rib chiqilmoqda / Tavsiya etilgan / AQShga yo'llangan; Rad etilgan collapsed behind a count); signal-sorted columns, per-stage counts; opening a New card moves it to In Review; `?stage=` deep-links a column
 - `/app/startups` — the searchable archive: full-text search plus stage / signal / outcome filters and sorting, all URL-synced (`?q=&stage=&signal=&outcome=&sort=`)
-- `/app/startups/:id` — deal report: AI summary **beside** raw founder inputs, recommendation framed as guidance, signal re-tagging, verification checklist, decision bar (Recommend / Pass / Advance-to-US), rough notes, verdict composer with inline editing and an explicit two-step **Send**
+- `/app/startups/:id` — deal report: AI summary **beside** raw founder inputs, recommendation framed as guidance, signal re-tagging, verification checklist, decision bar (Tavsiya qilish / Rad etish / AQShga yo'llash), rough notes, verdict composer with inline editing and an explicit two-step **Send**
 - `/app/settings` — profile, letter signature and notification stubs, demo reset
 
 ## Architecture
@@ -71,12 +76,12 @@ warmth).
 src/
   lib/
     types.ts       Domain model — Startup is the one core object everywhere
-    seed.ts        11 realistic seeded startups across all pipeline stages
-    store.tsx      React context + reducer, persisted to localStorage (key oqim:v1)
+    seed.ts        11 realistic seeded startups (Uzbek content) across all pipeline stages
+    store.tsx      React context + reducer, persisted to localStorage (key oqim:v2)
     compose.ts     Deterministic verdict composer: rough notes → polished letter (en/uz/ru)
     simulate.ts    Deterministic "AI": summary standardization + rule-based recommendation
     verdictText.ts Language resolution for verdict rendering
-    format.ts      Labels, orderings, date helpers
+    format.ts      Labels, orderings, date helpers (uz-Latn-UZ dates)
   components/      Shells (role chrome + auth guard), signal tag, icons, toast
   pages/           One file per route (founder/, vc/, auth, landing)
   test/            Vitest setup + app-level integration tests
@@ -87,25 +92,31 @@ Design decisions worth knowing:
 - **Deterministic AI stand-ins.** `compose.ts` and `simulate.ts` are pure functions, so the same
   notes always produce the same letter — reproducible demos and testable behavior. Production would
   swap in a real model behind the same contract (notes in, reviewable draft out, nothing auto-sends).
+- **Storage schema versioning.** The `localStorage` key is `oqim:v2` (v2 = Uzbek-localized seed
+  content). On first load, `loadState` migrates an existing `oqim:v1` entry by keeping only the
+  session, reseeding the content in Uzbek, and removing the old key — deployed users upgrade
+  seamlessly instead of seeing stale English data.
 - **Signal is never color alone.** The green/yellow/red system always renders color + distinct icon
   + text label (`SignalTag`), per the accessibility requirement.
 - **Honest stubs.** Every simulated boundary (payment, uploads, translations, notifications) is
   visibly labeled in the UI rather than faked silently.
-- **Accessibility**: semantic landmarks, labeled controls, visible focus states, skip links, focus
-  management on form-step changes, `aria-live` for autosave/counts, reduced-motion support,
-  WCAG-AA-checked palette.
+- **Accessibility**: semantic landmarks, labeled controls (all in Uzbek), visible focus states, skip
+  links, focus management on form-step changes, `aria-live` for autosave/counts, reduced-motion
+  support, WCAG-AA-checked palette. The document `lang` is `uz`; verdict letters set `lang`
+  per language.
 
 ## Tests
 
 `npm test` runs Vitest (jsdom + Testing Library):
 
-- `compose.test.ts` — shorthand polishing, "if …" routing to *what would change our answer*,
-  letter structure per decision/language, determinism
-- `simulate.test.ts` — summarization and recommendation rules
-- `store.test.ts` — reducer: payment gate, verification, compose→edit→send stage moves, reset, persistence
+- `compose.test.ts` — shorthand polishing, "if …" / "agar …" routing to *what would change our
+  answer*, letter structure per decision/language, determinism
+- `simulate.test.ts` — summarization and recommendation rules (Uzbek and English keywords)
+- `store.test.ts` — reducer: payment gate, verification, compose→edit→send stage moves, reset,
+  persistence, and the v1 → v2 storage migration
 - `ui.test.tsx` — signal tag renders label + icon + color, never color alone
 - `app.test.tsx` — integration: routing guards, demo login, founder submission autosave, and the
-  full VC review → compose → edit → send loop
+  full VC review → compose → edit → send loop, all against the Uzbek UI
 
 ## Deployment (GitHub Pages)
 
@@ -133,6 +144,7 @@ Design decisions worth knowing:
 - Payment is a stub — no gateway is called, no card data leaves the page.
 - File uploads are simulated (names only); attachments aren't downloadable.
 - The verdict letter "PDF" uses the browser's print-to-PDF.
-- Verdict translations are deterministic templates: the letter frame is genuinely localized (uz/ru),
-  while notes-derived reasons remain in English with a visible demo note.
-- Out of scope per the brief: real AI quality, multi-VC tenancy, CRM depth, full interface localization.
+- Verdict translations are deterministic templates: the letter frame is genuinely localized
+  (uz/ru/en), while notes-derived reasons stay in the language of the partner's notes (Uzbek in the
+  demo), with a visible demo note in the English and Russian letters.
+- Out of scope per the brief: real AI quality, multi-VC tenancy, CRM depth.

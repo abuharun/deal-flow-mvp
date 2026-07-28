@@ -13,15 +13,15 @@ export default function FounderAccount() {
 
   return (
     <div>
-      <h1 style={{ fontSize: '1.6rem' }}>Account</h1>
+      <h1 style={{ fontSize: '1.6rem' }}>Hisob</h1>
 
       <section className="card section-block" aria-labelledby="profile-heading">
         <h2 id="profile-heading" style={{ fontSize: '1.05rem' }}>
-          Profile
+          Profil
         </h2>
         <dl style={{ margin: 0, display: 'grid', gap: 8 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-            <dt className="muted">Name</dt>
+            <dt className="muted">Ism</dt>
             <dd style={{ margin: 0, fontWeight: 580 }}>{state.session?.name}</dd>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
@@ -29,8 +29,8 @@ export default function FounderAccount() {
             <dd style={{ margin: 0 }}>{state.session?.email}</dd>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
-            <dt className="muted">Preferred language</dt>
-            <dd style={{ margin: 0 }}>O'zbekcha (verdicts arrive in your language)</dd>
+            <dt className="muted">Afzal til</dt>
+            <dd style={{ margin: 0 }}>O'zbekcha (xulosalar o'z tilingizda keladi)</dd>
           </div>
         </dl>
       </section>
@@ -38,13 +38,13 @@ export default function FounderAccount() {
       <section className="card section-block" aria-labelledby="billing-heading">
         <div className="panel-title">
           <h2 id="billing-heading" style={{ fontSize: '1.05rem', margin: 0 }}>
-            Billing history
+            To'lovlar tarixi
           </h2>
-          <StubTag>Simulated payments</StubTag>
+          <StubTag>Simulyatsiya qilingan to'lovlar</StubTag>
         </div>
         {state.payments.length === 0 ? (
           <p className="muted" style={{ margin: 0 }}>
-            No payments yet. The validation fee appears here once you complete a submission.
+            Hozircha to'lovlar yo'q. Topshirishni yakunlaganingizda baholash to'lovi shu yerda ko'rinadi.
           </p>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: 8 }}>
@@ -60,7 +60,7 @@ export default function FounderAccount() {
                   </span>
                 </span>
                 <span className="num" style={{ color: p.status === 'failed' ? 'var(--red-ink)' : undefined }}>
-                  {p.amount} {p.status === 'failed' ? '· declined' : '· paid'}
+                  {p.amount} {p.status === 'failed' ? '· rad etilgan' : "· to'langan"}
                 </span>
               </li>
             ))}
@@ -70,11 +70,11 @@ export default function FounderAccount() {
 
       <section className="card section-block" aria-labelledby="demo-heading">
         <h2 id="demo-heading" style={{ fontSize: '1.05rem' }}>
-          Demo controls
+          Demo boshqaruvi
         </h2>
         <p className="muted">
-          Reset returns the whole demo — your submission, payments, and the VC pipeline — to its seeded
-          starting point.
+          Qayta o'rnatish butun demoni — topshirgan startapingiz, to'lovlaringiz va investor pipeline'ini — dastlabki
+          namunaviy holatiga qaytaradi.
         </p>
         {confirmReset ? (
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
@@ -84,18 +84,18 @@ export default function FounderAccount() {
               onClick={() => {
                 resetDemo()
                 setConfirmReset(false)
-                toast('Demo data reset to the seeded state.')
+                toast("Demo ma'lumotlari dastlabki holatiga qaytarildi.")
               }}
             >
-              Yes, reset everything
+              Ha, hammasini qayta o'rnatish
             </button>
             <button type="button" className="btn btn-secondary" onClick={() => setConfirmReset(false)}>
-              Cancel
+              Bekor qilish
             </button>
           </div>
         ) : (
           <button type="button" className="btn btn-secondary" onClick={() => setConfirmReset(true)}>
-            Reset demo data
+            Demo ma'lumotlarini qayta o'rnatish
           </button>
         )}
       </section>
@@ -108,7 +108,7 @@ export default function FounderAccount() {
           navigate('/')
         }}
       >
-        Log out
+        Chiqish
       </button>
     </div>
   )

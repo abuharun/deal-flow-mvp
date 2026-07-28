@@ -28,7 +28,7 @@ export default function Pay() {
       pay(ok)
       setProcessing(false)
       if (ok) {
-        toast('Payment received — your startup is submitted.')
+        toast("To'lov qabul qilindi — startapingiz topshirildi.")
         navigate('/apply')
       } else {
         setDeclined(true)
@@ -38,25 +38,26 @@ export default function Pay() {
 
   return (
     <div>
-      <h1 style={{ fontSize: '1.6rem' }}>One last step: the validation fee</h1>
+      <h1 style={{ fontSize: '1.6rem' }}>Oxirgi qadam: baholash to'lovi</h1>
       <p className="muted" style={{ maxWidth: 540 }}>
-        The fee is what makes the review serious — it buys a real partner's time and a truthful answer,
-        whatever that answer is. Your startup enters the review pipeline the moment payment completes.
+        Aynan shu to'lov tahlilni jiddiy qiladi — u haqiqiy hamkorning vaqtini va qanday bo'lmasin
+        haqqoniy javobni ta'minlaydi. To'lov yakunlanishi bilan startapingiz ko'rib chiqish
+        pipeline'iga kiradi.
       </p>
 
       <div className="card" style={{ margin: '20px 0' }}>
         <div className="panel-title">
-          <h2 style={{ margin: 0, fontSize: '1.05rem' }}>Order summary</h2>
-          <StubTag>Simulated payment — no card is charged</StubTag>
+          <h2 style={{ margin: 0, fontSize: '1.05rem' }}>Buyurtma xulosasi</h2>
+          <StubTag>Simulyatsiya qilingan to'lov — kartadan pul yechilmaydi</StubTag>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
           <span>
-            Startup validation — <strong>{state.draft.startupName}</strong>
+            Startap baholovi — <strong>{state.draft.startupName}</strong>
           </span>
           <span className="num">{VALIDATION_FEE}</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderTop: '1px solid var(--line)', fontWeight: 640 }}>
-          <span>Total due today</span>
+          <span>Bugun to'lanadigan jami</span>
           <span className="num">{VALIDATION_FEE}</span>
         </div>
       </div>
@@ -69,12 +70,12 @@ export default function Pay() {
         }}
       >
         <div className="field">
-          <label htmlFor="card-number">Card number</label>
+          <label htmlFor="card-number">Karta raqami</label>
           <input id="card-number" className="input" inputMode="numeric" defaultValue="4242 4242 4242 4242" autoComplete="cc-number" />
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           <div className="field">
-            <label htmlFor="card-exp">Expiry</label>
+            <label htmlFor="card-exp">Amal muddati</label>
             <input id="card-exp" className="input" defaultValue="12/28" autoComplete="cc-exp" />
           </div>
           <div className="field">
@@ -84,13 +85,13 @@ export default function Pay() {
         </div>
         {declined && (
           <p className="error-text" role="alert">
-            Your card was declined (simulated). Your submission is safe and waiting — try again whenever
-            you're ready.
+            Kartangiz rad etildi (simulyatsiya). Kiritgan ma'lumotlaringiz saqlanib turibdi — tayyor bo'lganingizda
+            qayta urinib ko'ring.
           </p>
         )}
         <div style={{ display: 'grid', gap: 10, marginTop: 6 }}>
           <button type="submit" className="btn btn-primary btn-lg" disabled={processing}>
-            {processing ? 'Processing…' : `Pay ${VALIDATION_FEE} & submit`}
+            {processing ? 'Bajarilmoqda…' : `${VALIDATION_FEE} to'lash va topshirish`}
           </button>
           <button
             type="button"
@@ -98,14 +99,14 @@ export default function Pay() {
             disabled={processing}
             onClick={() => runPayment(false)}
           >
-            Simulate a declined card
+            Rad etilgan kartani simulyatsiya qilish
           </button>
         </div>
       </form>
 
       <p className="faint" style={{ marginTop: 16 }}>
-        <Link to="/apply/submit?step=ask">Back to your submission</Link> — nothing is sent until payment
-        completes.
+        <Link to="/apply/submit?step=ask">Topshirishga qaytish</Link> — to'lov yakunlanmaguncha hech
+        narsa yuborilmaydi.
       </p>
     </div>
   )

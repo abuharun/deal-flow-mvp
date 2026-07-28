@@ -53,9 +53,9 @@ export function polishLine(line: string): string {
 
 /**
  * Split rough notes into polished bullets. Lines are the unit; a single
- * multi-sentence line is split into sentences. Lines starting with "if"
- * (or "would reconsider") are routed to the "what would change our answer"
- * section instead of the reasons list.
+ * multi-sentence line is split into sentences. Lines starting with "agar"
+ * (or English "if" / "would reconsider") are routed to the "what would
+ * change our answer" section instead of the reasons list.
  */
 export function polishNotes(notes: string): { reasons: string[]; changers: string[] } {
   let lines = notes
@@ -70,7 +70,7 @@ export function polishNotes(notes: string): { reasons: string[]; changers: strin
   for (const line of lines) {
     const polished = polishLine(line)
     if (!polished) continue
-    if (/^(if\b|would reconsider\b|reconsider if\b)/i.test(line.trim().replace(/^[-*•]+\s*/, ''))) {
+    if (/^(agar\b|if\b|would reconsider\b|reconsider if\b)/i.test(line.trim().replace(/^[-*•]+\s*/, ''))) {
       changers.push(polished)
     } else {
       reasons.push(polished)
@@ -128,7 +128,8 @@ const FRAMES: Record<Lang, Frame> = {
     closing:
       'This verdict was written to be honest because your time and effort deserve honesty. If anything here is unclear, reply and we will explain our thinking.',
     signoff: (vc) => `With respect,\n${vc}\nPartner, Oqim`,
-    demoNote: null,
+    demoNote:
+      "(Demo note: the reasons above are shown in the language of the partner's notes; the production version translates them fully.)",
   },
   uz: {
     salutation: (f) => `Hurmatli ${f},`,
@@ -158,7 +159,7 @@ const FRAMES: Record<Lang, Frame> = {
     closing:
       "Bu xulosa halol yozildi, chunki sizning vaqtingiz va mehnatingiz halollikka loyiq. Biror narsa tushunarsiz bo'lsa, javob yozing — fikrimizni tushuntiramiz.",
     signoff: (vc) => `Hurmat bilan,\n${vc}\nOqim hamkori`,
-    demoNote: "(Demo izohi: sabablar ro'yxati ushbu namoyishda ingliz tilida ko'rsatiladi; ishlab chiqarish versiyasida to'liq tarjima qilinadi.)",
+    demoNote: null,
   },
   ru: {
     salutation: (f) => `Уважаемый(ая) ${f},`,
@@ -188,7 +189,7 @@ const FRAMES: Record<Lang, Frame> = {
     closing:
       'Это заключение написано честно, потому что ваше время и труд заслуживают честности. Если что-то неясно — ответьте, и мы объясним ход наших рассуждений.',
     signoff: (vc) => `С уважением,\n${vc}\nПартнёр Oqim`,
-    demoNote: '(Примечание демо: причины показаны на английском; в рабочей версии письмо переводится полностью.)',
+    demoNote: '(Примечание демо: причины показаны на языке заметок партнёра; в рабочей версии письмо переводится полностью.)',
   },
 }
 

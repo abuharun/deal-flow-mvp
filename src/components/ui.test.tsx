@@ -4,9 +4,9 @@ import { SignalTag } from './ui'
 
 describe('SignalTag', () => {
   it.each([
-    ['high', 'High signal'],
-    ['medium', 'Medium signal'],
-    ['low', 'Low signal'],
+    ['high', 'Kuchli signal'],
+    ['medium', "O'rtacha signal"],
+    ['low', 'Past signal'],
   ] as const)('pairs the %s color with a text label and an icon', (signal, label) => {
     const { container } = render(<SignalTag signal={signal} />)
     // Text label is always present — color is never the only signal.
@@ -18,6 +18,6 @@ describe('SignalTag', () => {
 
   it('announces a partner re-tag to screen readers', () => {
     render(<SignalTag signal="high" overridden />)
-    expect(screen.getByText(/re-tagged by the partner/)).toBeInTheDocument()
+    expect(screen.getByText(/hamkor tomonidan qayta belgilangan/)).toBeInTheDocument()
   })
 })
