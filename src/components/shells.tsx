@@ -2,7 +2,8 @@ import { useEffect } from 'react'
 import { Navigate, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useStore } from '../lib/store'
 import type { Role } from '../lib/types'
-import { Wordmark } from './ui'
+import { useLocale } from '../i18n'
+import { LanguageSwitcher, Wordmark } from './ui'
 import { BoardIcon, ListIcon, PersonIcon } from './icons'
 
 /** Auth guard: requires a session with the given role, else sends to login. */
@@ -25,6 +26,7 @@ export function ScrollToTop() {
 
 function LogoutButton() {
   const { logout } = useStore()
+  const { t } = useLocale()
   const navigate = useNavigate()
   return (
     <button
@@ -35,7 +37,7 @@ function LogoutButton() {
         navigate('/')
       }}
     >
-      Chiqish
+      {t.common.logout}
     </button>
   )
 }
@@ -43,14 +45,16 @@ function LogoutButton() {
 /** Founder chrome: nearly nav-free by design — a linear flow, not a place to browse. */
 export function FounderShell() {
   const { state } = useStore()
+  const { t } = useLocale()
   return (
     <div className="founder-shell">
       <a className="skip-link" href="#main">
-        Asosiy mazmunga o'tish
+        {t.shell.skipToMain}
       </a>
       <header className="founder-header">
-        <Wordmark to="/apply" sub="asoschilar uchun" />
-        <nav aria-label="Hisob" className="vc-utility">
+        <Wordmark to="/apply" sub={t.shell.founderSub} />
+        <nav aria-label={t.shell.accountNavAria} className="vc-utility">
+          <LanguageSwitcher />
           <NavLink to="/apply/account" className="btn btn-quiet btn-sm">
             <PersonIcon size={15} /> {state.session?.name.split(' ')[0]}
           </NavLink>
@@ -66,25 +70,27 @@ export function FounderShell() {
 
 /** VC chrome: two-item primary nav, desktop-first, bottom tabs on mobile. */
 export function VcShell() {
+  const { t } = useLocale()
   const navClass = ({ isActive }: { isActive: boolean }) => (isActive ? 'active' : '')
   return (
     <div className="vc-shell">
       <a className="skip-link" href="#main">
-        Asosiy mazmunga o'tish
+        {t.shell.skipToMain}
       </a>
       <header className="vc-header">
-        <Wordmark to="/app" sub="hamkor" />
-        <nav className="vc-nav" aria-label="Asosiy">
+        <Wordmark to="/app" sub={t.shell.vcSub} />
+        <nav className="vc-nav" aria-label={t.shell.mainNavAria}>
           <NavLink to="/app" end className={navClass}>
-            Pipeline
+            {t.shell.pipeline}
           </NavLink>
           <NavLink to="/app/startups" className={navClass}>
-            Startaplar
+            {t.shell.startups}
           </NavLink>
         </nav>
         <div className="vc-utility">
+          <LanguageSwitcher />
           <NavLink to="/app/settings" className="btn btn-quiet btn-sm">
-            Sozlamalar
+            {t.shell.settings}
           </NavLink>
           <LogoutButton />
         </div>
@@ -92,15 +98,15 @@ export function VcShell() {
       <main id="main" className="vc-main">
         <Outlet />
       </main>
-      <nav className="mobile-tabbar" aria-label="Asosiy">
+      <nav className="mobile-tabbar" aria-label={t.shell.mainNavAria}>
         <NavLink to="/app" end className={navClass}>
-          <BoardIcon /> Pipeline
+          <BoardIcon /> {t.shell.pipeline}
         </NavLink>
         <NavLink to="/app/startups" className={navClass}>
-          <ListIcon /> Startaplar
+          <ListIcon /> {t.shell.startups}
         </NavLink>
         <NavLink to="/app/settings" className={navClass}>
-          <PersonIcon /> Hisob
+          <PersonIcon /> {t.shell.account}
         </NavLink>
       </nav>
     </div>

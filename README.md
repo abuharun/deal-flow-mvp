@@ -6,14 +6,18 @@ validation; simulated AI standardizes the submission and suggests a priority; a 
 reviews, verifies, decides, and sends a truthful, warmly-worded verdict in the founder's own
 language. **The AI drafts; the human is always the author of record.**
 
-**The interface is entirely in Uzbek (Latin script)** — the product's home market. Verdict letters
-are additionally readable in Russian and English, and the official English original of every verdict
-is preserved as the editable source of truth.
+**The complete interface is available in Uzbek (Latin script) and Russian.** The language switcher
+is available on public, founder, and VC screens; the choice persists independently in
+`localStorage` (`oqim:locale`) and updates the document language, title, and description. Seeded
+startup content is also localized dynamically, without duplicating or mutating business state.
+Verdict-body language remains a separate choice (Uzbek/Russian/English), and the official English
+original of every verdict is preserved as the editable source of truth.
 
 This repository is a **complete, deployable frontend MVP** built from
 [`docs/DESIGN_BRIEF.md`](docs/DESIGN_BRIEF.md) and
 [`docs/INFORMATION_ARCHITECTURE.md`](docs/INFORMATION_ARCHITECTURE.md). There is no backend: all
-data is realistic seeded mock data (in Uzbek), persisted to `localStorage`, so the full
+data is realistic seeded mock data (canonically stored in Uzbek and displayed in either interface
+language), persisted to `localStorage`, so the full
 founder → VC → verdict loop is playable end-to-end in one browser.
 
 ## Quick start
@@ -45,8 +49,9 @@ log in as the VC → open the card → verify, decide, write rough notes → *Xu
 verdict) → edit the draft → *Xulosani yuborish* (Send). Log back in as the founder → the verdict is
 waiting, in Uzbek/Russian/English, with a printable official letter.
 
-State is shared through `localStorage`; “Demo ma'lumotlarini qayta o'rnatish” (Reset demo data, in
-founder Hisob or VC Sozlamalar) restores the seeded pipeline.
+State is shared through `localStorage`; “Demo ma'lumotlarini qayta o'rnatish” / “Сбросить
+демо-данные” (in the founder account or VC settings) restores the seeded pipeline. Interface locale
+is stored separately and is not reset with business data.
 
 ## Routes
 
@@ -81,7 +86,13 @@ src/
     compose.ts     Deterministic verdict composer: rough notes → polished letter (en/uz/ru)
     simulate.ts    Deterministic "AI": summary standardization + rule-based recommendation
     verdictText.ts Language resolution for verdict rendering
-    format.ts      Labels, orderings, date helpers (uz-Latn-UZ dates)
+    content.ts     Pure display overlays for localized seeded/generated content
+    seedRu.ts      Russian translations of all seeded startup content
+    format.ts      Orderings and deterministic Uzbek/Russian/English date helpers
+  i18n/
+    index.tsx      Typed locale provider, switch persistence, and document metadata
+    uz.tsx         Uzbek source-of-truth dictionary and message schema
+    ru.tsx         Russian dictionary, type-checked against the Uzbek schema
   components/      Shells (role chrome + auth guard), signal tag, icons, toast
   pages/           One file per route (founder/, vc/, auth, landing)
   test/            Vitest setup + app-level integration tests
@@ -92,7 +103,10 @@ Design decisions worth knowing:
 - **Deterministic AI stand-ins.** `compose.ts` and `simulate.ts` are pure functions, so the same
   notes always produce the same letter — reproducible demos and testable behavior. Production would
   swap in a real model behind the same contract (notes in, reviewable draft out, nothing auto-sends).
-- **Storage schema versioning.** The `localStorage` key is `oqim:v2` (v2 = Uzbek-localized seed
+- **Typed localization.** `Messages` is derived from the Uzbek source dictionary; the Russian
+  dictionary must satisfy the same shape at compile time. UI locale (`uz|ru`) is deliberately
+  separate from verdict language (`uz|ru|en`).
+- **Storage schema versioning.** The business-state `localStorage` key is `oqim:v2` (v2 = Uzbek seed
   content). On first load, `loadState` migrates an existing `oqim:v1` entry by keeping only the
   session, reseeding the content in Uzbek, and removing the old key — deployed users upgrade
   seamlessly instead of seeing stale English data.
@@ -100,10 +114,10 @@ Design decisions worth knowing:
   + text label (`SignalTag`), per the accessibility requirement.
 - **Honest stubs.** Every simulated boundary (payment, uploads, translations, notifications) is
   visibly labeled in the UI rather than faked silently.
-- **Accessibility**: semantic landmarks, labeled controls (all in Uzbek), visible focus states, skip
+- **Accessibility**: semantic landmarks, localized labeled controls, visible focus states, skip
   links, focus management on form-step changes, `aria-live` for autosave/counts, reduced-motion
-  support, WCAG-AA-checked palette. The document `lang` is `uz`; verdict letters set `lang`
-  per language.
+  support, WCAG-AA-checked palette. The document `lang` follows the interface locale; verdict
+  letters set `lang` independently per selected body language.
 
 ## Tests
 
@@ -115,8 +129,11 @@ Design decisions worth knowing:
 - `store.test.ts` — reducer: payment gate, verification, compose→edit→send stage moves, reset,
   persistence, and the v1 → v2 storage migration
 - `ui.test.tsx` — signal tag renders label + icon + color, never color alone
-- `app.test.tsx` — integration: routing guards, demo login, founder submission autosave, and the
-  full VC review → compose → edit → send loop, all against the Uzbek UI
+- `app.test.tsx` — integration: routing guards, demo login, founder submission autosave, locale
+  switching and persistence, Russian settings/archive/detail/seeded content, and the full VC review
+  → compose → edit → send loop
+- `i18n/localization.test.ts` — deterministic Russian dates, complete seeded-content overlays,
+  canonical-state immutability, and verdict-body language independence
 
 ## Deployment (GitHub Pages)
 

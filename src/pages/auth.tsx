@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../lib/store'
-import { Wordmark } from '../components/ui'
+import { useLocale } from '../i18n'
+import { LanguageSwitcher, Wordmark } from '../components/ui'
 import { FOUNDER_EMAIL, FOUNDER_NAME, VC_EMAIL, VC_NAME } from '../lib/seed'
 import type { Role } from '../lib/types'
 
@@ -9,8 +10,9 @@ function AuthFrame({ title, children }: { title: string; children: React.ReactNo
   return (
     <div className="auth-wrap">
       <div className="auth-card">
-        <div style={{ marginBottom: 18 }}>
+        <div style={{ marginBottom: 18, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
           <Wordmark />
+          <LanguageSwitcher />
         </div>
         <div className="card">
           <h1 style={{ fontSize: '1.5rem' }}>{title}</h1>
@@ -23,21 +25,22 @@ function AuthFrame({ title, children }: { title: string; children: React.ReactNo
 
 function DemoRoleChooser() {
   const { login } = useStore()
+  const { t } = useLocale()
   const navigate = useNavigate()
   const enter = (role: Role) => {
     login(role)
     navigate(role === 'founder' ? '/apply' : '/app')
   }
   return (
-    <div className="demo-roles" role="group" aria-label="Demo hisoblar">
+    <div className="demo-roles" role="group" aria-label={t.auth.demoRolesAria}>
       <button type="button" className="demo-role-btn" onClick={() => enter('founder')}>
         <span className="demo-avatar" aria-hidden="true">
           DE
         </span>
         <span>
-          <strong>{FOUNDER_NAME}</strong> — Asoschi
+          <strong>{FOUNDER_NAME}</strong> — {t.auth.founderRole}
           <br />
-          <span className="faint">{FOUNDER_EMAIL} · startap topshiradi</span>
+          <span className="faint">{t.auth.founderRoleSub(FOUNDER_EMAIL)}</span>
         </span>
       </button>
       <button type="button" className="demo-role-btn" onClick={() => enter('vc')}>
@@ -45,9 +48,9 @@ function DemoRoleChooser() {
           LM
         </span>
         <span>
-          <strong>{VC_NAME}</strong> — Venchur hamkori
+          <strong>{VC_NAME}</strong> — {t.auth.vcRole}
           <br />
-          <span className="faint">{VC_EMAIL} · pipeline bilan ishlaydi</span>
+          <span className="faint">{t.auth.vcRoleSub(VC_EMAIL)}</span>
         </span>
       </button>
     </div>
@@ -56,6 +59,7 @@ function DemoRoleChooser() {
 
 export function Login() {
   const { login } = useStore()
+  const { t } = useLocale()
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
 
@@ -67,16 +71,15 @@ export function Login() {
   }
 
   return (
-    <AuthFrame title="Kirish">
+    <AuthFrame title={t.auth.loginTitle}>
       <p className="demo-note" style={{ marginBottom: 16 }}>
-        Bu mahsulot demosi — istalgan parol ishlaydi. Eng tez yo'l: quyidagi demo hisoblardan birini
-        tanlang.
+        {t.auth.loginDemoNote}
       </p>
       <DemoRoleChooser />
       <hr className="divider" />
       <form onSubmit={submit}>
         <div className="field">
-          <label htmlFor="login-email">Email</label>
+          <label htmlFor="login-email">{t.common.email}</label>
           <input
             id="login-email"
             className="input"
@@ -85,20 +88,20 @@ export function Login() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="siz@misol.uz"
+            placeholder={t.auth.emailPlaceholder}
           />
         </div>
         <div className="field">
-          <label htmlFor="login-password">Parol</label>
+          <label htmlFor="login-password">{t.common.password}</label>
           <input id="login-password" className="input" type="password" autoComplete="current-password" required />
         </div>
         <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-          Kirish
+          {t.auth.loginButton}
         </button>
       </form>
       <p className="faint" style={{ marginTop: 14 }}>
-        <Link to="/reset">Parolni unutdingizmi?</Link> · Yangimisiz?{' '}
-        <Link to="/signup">Ro'yxatdan o'tish</Link>
+        <Link to="/reset">{t.auth.forgot}</Link> · {t.auth.newHere}{' '}
+        <Link to="/signup">{t.auth.signupLink}</Link>
       </p>
     </AuthFrame>
   )
@@ -106,6 +109,7 @@ export function Login() {
 
 export function Signup() {
   const { login } = useStore()
+  const { t } = useLocale()
   const navigate = useNavigate()
 
   const submit = (e: FormEvent) => {
@@ -115,37 +119,38 @@ export function Signup() {
   }
 
   return (
-    <AuthFrame title="Hisob yaratish">
-      <p className="muted">Asoschilar shu yerda ro'yxatdan o'tadi. Investorlar faqat taklif orqali kiradi.</p>
+    <AuthFrame title={t.auth.signupTitle}>
+      <p className="muted">{t.auth.signupIntro}</p>
       <form onSubmit={submit}>
         <div className="field">
-          <label htmlFor="su-name">To'liq ism</label>
-          <input id="su-name" className="input" autoComplete="name" required placeholder="Dilshod Ergashev" />
+          <label htmlFor="su-name">{t.auth.fullName}</label>
+          <input id="su-name" className="input" autoComplete="name" required placeholder={FOUNDER_NAME} />
         </div>
         <div className="field">
-          <label htmlFor="su-email">Email</label>
-          <input id="su-email" className="input" type="email" autoComplete="email" required placeholder="siz@misol.uz" />
+          <label htmlFor="su-email">{t.common.email}</label>
+          <input id="su-email" className="input" type="email" autoComplete="email" required placeholder={t.auth.emailPlaceholder} />
         </div>
         <div className="field">
-          <label htmlFor="su-password">Parol</label>
+          <label htmlFor="su-password">{t.common.password}</label>
           <input id="su-password" className="input" type="password" autoComplete="new-password" required minLength={8} />
-          <p className="hint">Kamida 8 ta belgi.</p>
+          <p className="hint">{t.auth.passwordHint}</p>
         </div>
         <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-          Ro'yxatdan o'tish
+          {t.auth.signupButton}
         </button>
       </form>
       <p className="demo-note" style={{ marginTop: 16 }}>
-        Demo: ro'yxatdan o'tsangiz, demo asoschi {FOUNDER_NAME} sifatida kirasiz.
+        {t.auth.signupDemoNote(FOUNDER_NAME)}
       </p>
       <p className="faint" style={{ marginTop: 14 }}>
-        Hisobingiz bormi? <Link to="/login">Kirish</Link>
+        {t.auth.haveAccount} <Link to="/login">{t.auth.loginLink}</Link>
       </p>
     </AuthFrame>
   )
 }
 
 export function Reset() {
+  const { t } = useLocale()
   const [sent, setSent] = useState(false)
 
   const submit = (e: FormEvent) => {
@@ -154,28 +159,27 @@ export function Reset() {
   }
 
   return (
-    <AuthFrame title="Parolni tiklash">
+    <AuthFrame title={t.auth.resetTitle}>
       {sent ? (
         <>
           <div className="sent-banner" role="status">
-            Tiklash havolasi yuborildi (simulyatsiya) — pochtangizni tekshiring.
+            {t.auth.resetSent}
           </div>
           <p className="muted" style={{ marginTop: 14 }}>
-            Bu demoda hech qanday email aslida yuborilmaydi.{' '}
-            <Link to="/login">Kirish sahifasiga qaytish</Link>.
+            {t.auth.resetNote(<Link to="/login">{t.auth.resetBackLink}</Link>)}
           </p>
         </>
       ) : (
         <form onSubmit={submit}>
           <div className="field">
-            <label htmlFor="rs-email">Email</label>
-            <input id="rs-email" className="input" type="email" autoComplete="email" required placeholder="siz@misol.uz" />
+            <label htmlFor="rs-email">{t.common.email}</label>
+            <input id="rs-email" className="input" type="email" autoComplete="email" required placeholder={t.auth.emailPlaceholder} />
           </div>
           <button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-            Tiklash havolasini yuborish
+            {t.auth.resetButton}
           </button>
           <p className="faint" style={{ marginTop: 14 }}>
-            Esladingizmi? <Link to="/login">Kirish</Link>
+            {t.auth.remembered} <Link to="/login">{t.auth.loginLink}</Link>
           </p>
         </form>
       )}

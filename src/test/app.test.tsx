@@ -6,16 +6,19 @@ import { AppRoutes } from '../App'
 import { StoreProvider, initialState, reducer } from '../lib/store'
 import { ToastProvider } from '../components/toast'
 import { opaqueId } from '../lib/simulate'
+import { LocaleProvider } from '../i18n'
 
 function renderAt(path: string) {
   return render(
-    <StoreProvider>
-      <ToastProvider>
-        <MemoryRouter initialEntries={[path]}>
-          <AppRoutes />
-        </MemoryRouter>
-      </ToastProvider>
-    </StoreProvider>,
+    <LocaleProvider>
+      <StoreProvider>
+        <ToastProvider>
+          <MemoryRouter initialEntries={[path]}>
+            <AppRoutes />
+          </MemoryRouter>
+        </ToastProvider>
+      </StoreProvider>
+    </LocaleProvider>,
   )
 }
 
@@ -36,6 +39,22 @@ describe('public pages', () => {
   it('guards role routes behind login', () => {
     renderAt('/app')
     expect(screen.getByRole('heading', { name: 'Kirish' })).toBeInTheDocument()
+  })
+
+  it('switches the whole interface to Russian and persists the choice', async () => {
+    const user = userEvent.setup()
+    const first = renderAt('/')
+
+    await user.click(screen.getByRole('button', { name: 'Русский' }))
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Честное заключение')
+    expect(document.documentElement).toHaveAttribute('lang', 'ru')
+    expect(document.title).toBe('Oqim — честный поток сделок')
+    expect(localStorage.getItem('oqim:locale')).toBe('ru')
+
+    first.unmount()
+    renderAt('/login')
+    expect(screen.getByRole('heading', { name: 'Вход' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Русский' })).toHaveAttribute('aria-pressed', 'true')
   })
 })
 
@@ -83,6 +102,39 @@ describe('founder submission flow', () => {
 })
 
 describe('VC review and verdict loop', () => {
+  it('renders VC settings and seeded pipeline content in Russian', () => {
+    localStorage.setItem('oqim:locale', 'ru')
+    seedSession('vc')
+    const view = renderAt('/app/settings')
+
+    expect(screen.getByRole('heading', { name: 'Настройки' })).toBeInTheDocument()
+    expect(screen.getByText('Рассматривающий партнёр — пилот в Узбекистане')).toBeInTheDocument()
+    expect(screen.getByText('Когда в пайплайн поступают новые заявки')).toBeInTheDocument()
+
+    view.unmount()
+    renderAt('/app')
+    expect(screen.getByText('B2B-маркетплейс снабжения для ресторанов и кафе')).toBeInTheDocument()
+    expect(screen.getByText('$24.7k валовой / мес')).toBeInTheDocument()
+  })
+
+  it('renders the Russian archive, startup detail, seeded text, and dates', () => {
+    localStorage.setItem('oqim:locale', 'ru')
+    seedSession('vc')
+    const archive = renderAt('/app/startups')
+
+    expect(screen.getByRole('heading', { name: 'Стартапы' })).toBeInTheDocument()
+    expect(screen.getByRole('columnheader', { name: 'Подан' })).toBeInTheDocument()
+    expect(screen.getByText('27 июл. 2026')).toBeInTheDocument()
+    expect(screen.getByText('B2B-маркетплейс снабжения для ресторанов и кафе')).toBeInTheDocument()
+
+    archive.unmount()
+    renderAt(`/app/startups/${opaqueId('xarid')}`)
+    expect(screen.getByRole('heading', { name: 'Краткая сводка ИИ' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Исходный текст основателя' })).toBeInTheDocument()
+    expect(screen.getAllByText(/^Рестораны Ташкента закупают овощи/)).toHaveLength(2)
+    expect(screen.getByText(/подан:/)).toHaveTextContent('26 июл. 2026')
+  })
+
   it('reviews, decides, composes, edits, and sends a verdict', async () => {
     const user = userEvent.setup()
     seedSession('vc')

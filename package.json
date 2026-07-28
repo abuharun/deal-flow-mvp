@@ -2,6 +2,7 @@
   "name": "oqim-deal-flow-mvp",
   "private": true,
   "version": "0.1.0",
+  "description": "Bilingual Uzbek/Russian deal-flow demo for startup founders and venture partners",
   "type": "module",
   "scripts": {
     "dev": "vite",

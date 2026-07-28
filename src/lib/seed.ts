@@ -22,7 +22,7 @@ export function makeVerification(): VerificationItem[] {
   ]
 }
 
-interface SeedSpec {
+export interface SeedSpec {
   name: string
   oneLiner: string
   sector: string
@@ -42,7 +42,9 @@ interface SeedSpec {
   verdictSentAt?: string
 }
 
-const SPECS: SeedSpec[] = [
+/** Exported for the Russian display overlay (content.ts), which needs the
+ * original Uzbek values to know when a field is still untouched seed data. */
+export const SEED_SPECS: SeedSpec[] = [
   {
     name: 'Xarid',
     oneLiner: "Restoran va kafelar uchun B2B ta'minot marketpleysi",
@@ -465,7 +467,7 @@ function buildStartup(spec: SeedSpec): Startup {
             founderName: spec.founder.name,
             vcName: VC_NAME,
             lang: 'en',
-            dateLabel: formatDateLong(spec.verdictSentAt),
+            dateLabel: formatDateLong(spec.verdictSentAt, 'en'),
           }),
           local: composeVerdict({
             decision: spec.decision,
@@ -474,7 +476,7 @@ function buildStartup(spec: SeedSpec): Startup {
             founderName: spec.founder.name,
             vcName: VC_NAME,
             lang: spec.founder.language,
-            dateLabel: formatDateLong(spec.verdictSentAt),
+            dateLabel: formatDateLong(spec.verdictSentAt, spec.founder.language),
           }),
           localLang: spec.founder.language,
           composedAt: spec.verdictSentAt,
@@ -507,5 +509,5 @@ function buildStartup(spec: SeedSpec): Startup {
 }
 
 export function seedStartups(): Startup[] {
-  return SPECS.map(buildStartup)
+  return SEED_SPECS.map(buildStartup)
 }

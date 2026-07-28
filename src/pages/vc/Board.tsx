@@ -1,7 +1,9 @@
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { useStore } from '../../lib/store'
 import type { Stage, Startup } from '../../lib/types'
-import { SIGNAL_ORDER, STAGE_LABEL, formatDate, cx } from '../../lib/format'
+import { useLocale } from '../../i18n'
+import { localizeStartup } from '../../lib/content'
+import { SIGNAL_ORDER, formatDate, cx } from '../../lib/format'
 import { SignalTag } from '../../components/ui'
 
 const BOARD_STAGES: Stage[] = ['new', 'in-review', 'recommended', 'advanced']
@@ -17,13 +19,15 @@ function sortForColumn(list: Startup[]): Startup[] {
 
 export default function Board() {
   const { state, moveStage } = useStore()
+  const { locale, t } = useLocale()
   const navigate = useNavigate()
   const [params] = useSearchParams()
   const highlighted = params.get('stage')
 
-  const byStage = (stage: Stage) => sortForColumn(state.startups.filter((s) => s.stage === stage))
+  const byStage = (stage: Stage) =>
+    sortForColumn(state.startups.filter((s) => s.stage === stage)).map((s) => localizeStartup(s, locale))
   const passed = byStage('passed')
-  const counts = BOARD_STAGES.map((st) => `${STAGE_LABEL[st]} ${byStage(st).length}`).join(' · ')
+  const counts = BOARD_STAGES.map((st) => `${t.stage[st]} ${byStage(st).length}`).join(' · ')
 
   const openCard = (s: Startup) => {
     // Opening a New card moves it to In Review (see IA: VC flow step 2).
@@ -34,13 +38,13 @@ export default function Board() {
   return (
     <div>
       <div className="board-toolbar">
-        <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Pipeline</h1>
-        <span className="faint num" aria-label={`Bosqichlar bo'yicha soni: ${counts}`}>
+        <h1 style={{ fontSize: '1.5rem', margin: 0 }}>{t.board.title}</h1>
+        <span className="faint num" aria-label={t.board.countsAria(counts)}>
           {counts}
         </span>
         <span style={{ marginLeft: 'auto' }}>
           <Link to="/app/startups" className="btn btn-quiet btn-sm">
-            Barcha startaplarni qidirish →
+            {t.board.searchAll}
           </Link>
         </span>
       </div>
@@ -55,17 +59,17 @@ export default function Board() {
               aria-labelledby={`col-${stage}`}
             >
               <div className="board-col-head">
-                <h2 id={`col-${stage}`}>{STAGE_LABEL[stage]}</h2>
+                <h2 id={`col-${stage}`}>{t.stage[stage]}</h2>
                 <span className="faint num">{cards.length}</span>
               </div>
               <div className="board-cards">
-                {cards.length === 0 && <p className="board-empty">Hozircha bu yer bo'sh.</p>}
+                {cards.length === 0 && <p className="board-empty">{t.board.emptyCol}</p>}
                 {cards.map((s) => (
                   <button key={s.id} type="button" className="board-card" onClick={() => openCard(s)}>
                     <span className="name">
                       {s.name}
                       <span className="faint num" style={{ fontWeight: 480 }}>
-                        {formatDate(s.submittedAt)}
+                        {formatDate(s.submittedAt, locale)}
                       </span>
                     </span>
                     <span className="line">{s.oneLiner}</span>
@@ -83,11 +87,9 @@ export default function Board() {
 
       <details className="passed-strip" open={highlighted === 'passed'}>
         <summary style={{ cursor: 'pointer', fontWeight: 620 }}>
-          Rad etilgan · <span className="num">{passed.length}</span>
+          {t.board.passedTitle} · <span className="num">{passed.length}</span>
           <span className="faint" style={{ fontWeight: 420 }}>
-            {' '}
-            — doska faol ishlar uchun qolishi maqsadida yig'ilgan; to'liq tarix{' '}
-            <Link to="/app/startups?stage=passed">Startaplar</Link> bo'limida
+            {t.board.passedNote(<Link to="/app/startups?stage=passed">{t.board.passedLink}</Link>)}
           </span>
         </summary>
         <div className="board-cards" style={{ marginTop: 10, maxWidth: 420 }}>
@@ -98,7 +100,7 @@ export default function Board() {
               <SignalTag signal={s.signal} overridden={s.signalOverridden} />
             </button>
           ))}
-          {passed.length === 0 && <p className="board-empty">Hozircha rad etilgan startaplar yo'q.</p>}
+          {passed.length === 0 && <p className="board-empty">{t.board.passedEmpty}</p>}
         </div>
       </details>
     </div>

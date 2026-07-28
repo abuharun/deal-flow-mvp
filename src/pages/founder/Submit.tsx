@@ -2,11 +2,14 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import { useStore } from '../../lib/store'
 import { STEP_KEYS, type Attachment, type StepKey } from '../../lib/types'
-import { STEP_META } from './steps'
+import { useLocale } from '../../i18n'
+import { attachmentLabel } from '../../lib/content'
 import { cx } from '../../lib/format'
 import { StubTag } from '../../components/ui'
 import { DocIcon } from '../../components/icons'
 
+// Labels are stored canonically in Uzbek and localized at display time, so a
+// draft attached under one interface language reads correctly under the other.
 const SAMPLE_ATTACHMENTS: Attachment[] = [
   { label: 'Pitch-dek', kind: 'deck', fileName: 'my-pitch-deck.pdf' },
   { label: 'Daromad isboti', kind: 'revenue', fileName: 'bank-statement-export.xlsx' },
@@ -29,11 +32,12 @@ export default function Submit() {
 
 function StepForm({ step }: { step: StepKey }) {
   const { state, updateDraft, completeStep, addDraftAttachment, removeDraftAttachment } = useStore()
+  const { locale, t } = useLocale()
   const navigate = useNavigate()
-  const meta = STEP_META[step]
+  const meta = t.steps[step]
   const stepIndex = STEP_KEYS.indexOf(step)
   const draft = state.draft
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState<'name' | 'empty' | null>(null)
   const headingRef = useRef<HTMLHeadingElement>(null)
 
   // Announce and focus the step heading on step change (focus management).
@@ -46,11 +50,7 @@ function StepForm({ step }: { step: StepKey }) {
 
   const goNext = () => {
     if (!valid) {
-      setError(
-        step === 'problem' && !draft.startupName.trim()
-          ? "Davom etishdan oldin startap nomini kiriting va savolga javob bering."
-          : "Davom etishdan oldin bu bo'limga javob bering — bo'sh bo'limni ko'rib chiqib bo'lmaydi.",
-      )
+      setError(step === 'problem' && !draft.startupName.trim() ? 'name' : 'empty')
       return
     }
     completeStep(step)
@@ -63,7 +63,7 @@ function StepForm({ step }: { step: StepKey }) {
 
   return (
     <div>
-      <nav aria-label="Topshirish bosqichlari">
+      <nav aria-label={t.submit.stepsNavAria}>
         <ol className="stepper">
           {STEP_KEYS.map((k) => {
             const done = draft.completed.includes(k)
@@ -75,7 +75,7 @@ function StepForm({ step }: { step: StepKey }) {
                   className={cx(done && 'done', current && 'current')}
                   aria-current={current ? 'step' : undefined}
                 >
-                  {STEP_META[k].title}
+                  {t.steps[k].title}
                 </Link>
               </li>
             )
@@ -84,7 +84,7 @@ function StepForm({ step }: { step: StepKey }) {
       </nav>
 
       <p className="faint" style={{ margin: '0 0 4px' }}>
-        {STEP_KEYS.length} bosqichdan {stepIndex + 1}-si
+        {t.submit.stepOf(stepIndex + 1, STEP_KEYS.length)}
       </p>
       <h1 ref={headingRef} tabIndex={-1} style={{ fontSize: '1.6rem', outline: 'none' }}>
         {meta.question}
@@ -102,45 +102,45 @@ function StepForm({ step }: { step: StepKey }) {
         {step === 'problem' && (
           <>
             <div className="field">
-              <label htmlFor="f-name">Startap nomi</label>
+              <label htmlFor="f-name">{t.submit.startupName}</label>
               <input
                 id="f-name"
                 className="input"
                 value={draft.startupName}
                 onChange={(e) => updateDraft({ startupName: e.target.value })}
-                placeholder="Masalan: Xarid"
+                placeholder={t.submit.startupNamePlaceholder}
                 autoComplete="organization"
               />
             </div>
             <div className="field">
-              <label htmlFor="f-oneliner">Bir qatorli tavsif</label>
+              <label htmlFor="f-oneliner">{t.submit.oneLiner}</label>
               <input
                 id="f-oneliner"
                 className="input"
                 value={draft.oneLiner}
                 onChange={(e) => updateDraft({ oneLiner: e.target.value })}
-                placeholder="Masalan: Restoranlar uchun B2B ta'minot marketpleysi"
+                placeholder={t.submit.oneLinerPlaceholder}
               />
             </div>
             <div className="field">
-              <label htmlFor="f-sector">Soha</label>
+              <label htmlFor="f-sector">{t.submit.sector}</label>
               <input
                 id="f-sector"
                 className="input"
                 value={draft.sector}
                 onChange={(e) => updateDraft({ sector: e.target.value })}
-                placeholder="Masalan: Fintech, Logistika, EdTech"
+                placeholder={t.submit.sectorPlaceholder}
               />
             </div>
             <div className="field">
-              <label htmlFor="f-stage">Moliyalash bosqichi</label>
+              <label htmlFor="f-stage">{t.submit.fundingStage}</label>
               <select
                 id="f-stage"
                 className="select"
                 value={draft.fundingStage}
                 onChange={(e) => updateDraft({ fundingStage: e.target.value })}
               >
-                <option value="">Tanlang…</option>
+                <option value="">{t.submit.choose}</option>
                 <option>Pre-seed</option>
                 <option>Seed</option>
                 <option>Series A</option>
@@ -164,7 +164,7 @@ function StepForm({ step }: { step: StepKey }) {
           />
           {error && (
             <p className="error-text" role="alert">
-              {error}
+              {error === 'name' ? t.submit.errName : t.submit.errEmpty}
             </p>
           )}
         </div>
@@ -172,23 +172,23 @@ function StepForm({ step }: { step: StepKey }) {
         {step === 'traction' && (
           <>
             <div className="field">
-              <label htmlFor="f-revenue">Oylik daromad (bo'lsa)</label>
+              <label htmlFor="f-revenue">{t.submit.revenue}</label>
               <input
                 id="f-revenue"
                 className="input"
                 value={draft.revenue}
                 onChange={(e) => updateDraft({ revenue: e.target.value })}
-                placeholder="Masalan: oyiga $24 700 — yoki «hali daromadsiz»"
+                placeholder={t.submit.revenuePlaceholder}
               />
             </div>
             <div className="field">
-              <label htmlFor="f-growth">O'sish</label>
+              <label htmlFor="f-growth">{t.submit.growth}</label>
               <input
                 id="f-growth"
                 className="input"
                 value={draft.growth}
                 onChange={(e) => updateDraft({ growth: e.target.value })}
-                placeholder="Masalan: oyiga +18%"
+                placeholder={t.submit.growthPlaceholder}
               />
             </div>
           </>
@@ -197,18 +197,18 @@ function StepForm({ step }: { step: StepKey }) {
         {step === 'ask' && (
           <>
             <div className="field">
-              <label htmlFor="f-ask">Jalb qilinayotgan summa, qisqacha</label>
+              <label htmlFor="f-ask">{t.submit.askShort}</label>
               <input
                 id="f-ask"
                 className="input"
                 value={draft.ask}
                 onChange={(e) => updateDraft({ ask: e.target.value })}
-                placeholder="Masalan: $500k seed"
+                placeholder={t.submit.askShortPlaceholder}
               />
             </div>
             <fieldset style={{ border: 'none', padding: 0, margin: '0 0 18px' }}>
               <legend style={{ fontWeight: 580, fontSize: '0.92rem', padding: 0, marginBottom: 6 }}>
-                Ilovalar <StubTag>Demo yuklash — fayllar saqlanmaydi</StubTag>
+                {t.submit.attachments} <StubTag>{t.submit.attachmentsStub}</StubTag>
               </legend>
               {draft.attachments.length > 0 && (
                 <ul className="attach-list" style={{ marginBottom: 10 }}>
@@ -216,16 +216,16 @@ function StepForm({ step }: { step: StepKey }) {
                     <li key={a.fileName}>
                       <DocIcon />
                       <span>
-                        <strong>{a.label}</strong> · {a.fileName}
+                        <strong>{attachmentLabel(a.label, locale)}</strong> · {a.fileName}
                       </span>
                       <button
                         type="button"
                         className="btn btn-quiet btn-sm"
                         style={{ marginLeft: 'auto' }}
                         onClick={() => removeDraftAttachment(a.fileName)}
-                        aria-label={`${a.label} faylini olib tashlash`}
+                        aria-label={t.submit.removeAttachment(attachmentLabel(a.label, locale))}
                       >
-                        Olib tashlash
+                        {t.submit.remove}
                       </button>
                     </li>
                   ))}
@@ -241,7 +241,7 @@ function StepForm({ step }: { step: StepKey }) {
                     className="btn btn-secondary btn-sm"
                     onClick={() => addDraftAttachment(s)}
                   >
-                    + {s.label} biriktirish
+                    {t.submit.attach(attachmentLabel(s.label, locale))}
                   </button>
                 ))}
               </div>
@@ -250,23 +250,21 @@ function StepForm({ step }: { step: StepKey }) {
         )}
 
         <div aria-live="polite" className="autosave-note">
-          {draft.updatedAt
-            ? "Shu qurilmada saqlandi — istalgan payt chiqib, keyin qaytishingiz mumkin."
-            : 'Javoblaringiz yozganingiz sari avtomatik saqlanadi.'}
+          {draft.updatedAt ? t.submit.autosaved : t.submit.autosaveIdle}
         </div>
 
         <div className="step-actions">
           {stepIndex > 0 ? (
             <Link to={`/apply/submit?step=${STEP_KEYS[stepIndex - 1]}`} className="btn btn-secondary">
-              Orqaga
+              {t.common.back}
             </Link>
           ) : (
             <Link to="/apply" className="btn btn-quiet">
-              Saqlash va chiqish
+              {t.submit.saveExit}
             </Link>
           )}
           <button type="submit" className="btn btn-primary">
-            {stepIndex === STEP_KEYS.length - 1 ? "To'lovga o'tish" : 'Davom etish'}
+            {stepIndex === STEP_KEYS.length - 1 ? t.submit.toPay : t.submit.next}
           </button>
         </div>
       </form>

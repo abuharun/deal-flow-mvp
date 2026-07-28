@@ -3,12 +3,16 @@ import { useStore } from '../../lib/store'
 import type { Lang } from '../../lib/types'
 import { verdictTextFor } from '../../lib/verdictText'
 import { LANG_LABEL } from '../../lib/compose'
-import { DECISION_LABEL, formatDate, cx } from '../../lib/format'
+import { useLocale } from '../../i18n'
+import { formatDate, cx } from '../../lib/format'
 
+// The verdict body's language selector — a separate axis from the interface
+// locale, because the English original is a product guarantee.
 const LANGS: Lang[] = ['uz', 'ru', 'en']
 
 export default function FounderVerdict() {
   const { founderStartup } = useStore()
+  const { locale, t } = useLocale()
   const [params, setParams] = useSearchParams()
 
   if (!founderStartup?.verdict?.sentAt) return <Navigate to="/apply" replace />
@@ -21,21 +25,20 @@ export default function FounderVerdict() {
   return (
     <article aria-labelledby="verdict-heading">
       <p className="status-chip" style={{ color: 'var(--green-ink)' }}>
-        Qaror: {DECISION_LABEL[verdict.decision]}
+        {t.verdict.decisionChip(t.decision[verdict.decision])}
       </p>
       <h1 id="verdict-heading" style={{ marginTop: 14 }}>
-        {founderStartup.name} uchun xulosangiz
+        {t.verdict.heading(founderStartup.name)}
       </h1>
-      <p className="muted">
-        Hamkor tomonidan ko'rib chiqilgan va imzolangan · yuborildi {formatDate(verdict.sentAt!)}
-      </p>
+      <p className="muted">{t.verdict.reviewedLine(formatDate(verdict.sentAt!, locale))}</p>
 
       <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap', margin: '18px 0' }}>
-        <div className="lang-toggle" role="group" aria-label="Xulosa tili">
+        <div className="lang-toggle" role="group" aria-label={t.verdict.langToggleAria}>
           {LANGS.map((l) => (
             <button
               key={l}
               type="button"
+              lang={l}
               aria-pressed={lang === l}
               onClick={() => setParams({ lang: l })}
             >
@@ -44,7 +47,7 @@ export default function FounderVerdict() {
           ))}
         </div>
         <Link to={`/apply/verdict/letter.pdf?lang=${lang}`} className="btn btn-secondary btn-sm">
-          Rasmiy xatni yuklab olish (PDF)
+          {t.verdict.downloadLetter}
         </Link>
       </div>
 
@@ -54,22 +57,21 @@ export default function FounderVerdict() {
 
       {lang !== 'en' && (
         <p className="faint" style={{ marginTop: 12 }}>
-          Inglizcha asl nusxa har doim mavjud —{' '}
+          {t.verdict.enAlways}{' '}
           <button
             type="button"
             className="btn btn-quiet btn-sm"
             style={{ display: 'inline-flex' }}
             onClick={() => setParams({ lang: 'en' })}
           >
-            inglizcha asl nusxani ko'rish
+            {t.verdict.enView}
           </button>
         </p>
       )}
 
       <hr className="divider" />
       <p className="muted" style={{ maxWidth: 560 }}>
-        Bu qaror bo'yicha savolingiz bormi? Hisobingizdagi emaildan javob yozing — hamkor o'z
-        mulohazasini tushuntiradi. <Link to="/apply">Mening startapimga qaytish</Link>
+        {t.verdict.questions(<Link to="/apply">{t.verdict.backToStartup}</Link>)}
       </p>
     </article>
   )

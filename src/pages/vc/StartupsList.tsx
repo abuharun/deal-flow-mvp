@@ -1,7 +1,9 @@
 import { Link, useSearchParams } from 'react-router-dom'
 import { useStore } from '../../lib/store'
 import type { Signal, Stage, Startup } from '../../lib/types'
-import { DECISION_LABEL, SIGNAL_ORDER, STAGE_LABEL, STAGE_ORDER, formatDate } from '../../lib/format'
+import { useLocale } from '../../i18n'
+import { localizeStartup } from '../../lib/content'
+import { SIGNAL_ORDER, STAGE_ORDER, formatDate } from '../../lib/format'
 import { SignalTag, StageBadge } from '../../components/ui'
 
 type SortKey = 'recent' | 'oldest' | 'signal' | 'name'
@@ -19,6 +21,7 @@ function matches(s: Startup, q: string): boolean {
 
 export default function StartupsList() {
   const { state } = useStore()
+  const { locale, t } = useLocale()
   const [params, setParams] = useSearchParams()
 
   const q = params.get('q') ?? ''
@@ -34,13 +37,16 @@ export default function StartupsList() {
     setParams(next, { replace: true })
   }
 
-  let rows = state.startups.filter(
-    (s) =>
-      matches(s, q) &&
-      (!stage || s.stage === (stage as Stage)) &&
-      (!signal || s.signal === (signal as Signal)) &&
-      (!outcome || (outcome === 'undecided' ? s.decision === null : s.decision === outcome)),
-  )
+  // Localize first so full-text search matches what the reviewer actually sees.
+  let rows = state.startups
+    .map((s) => localizeStartup(s, locale))
+    .filter(
+      (s) =>
+        matches(s, q) &&
+        (!stage || s.stage === (stage as Stage)) &&
+        (!signal || s.signal === (signal as Signal)) &&
+        (!outcome || (outcome === 'undecided' ? s.decision === null : s.decision === outcome)),
+    )
 
   rows = [...rows].sort((a, b) => {
     switch (sort) {
@@ -57,71 +63,72 @@ export default function StartupsList() {
 
   return (
     <div>
-      <h1 style={{ fontSize: '1.5rem' }}>Startaplar</h1>
+      <h1 style={{ fontSize: '1.5rem' }}>{t.list.title}</h1>
       <p className="muted" style={{ marginTop: -6 }}>
-        Doimiy arxiv — barcha topshirilgan arizalar, qidiruv bilan. Doska harakat uchun; bu yer topish
-        uchun.
+        {t.list.intro}
       </p>
 
       <div className="list-toolbar" role="search">
         <input
           type="search"
           className="input search"
-          placeholder="Nomi, xulosasi, sohasi, asoschisi bo'yicha qidiring…"
-          aria-label="Startaplarni qidirish"
+          placeholder={t.list.searchPlaceholder}
+          aria-label={t.list.searchAria}
           value={q}
           onChange={(e) => setParam('q', e.target.value)}
         />
         <label className="visually-hidden" htmlFor="filter-stage">
-          Bosqich bo'yicha saralash
+          {t.list.filterStage}
         </label>
         <select id="filter-stage" className="select" value={stage} onChange={(e) => setParam('stage', e.target.value)}>
-          <option value="">Barcha bosqichlar</option>
+          <option value="">{t.list.allStages}</option>
           {STAGE_ORDER.map((st) => (
             <option key={st} value={st}>
-              {STAGE_LABEL[st]}
+              {t.stage[st]}
             </option>
           ))}
         </select>
         <label className="visually-hidden" htmlFor="filter-signal">
-          Signal bo'yicha saralash
+          {t.list.filterSignal}
         </label>
         <select id="filter-signal" className="select" value={signal} onChange={(e) => setParam('signal', e.target.value)}>
-          <option value="">Barcha signallar</option>
-          <option value="high">Kuchli signal</option>
-          <option value="medium">O'rtacha signal</option>
-          <option value="low">Past signal</option>
+          <option value="">{t.list.allSignals}</option>
+          {(['high', 'medium', 'low'] as Signal[]).map((s) => (
+            <option key={s} value={s}>
+              {t.signal[s]}
+            </option>
+          ))}
         </select>
         <label className="visually-hidden" htmlFor="filter-outcome">
-          Natija bo'yicha saralash
+          {t.list.filterOutcome}
         </label>
         <select id="filter-outcome" className="select" value={outcome} onChange={(e) => setParam('outcome', e.target.value)}>
-          <option value="">Barcha natijalar</option>
-          <option value="recommend">Tavsiya etilgan</option>
-          <option value="advance">AQShga yo'llangan</option>
-          <option value="pass">Rad etilgan</option>
-          <option value="undecided">Qaror qilinmagan</option>
+          <option value="">{t.list.allOutcomes}</option>
+          <option value="recommend">{t.list.outcome.recommend}</option>
+          <option value="advance">{t.list.outcome.advance}</option>
+          <option value="pass">{t.list.outcome.pass}</option>
+          <option value="undecided">{t.list.outcome.undecided}</option>
         </select>
         <label className="visually-hidden" htmlFor="sort-by">
-          Tartiblash
+          {t.list.sortLabel}
         </label>
         <select id="sort-by" className="select" value={sort} onChange={(e) => setParam('sort', e.target.value)}>
-          <option value="recent">Avval yangilari</option>
-          <option value="oldest">Avval eskilari</option>
-          <option value="signal">Signal bo'yicha</option>
-          <option value="name">Nomi bo'yicha</option>
+          <option value="recent">{t.list.sortRecent}</option>
+          <option value="oldest">{t.list.sortOldest}</option>
+          <option value="signal">{t.list.sortSignal}</option>
+          <option value="name">{t.list.sortName}</option>
         </select>
       </div>
 
       <p className="faint" aria-live="polite">
-        {rows.length} ta startap
+        {t.list.count(rows.length)}
       </p>
 
       {rows.length === 0 ? (
         <div className="card" style={{ textAlign: 'center', padding: 40 }}>
-          <h2 style={{ fontSize: '1.1rem' }}>Hech narsa topilmadi</h2>
+          <h2 style={{ fontSize: '1.1rem' }}>{t.list.emptyTitle}</h2>
           <p className="muted" style={{ margin: 0 }}>
-            Filtrlarni kamaytirib yoki kengroq qidiruv so'zi bilan urinib ko'ring.
+            {t.list.emptyBody}
           </p>
         </div>
       ) : (
@@ -129,12 +136,12 @@ export default function StartupsList() {
           <table className="startup-table">
             <thead>
               <tr>
-                <th scope="col">Startap</th>
-                <th scope="col">Signal</th>
-                <th scope="col">Bosqich</th>
-                <th scope="col">Topshirilgan</th>
-                <th scope="col">Daromad</th>
-                <th scope="col">Natija</th>
+                <th scope="col">{t.list.colStartup}</th>
+                <th scope="col">{t.list.colSignal}</th>
+                <th scope="col">{t.list.colStage}</th>
+                <th scope="col">{t.list.colSubmitted}</th>
+                <th scope="col">{t.list.colRevenue}</th>
+                <th scope="col">{t.list.colOutcome}</th>
               </tr>
             </thead>
             <tbody>
@@ -154,9 +161,9 @@ export default function StartupsList() {
                   <td>
                     <StageBadge stage={s.stage} />
                   </td>
-                  <td className="num">{formatDate(s.submittedAt)}</td>
+                  <td className="num">{formatDate(s.submittedAt, locale)}</td>
                   <td className="num">{s.metrics.revenue}</td>
-                  <td>{s.decision ? DECISION_LABEL[s.decision] : <span className="faint">—</span>}</td>
+                  <td>{s.decision ? t.decision[s.decision] : <span className="faint">—</span>}</td>
                 </tr>
               ))}
             </tbody>

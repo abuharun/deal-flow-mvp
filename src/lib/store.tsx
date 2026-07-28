@@ -189,13 +189,16 @@ export function reducer(state: AppState, action: Action): AppState {
         startupName: s.name,
         founderName: s.founder.name,
         vcName: VC_NAME,
-        dateLabel: formatDateLong(now),
       }
       return patchStartup(state, action.id, {
         verdict: {
           decision: s.decision,
-          en: composeVerdict({ ...base, lang: 'en' }),
-          local: composeVerdict({ ...base, lang: s.founder.language }),
+          en: composeVerdict({ ...base, lang: 'en', dateLabel: formatDateLong(now, 'en') }),
+          local: composeVerdict({
+            ...base,
+            lang: s.founder.language,
+            dateLabel: formatDateLong(now, s.founder.language),
+          }),
           localLang: s.founder.language,
           composedAt: now,
           sentAt: null,

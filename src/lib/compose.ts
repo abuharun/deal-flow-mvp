@@ -54,8 +54,8 @@ export function polishLine(line: string): string {
 /**
  * Split rough notes into polished bullets. Lines are the unit; a single
  * multi-sentence line is split into sentences. Lines starting with "agar"
- * (or English "if" / "would reconsider") are routed to the "what would
- * change our answer" section instead of the reasons list.
+ * (or Russian "если", or English "if" / "would reconsider") are routed to
+ * the "what would change our answer" section instead of the reasons list.
  */
 export function polishNotes(notes: string): { reasons: string[]; changers: string[] } {
   let lines = notes
@@ -70,7 +70,7 @@ export function polishNotes(notes: string): { reasons: string[]; changers: strin
   for (const line of lines) {
     const polished = polishLine(line)
     if (!polished) continue
-    if (/^(agar\b|if\b|would reconsider\b|reconsider if\b)/i.test(line.trim().replace(/^[-*•]+\s*/, ''))) {
+    if (/^(agar\b|если\b|if\b|would reconsider\b|reconsider if\b)/i.test(line.trim().replace(/^[-*•]+\s*/, ''))) {
       changers.push(polished)
     } else {
       reasons.push(polished)

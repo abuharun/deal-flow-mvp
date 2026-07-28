@@ -3,11 +3,13 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { useStore } from '../../lib/store'
 import { STEP_KEYS } from '../../lib/types'
 import { VALIDATION_FEE } from '../../lib/seed'
+import { useLocale } from '../../i18n'
 import { StubTag } from '../../components/ui'
 import { useToast } from '../../components/toast'
 
 export default function Pay() {
   const { state, founderStartup, pay } = useStore()
+  const { t } = useLocale()
   const navigate = useNavigate()
   const toast = useToast()
   const [processing, setProcessing] = useState(false)
@@ -28,7 +30,7 @@ export default function Pay() {
       pay(ok)
       setProcessing(false)
       if (ok) {
-        toast("To'lov qabul qilindi — startapingiz topshirildi.")
+        toast(t.pay.toastPaid)
         navigate('/apply')
       } else {
         setDeclined(true)
@@ -38,26 +40,22 @@ export default function Pay() {
 
   return (
     <div>
-      <h1 style={{ fontSize: '1.6rem' }}>Oxirgi qadam: baholash to'lovi</h1>
+      <h1 style={{ fontSize: '1.6rem' }}>{t.pay.title}</h1>
       <p className="muted" style={{ maxWidth: 540 }}>
-        Aynan shu to'lov tahlilni jiddiy qiladi — u haqiqiy hamkorning vaqtini va qanday bo'lmasin
-        haqqoniy javobni ta'minlaydi. To'lov yakunlanishi bilan startapingiz ko'rib chiqish
-        pipeline'iga kiradi.
+        {t.pay.intro}
       </p>
 
       <div className="card" style={{ margin: '20px 0' }}>
         <div className="panel-title">
-          <h2 style={{ margin: 0, fontSize: '1.05rem' }}>Buyurtma xulosasi</h2>
-          <StubTag>Simulyatsiya qilingan to'lov — kartadan pul yechilmaydi</StubTag>
+          <h2 style={{ margin: 0, fontSize: '1.05rem' }}>{t.pay.orderSummary}</h2>
+          <StubTag>{t.pay.stubPayment}</StubTag>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderTop: '1px solid var(--line)' }}>
-          <span>
-            Startap baholovi — <strong>{state.draft.startupName}</strong>
-          </span>
+          <span>{t.pay.lineItem(state.draft.startupName)}</span>
           <span className="num">{VALIDATION_FEE}</span>
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderTop: '1px solid var(--line)', fontWeight: 640 }}>
-          <span>Bugun to'lanadigan jami</span>
+          <span>{t.pay.totalDue}</span>
           <span className="num">{VALIDATION_FEE}</span>
         </div>
       </div>
@@ -70,28 +68,27 @@ export default function Pay() {
         }}
       >
         <div className="field">
-          <label htmlFor="card-number">Karta raqami</label>
+          <label htmlFor="card-number">{t.pay.cardNumber}</label>
           <input id="card-number" className="input" inputMode="numeric" defaultValue="4242 4242 4242 4242" autoComplete="cc-number" />
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           <div className="field">
-            <label htmlFor="card-exp">Amal muddati</label>
+            <label htmlFor="card-exp">{t.pay.expiry}</label>
             <input id="card-exp" className="input" defaultValue="12/28" autoComplete="cc-exp" />
           </div>
           <div className="field">
-            <label htmlFor="card-cvc">CVC</label>
+            <label htmlFor="card-cvc">{t.pay.cvc}</label>
             <input id="card-cvc" className="input" defaultValue="123" autoComplete="cc-csc" />
           </div>
         </div>
         {declined && (
           <p className="error-text" role="alert">
-            Kartangiz rad etildi (simulyatsiya). Kiritgan ma'lumotlaringiz saqlanib turibdi — tayyor bo'lganingizda
-            qayta urinib ko'ring.
+            {t.pay.declined}
           </p>
         )}
         <div style={{ display: 'grid', gap: 10, marginTop: 6 }}>
           <button type="submit" className="btn btn-primary btn-lg" disabled={processing}>
-            {processing ? 'Bajarilmoqda…' : `${VALIDATION_FEE} to'lash va topshirish`}
+            {processing ? t.pay.processing : t.pay.payButton(VALIDATION_FEE)}
           </button>
           <button
             type="button"
@@ -99,14 +96,13 @@ export default function Pay() {
             disabled={processing}
             onClick={() => runPayment(false)}
           >
-            Rad etilgan kartani simulyatsiya qilish
+            {t.pay.simulateDeclined}
           </button>
         </div>
       </form>
 
       <p className="faint" style={{ marginTop: 16 }}>
-        <Link to="/apply/submit?step=ask">Topshirishga qaytish</Link> — to'lov yakunlanmaguncha hech
-        narsa yuborilmaydi.
+        <Link to="/apply/submit?step=ask">{t.pay.backToSubmit}</Link> {t.pay.backNote}
       </p>
     </div>
   )

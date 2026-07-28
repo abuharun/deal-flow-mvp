@@ -1,4 +1,5 @@
 import { Route, Routes, Link } from 'react-router-dom'
+import { useLocale } from './i18n'
 import { RequireRole, FounderShell, VcShell, ScrollToTop } from './components/shells'
 import Landing from './pages/Landing'
 import { Login, Signup, Reset } from './pages/auth'
@@ -14,13 +15,14 @@ import StartupDetail from './pages/vc/StartupDetail'
 import Settings from './pages/vc/Settings'
 
 function NotFound() {
+  const { t } = useLocale()
   return (
     <div className="auth-wrap">
       <div className="card" style={{ textAlign: 'center', maxWidth: 380 }}>
-        <h1 style={{ fontSize: '1.4rem' }}>Sahifa topilmadi</h1>
-        <p className="muted">Bu havola hech qayerga olib bormaydi.</p>
+        <h1 style={{ fontSize: '1.4rem' }}>{t.notFound.title}</h1>
+        <p className="muted">{t.notFound.body}</p>
         <Link to="/" className="btn btn-primary">
-          Bosh sahifaga qaytish
+          {t.notFound.home}
         </Link>
       </div>
     </div>

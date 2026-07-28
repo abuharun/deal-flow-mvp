@@ -20,6 +20,6 @@ export function verdictTextFor(startup: Startup, lang: Lang): string {
     founderName: startup.founder.name,
     vcName: VC_NAME,
     lang,
-    dateLabel: formatDateLong(v.sentAt ?? v.composedAt),
+    dateLabel: formatDateLong(v.sentAt ?? v.composedAt, lang),
   })
 }
