@@ -514,6 +514,9 @@ export const ru: Messages = {
     openFile: (fileName: string) => `Открыть файл ${fileName}`,
     open: 'Открыть',
     openFailed: 'Не удалось открыть файл — он не сохранён на этом устройстве.',
+    downloadFile: (fileName: string) => `Скачать файл ${fileName}`,
+    download: 'Скачать',
+    downloadFailed: 'Не удалось скачать файл — он не сохранён на этом устройстве.',
     openLink: 'Открыть ссылку',
     kindLabel: {
       deck: 'презентация',

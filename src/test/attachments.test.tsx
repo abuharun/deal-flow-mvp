@@ -252,6 +252,62 @@ describe('VC attachment access', () => {
     vi.unstubAllGlobals()
   })
 
+  it('downloads a locally stored PDF via a temporary anchor with the original filename', async () => {
+    const user = userEvent.setup()
+    const openSpy = vi.fn(() => ({}) as Window)
+    vi.stubGlobal('open', openSpy)
+    // Capture the anchor's state at click time — it must already carry the
+    // object URL + filename and be attached to the document.
+    let clickedAnchor: { href: string; download: string; connected: boolean } | null = null
+    const anchorClick = vi
+      .spyOn(HTMLAnchorElement.prototype, 'click')
+      .mockImplementation(function (this: HTMLAnchorElement) {
+        clickedAnchor = { href: this.href, download: this.download, connected: this.isConnected }
+      })
+    seam.blobs.set('attachment:deck', new Blob(['%PDF-1.4'], { type: 'application/pdf' }))
+    const id = seedVcWithUploads()
+    renderAt(`/app/startups/${id}`)
+
+    const button = screen.getByRole('button', {
+      name: 'uploaded-real-deck.pdf faylini yuklab olish',
+    })
+    expect(button).toHaveTextContent('Yuklab olish')
+    await user.click(button)
+
+    expect(seam.getBlob).toHaveBeenCalledWith('attachment:deck')
+    expect(URL.createObjectURL).toHaveBeenCalledTimes(1)
+    expect(anchorClick).toHaveBeenCalledTimes(1)
+    expect(clickedAnchor).toEqual({
+      href: 'blob:mock-url',
+      download: 'uploaded-real-deck.pdf',
+      connected: true,
+    })
+    // Cleanup: the helper anchor is gone and the object URL is released.
+    expect(document.querySelector('a[download]')).toBeNull()
+    expect(URL.revokeObjectURL).toHaveBeenCalledWith('blob:mock-url')
+    // Download never opens a tab — that stays the Open action's job.
+    expect(openSpy).not.toHaveBeenCalled()
+    anchorClick.mockRestore()
+    vi.unstubAllGlobals()
+  })
+
+  it('reports a missing blob instead of claiming the file downloaded', async () => {
+    const user = userEvent.setup()
+    const anchorClick = vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
+    const id = seedVcWithUploads() // seam.blobs left empty on purpose
+    renderAt(`/app/startups/${id}`)
+
+    await user.click(
+      screen.getByRole('button', { name: 'uploaded-real-deck.pdf faylini yuklab olish' }),
+    )
+
+    expect(await screen.findByText(/Faylni yuklab olib bo'lmadi/)).toBeInTheDocument()
+    expect(URL.createObjectURL).not.toHaveBeenCalled()
+    expect(URL.revokeObjectURL).not.toHaveBeenCalled()
+    expect(anchorClick).not.toHaveBeenCalled()
+    anchorClick.mockRestore()
+  })
+
   it('reports a missing blob instead of claiming the file opened', async () => {
     const user = userEvent.setup()
     const id = seedVcWithUploads() // seam.blobs left empty on purpose

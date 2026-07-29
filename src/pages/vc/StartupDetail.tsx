@@ -31,7 +31,9 @@ export default function StartupDetail() {
   const toast = useToast()
   const [draftLang, setDraftLang] = useState<'en' | 'local'>('en')
   const [confirmSend, setConfirmSend] = useState(false)
-  const [openErrorKey, setOpenErrorKey] = useState<string | null>(null)
+  const [attachError, setAttachError] = useState<{ key: string; action: 'open' | 'download' } | null>(
+    null,
+  )
   const reviewRef = useRef<HTMLDivElement>(null)
   const verifyRef = useRef<HTMLDivElement>(null)
   const decideRef = useRef<HTMLDivElement>(null)
@@ -68,9 +70,28 @@ export default function StartupDetail() {
       window.open(url, '_blank', 'noopener')
       // Give the new tab time to load the PDF before releasing the object URL.
       setTimeout(() => URL.revokeObjectURL(url), 60_000)
-      setOpenErrorKey(null)
+      setAttachError(null)
     } catch {
-      setOpenErrorKey(a.storageKey)
+      setAttachError({ key: a.storageKey, action: 'open' })
+    }
+  }
+
+  const downloadStoredFile = async (a: Attachment) => {
+    if (!a.storageKey) return
+    try {
+      const blob = await getBlob(a.storageKey)
+      if (!blob) throw new Error('attachment bytes missing')
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = a.fileName
+      document.body.appendChild(anchor)
+      anchor.click()
+      anchor.remove()
+      URL.revokeObjectURL(url)
+      setAttachError(null)
+    } catch {
+      setAttachError({ key: a.storageKey, action: 'download' })
     }
   }
 
@@ -416,22 +437,32 @@ export default function StartupDetail() {
                         <span className="num faint">{formatBytes(a.size, locale)}</span>
                       </>
                     )}
-                    {a.storageKey && openErrorKey === a.storageKey && (
+                    {a.storageKey && attachError?.key === a.storageKey && (
                       <span className="error-text" role="alert" style={{ display: 'block' }}>
-                        {t.detail.openFailed}
+                        {attachError.action === 'open' ? t.detail.openFailed : t.detail.downloadFailed}
                       </span>
                     )}
                   </span>
                   <span className="kind">{t.detail.kindLabel[a.kind]}</span>
                   {a.storageKey && (
-                    <button
-                      type="button"
-                      className="btn btn-secondary btn-sm"
-                      aria-label={t.detail.openFile(a.fileName)}
-                      onClick={() => openStoredFile(a)}
-                    >
-                      {t.detail.open}
-                    </button>
+                    <span style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        className="btn btn-secondary btn-sm"
+                        aria-label={t.detail.openFile(a.fileName)}
+                        onClick={() => openStoredFile(a)}
+                      >
+                        {t.detail.open}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-secondary btn-sm"
+                        aria-label={t.detail.downloadFile(a.fileName)}
+                        onClick={() => downloadStoredFile(a)}
+                      >
+                        {t.detail.download}
+                      </button>
+                    </span>
                   )}
                   {linkHref && (
                     <a

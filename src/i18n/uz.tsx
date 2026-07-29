@@ -515,6 +515,9 @@ export const uz = {
     openFile: (fileName: string) => `${fileName} faylini ochish`,
     open: 'Ochish',
     openFailed: "Faylni ochib bo'lmadi — bu qurilmada saqlanmagan.",
+    downloadFile: (fileName: string) => `${fileName} faylini yuklab olish`,
+    download: 'Yuklab olish',
+    downloadFailed: "Faylni yuklab olib bo'lmadi — bu qurilmada saqlanmagan.",
     openLink: 'Havolani ochish',
     kindLabel: {
       deck: 'taqdimot',
