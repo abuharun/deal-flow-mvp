@@ -50,6 +50,22 @@ export function formatDateLong(iso: string, lang: Lang = 'uz'): string {
   return assemble(iso, lang, MONTHS[lang].long)
 }
 
+// Uzbek uses Latin byte units; Russian its Cyrillic equivalents.
+const BYTE_UNITS: Record<Lang, [string, string, string]> = {
+  uz: ['B', 'KB', 'MB'],
+  ru: ['Б', 'КБ', 'МБ'],
+  en: ['B', 'KB', 'MB'],
+}
+
+/** Human-readable file size ("13 B", "2.3 MB"); attachments are capped at 10 MiB. */
+export function formatBytes(bytes: number, lang: Lang = 'uz'): string {
+  const [b, kb, mb] = BYTE_UNITS[lang]
+  const round = (n: number) => (Math.round(n * 10) / 10).toFixed(1).replace(/\.0$/, '')
+  if (bytes < 1024) return `${bytes} ${b}`
+  if (bytes < 1024 * 1024) return `${round(bytes / 1024)} ${kb}`
+  return `${round(bytes / (1024 * 1024))} ${mb}`
+}
+
 export const STAGE_ORDER: Stage[] = ['new', 'in-review', 'recommended', 'advanced', 'passed']
 
 export const SIGNAL_ORDER: Record<'high' | 'medium' | 'low', number> = { high: 0, medium: 1, low: 2 }

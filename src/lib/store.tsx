@@ -310,10 +310,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       editVerdict: (id, en) => dispatch({ type: 'edit-verdict', id, en }),
       sendVerdict: (id) => dispatch({ type: 'send-verdict', id }),
       resetDemo: () => dispatch({ type: 'reset' }),
+      // One file per kind (a new deck replaces the old one); data-room links
+      // are only deduplicated by URL, so several links can coexist.
       addDraftAttachment: (a) =>
         dispatch({
           type: 'update-draft',
-          patch: { attachments: [...state.draft.attachments.filter((x) => x.fileName !== a.fileName), a] },
+          patch: {
+            attachments: [
+              ...state.draft.attachments.filter((x) =>
+                a.kind === 'dataroom' ? x.fileName !== a.fileName : x.kind !== a.kind,
+              ),
+              a,
+            ],
+          },
         }),
       removeDraftAttachment: (fileName) =>
         dispatch({

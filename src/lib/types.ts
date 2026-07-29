@@ -27,8 +27,13 @@ export interface FounderProfile {
 export interface Attachment {
   label: string
   kind: 'deck' | 'dataroom' | 'revenue' | 'other'
-  /** Demo only — no real files are stored. */
+  /** Real file name for uploads, URL for data-room links, sample name for seeds. */
   fileName: string
+  /** IndexedDB key of the locally stored bytes; absent for links and seeded demo rows. */
+  storageKey?: string
+  mimeType?: string
+  /** Byte size of the stored file. */
+  size?: number
 }
 
 export interface VerificationItem {

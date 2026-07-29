@@ -1406,6 +1406,25 @@ a { color: var(--brand-strong); }
   margin-left: auto;
 }
 
+/* Real upload controls on the ask step. */
+.attach-controls { display: grid; gap: 14px; }
+.file-input {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  width: 100%;
+}
+.file-input:focus-visible {
+  outline-offset: 0;
+  border-color: var(--brand-strong);
+}
+.attach-url-row { display: flex; gap: 8px; align-items: stretch; flex-wrap: wrap; }
+.attach-url-row .input { flex: 1 1 220px; width: auto; }
+
 .settings-grid {
   display: grid;
   gap: 18px;

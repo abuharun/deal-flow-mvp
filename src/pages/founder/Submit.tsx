@@ -4,17 +4,44 @@ import { useStore } from '../../lib/store'
 import { STEP_KEYS, type Attachment, type StepKey } from '../../lib/types'
 import { useLocale } from '../../i18n'
 import { attachmentLabel } from '../../lib/content'
-import { cx } from '../../lib/format'
+import { cx, formatBytes } from '../../lib/format'
 import { StubTag } from '../../components/ui'
 import { DocIcon } from '../../components/icons'
+import { deleteBlob, putBlob } from '../../lib/blobStore'
 
 // Labels are stored canonically in Uzbek and localized at display time, so a
 // draft attached under one interface language reads correctly under the other.
-const SAMPLE_ATTACHMENTS: Attachment[] = [
-  { label: 'Pitch-dek', kind: 'deck', fileName: 'my-pitch-deck.pdf' },
-  { label: 'Daromad isboti', kind: 'revenue', fileName: 'bank-statement-export.xlsx' },
-  { label: 'Data room havolasi', kind: 'dataroom', fileName: 'drive.google.com/my-dataroom' },
-]
+const ATTACH_LABEL = {
+  deck: 'Pitch-dek',
+  revenue: 'Daromad isboti',
+  dataroom: 'Data room havolasi',
+} as const
+
+type PdfKind = 'deck' | 'revenue'
+type AttachSlot = PdfKind | 'dataroom'
+type AttachErrorCode = 'type' | 'size' | 'store' | 'url'
+
+const MAX_PDF_BYTES = 10 * 1024 * 1024
+
+/** Stable per-kind key: replacing a deck overwrites the same IndexedDB row. */
+const storageKeyFor = (kind: PdfKind) => `attachment:${kind}`
+
+/** Accept only http(s) links; a bare domain is normalized to https. */
+function normalizeDataroomUrl(raw: string): string | null {
+  if (!raw) return null
+  let url: URL | null = null
+  try {
+    url = new URL(raw)
+  } catch {
+    try {
+      url = new URL(`https://${raw}`)
+    } catch {
+      url = null
+    }
+  }
+  if (!url || (url.protocol !== 'http:' && url.protocol !== 'https:')) return null
+  return url.href
+}
 
 export default function Submit() {
   const { state, founderStartup } = useStore()
@@ -38,7 +65,69 @@ function StepForm({ step }: { step: StepKey }) {
   const stepIndex = STEP_KEYS.indexOf(step)
   const draft = state.draft
   const [error, setError] = useState<'name' | 'empty' | null>(null)
+  const [attachErrors, setAttachErrors] = useState<Partial<Record<AttachSlot, AttachErrorCode>>>({})
+  const [dataroomUrl, setDataroomUrl] = useState('')
   const headingRef = useRef<HTMLHeadingElement>(null)
+
+  const attachErrorText: Record<AttachErrorCode, string> = {
+    type: t.submit.errPdfOnly,
+    size: t.submit.errFileTooLarge,
+    store: t.submit.errFileStore,
+    url: t.submit.errBadUrl,
+  }
+
+  const setAttachError = (slot: AttachSlot, code: AttachErrorCode | null) =>
+    setAttachErrors((prev) => ({ ...prev, [slot]: code ?? undefined }))
+
+  const onPdfSelected = async (kind: PdfKind, e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    // Reset so re-selecting the same file after an error fires change again.
+    e.target.value = ''
+    if (!file) return
+    const isPdf = file.type ? file.type === 'application/pdf' : /\.pdf$/i.test(file.name)
+    if (!isPdf) {
+      setAttachError(kind, 'type')
+      return
+    }
+    if (file.size > MAX_PDF_BYTES) {
+      setAttachError(kind, 'size')
+      return
+    }
+    const storageKey = storageKeyFor(kind)
+    try {
+      // Bytes must land in IndexedDB before the metadata claims they exist.
+      await putBlob(storageKey, file)
+    } catch {
+      setAttachError(kind, 'store')
+      return
+    }
+    setAttachError(kind, null)
+    addDraftAttachment({
+      label: ATTACH_LABEL[kind],
+      kind,
+      fileName: file.name,
+      storageKey,
+      mimeType: file.type || 'application/pdf',
+      size: file.size,
+    })
+  }
+
+  const addDataroomLink = () => {
+    const href = normalizeDataroomUrl(dataroomUrl.trim())
+    if (!href) {
+      setAttachError('dataroom', 'url')
+      return
+    }
+    setAttachError('dataroom', null)
+    addDraftAttachment({ label: ATTACH_LABEL.dataroom, kind: 'dataroom', fileName: href })
+    setDataroomUrl('')
+  }
+
+  const removeAttachment = (a: Attachment) => {
+    // Links have no bytes; uploads clean their IndexedDB row up as well.
+    if (a.storageKey) deleteBlob(a.storageKey).catch(() => {})
+    removeDraftAttachment(a.fileName)
+  }
 
   // Announce and focus the step heading on step change (focus management).
   useEffect(() => {
@@ -213,16 +302,22 @@ function StepForm({ step }: { step: StepKey }) {
               {draft.attachments.length > 0 && (
                 <ul className="attach-list" style={{ marginBottom: 10 }}>
                   {draft.attachments.map((a) => (
-                    <li key={a.fileName}>
+                    <li key={`${a.kind}:${a.fileName}`}>
                       <DocIcon />
                       <span>
                         <strong>{attachmentLabel(a.label, locale)}</strong> · {a.fileName}
+                        {typeof a.size === 'number' && (
+                          <>
+                            {' · '}
+                            <span className="num faint">{formatBytes(a.size, locale)}</span>
+                          </>
+                        )}
                       </span>
                       <button
                         type="button"
                         className="btn btn-quiet btn-sm"
                         style={{ marginLeft: 'auto' }}
-                        onClick={() => removeDraftAttachment(a.fileName)}
+                        onClick={() => removeAttachment(a)}
                         aria-label={t.submit.removeAttachment(attachmentLabel(a.label, locale))}
                       >
                         {t.submit.remove}
@@ -231,19 +326,62 @@ function StepForm({ step }: { step: StepKey }) {
                   ))}
                 </ul>
               )}
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                {SAMPLE_ATTACHMENTS.filter(
-                  (s) => !draft.attachments.some((a) => a.fileName === s.fileName),
-                ).map((s) => (
-                  <button
-                    key={s.fileName}
-                    type="button"
-                    className="btn btn-secondary btn-sm"
-                    onClick={() => addDraftAttachment(s)}
-                  >
-                    {t.submit.attach(attachmentLabel(s.label, locale))}
-                  </button>
-                ))}
+              <div className="attach-controls">
+                <div className="field" style={{ marginBottom: 0 }}>
+                  <label htmlFor="f-attach-deck">{t.submit.deckLabel}</label>
+                  <input
+                    id="f-attach-deck"
+                    className="file-input"
+                    type="file"
+                    accept="application/pdf,.pdf"
+                    onChange={(e) => onPdfSelected('deck', e)}
+                  />
+                  {attachErrors.deck && (
+                    <p className="error-text" role="alert">
+                      {attachErrorText[attachErrors.deck]}
+                    </p>
+                  )}
+                </div>
+                <div className="field" style={{ marginBottom: 0 }}>
+                  <label htmlFor="f-attach-revenue">{t.submit.revenueProofLabel}</label>
+                  <input
+                    id="f-attach-revenue"
+                    className="file-input"
+                    type="file"
+                    accept="application/pdf,.pdf"
+                    onChange={(e) => onPdfSelected('revenue', e)}
+                  />
+                  {attachErrors.revenue && (
+                    <p className="error-text" role="alert">
+                      {attachErrorText[attachErrors.revenue]}
+                    </p>
+                  )}
+                </div>
+                <div className="field" style={{ marginBottom: 0 }}>
+                  <label htmlFor="f-attach-dataroom">{t.submit.dataroomLabel}</label>
+                  <div className="attach-url-row">
+                    <input
+                      id="f-attach-dataroom"
+                      className="input"
+                      type="text"
+                      inputMode="url"
+                      value={dataroomUrl}
+                      placeholder={t.submit.dataroomPlaceholder}
+                      onChange={(e) => {
+                        setDataroomUrl(e.target.value)
+                        setAttachError('dataroom', null)
+                      }}
+                    />
+                    <button type="button" className="btn btn-secondary" onClick={addDataroomLink}>
+                      {t.submit.addLink}
+                    </button>
+                  </div>
+                  {attachErrors.dataroom && (
+                    <p className="error-text" role="alert">
+                      {attachErrorText[attachErrors.dataroom]}
+                    </p>
+                  )}
+                </div>
               </div>
             </fieldset>
           </>

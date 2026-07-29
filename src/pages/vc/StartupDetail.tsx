@@ -1,16 +1,27 @@
 import { useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useStore } from '../../lib/store'
-import { STEP_KEYS, type Decision, type Signal } from '../../lib/types'
+import { STEP_KEYS, type Attachment, type Decision, type Signal } from '../../lib/types'
 import { useLocale } from '../../i18n'
 import { localizeStartup } from '../../lib/content'
-import { formatDate, cx } from '../../lib/format'
+import { formatDate, formatBytes, cx } from '../../lib/format'
 import { AiBadge, SignalTag, StageBadge, StubTag } from '../../components/ui'
 import { CheckIcon, DocIcon } from '../../components/icons'
 import { LANG_LABEL } from '../../lib/compose'
 import { useToast } from '../../components/toast'
+import { getBlob } from '../../lib/blobStore'
 
 const DECISIONS: Decision[] = ['recommend', 'advance', 'pass']
+
+/** Data-room links open externally only when they are schemeful http(s). */
+function safeHttpUrl(value: string): string | null {
+  try {
+    const url = new URL(value)
+    return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : null
+  } catch {
+    return null
+  }
+}
 
 export default function StartupDetail() {
   const { id } = useParams()
@@ -20,6 +31,7 @@ export default function StartupDetail() {
   const toast = useToast()
   const [draftLang, setDraftLang] = useState<'en' | 'local'>('en')
   const [confirmSend, setConfirmSend] = useState(false)
+  const [openErrorKey, setOpenErrorKey] = useState<string | null>(null)
   const reviewRef = useRef<HTMLDivElement>(null)
   const verifyRef = useRef<HTMLDivElement>(null)
   const decideRef = useRef<HTMLDivElement>(null)
@@ -46,6 +58,21 @@ export default function StartupDetail() {
 
   const scrollTo = (ref: React.RefObject<HTMLDivElement | null>) =>
     ref.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+  const openStoredFile = async (a: Attachment) => {
+    if (!a.storageKey) return
+    try {
+      const blob = await getBlob(a.storageKey)
+      if (!blob) throw new Error('attachment bytes missing')
+      const url = URL.createObjectURL(blob)
+      window.open(url, '_blank', 'noopener')
+      // Give the new tab time to load the PDF before releasing the object URL.
+      setTimeout(() => URL.revokeObjectURL(url), 60_000)
+      setOpenErrorKey(null)
+    } catch {
+      setOpenErrorKey(a.storageKey)
+    }
+  }
 
   return (
     <div>
@@ -376,15 +403,49 @@ export default function StartupDetail() {
           </p>
         ) : (
           <ul className="attach-list">
-            {startup.attachments.map((a) => (
-              <li key={a.fileName}>
-                <DocIcon />
-                <span>
-                  <strong>{a.label}</strong> · {a.fileName}
-                </span>
-                <span className="kind">{t.detail.kindLabel[a.kind]}</span>
-              </li>
-            ))}
+            {startup.attachments.map((a) => {
+              const linkHref = a.kind === 'dataroom' && !a.storageKey ? safeHttpUrl(a.fileName) : null
+              return (
+                <li key={`${a.kind}:${a.fileName}`}>
+                  <DocIcon />
+                  <span>
+                    <strong>{a.label}</strong> · {a.fileName}
+                    {typeof a.size === 'number' && (
+                      <>
+                        {' · '}
+                        <span className="num faint">{formatBytes(a.size, locale)}</span>
+                      </>
+                    )}
+                    {a.storageKey && openErrorKey === a.storageKey && (
+                      <span className="error-text" role="alert" style={{ display: 'block' }}>
+                        {t.detail.openFailed}
+                      </span>
+                    )}
+                  </span>
+                  <span className="kind">{t.detail.kindLabel[a.kind]}</span>
+                  {a.storageKey && (
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      aria-label={t.detail.openFile(a.fileName)}
+                      onClick={() => openStoredFile(a)}
+                    >
+                      {t.detail.open}
+                    </button>
+                  )}
+                  {linkHref && (
+                    <a
+                      className="btn btn-secondary btn-sm"
+                      href={linkHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {t.detail.openLink}
+                    </a>
+                  )}
+                </li>
+              )
+            })}
           </ul>
         )}
       </section>
