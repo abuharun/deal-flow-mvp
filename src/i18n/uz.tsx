@@ -88,21 +88,32 @@ export const uz = {
     assessment: 'Baholash',
     login: 'Kirish',
     start: 'Boshlash',
+    badge: 'Inson qaror qiladi · AI yordam beradi',
     hero1: 'Startapingiz uchun halol xulosa.',
     hero2: 'Haqiqiy kapital uchun haqiqiy signal.',
+    heroAlt:
+      "Markaziy Osiyoni jahon kapital markazlari bilan bog'lovchi yorqin tarmoq chiziqlari tasvirlangan ko'k xarita",
+    heroCaption: 'Toshkent ↔ Ostin · bitta halol oqim',
     lede: "Bevosita O'zbekistondagi asoschilarni AQSh venchur kapitali standartlari bilan bog'laydi. Startapingizni topshiring, inson ko'rib chiqqan halol xulosa oling — agar u investitsiyaga loyiq bo'lsa, oldinga olib boradigan haqiqiy yo'l ham ochiladi.",
     ctaSubmit: 'Startapingizni topshiring',
     ctaVc: "Men bitimlarni ko'rib chiqaman",
+    flowKicker: 'Jarayon',
     howHeading: 'Qanday ishlaydi',
-    how1Title: '1 · Siz topshirasiz',
+    flowTitle: 'Tartibli topshirishdan halol qarorgacha',
+    flowBody:
+      "Startap olti bo'limli tartibda topshiriladi; AI uni investorlar o'qiydigan yagona formatga keltiradi; qarorni esa haqiqiy hamkor qabul qiladi. Avtomatik hukm yo'q — texnologiya faqat e'tiborni tartiblaydi.",
+    flowAlt:
+      "Tarqoq ma'lumot bloklarini tartibli bosqichlarga jamlovchi shaffof modulli quvur tasviri",
+    how1Title: 'Siz topshirasiz',
     how1Body:
       "Olti bosqichli tartibli topshirish jarayoni — muammo, mahsulot, bozor, natijalar, jamoa, so'rov. Istalgan payt saqlab, keyin davom eting; internet uzilib turadigan telefon uchun ham qulay qilib qurilgan.",
-    how2Title: '2 · Biz sizni tushunarli qilamiz',
+    how2Title: 'Biz sizni tushunarli qilamiz',
     how2Body:
       "AI hikoyangizni investorlar haqiqatda o'qiydigan formatga keltiradi va qay darajada turganingizni taxmin qiladi. U e'tiborni tartiblaydi — hech qachon qaror qabul qilmaydi.",
-    how3Title: '3 · Hamkor qaror qiladi',
+    how3Title: 'Hamkor qaror qiladi',
     how3Body:
       "Haqiqiy venchur hamkori topshirgan startapingizni asl so'zlaringiz bilan solishtirib o'rganadi, da'volaringizni tekshiradi va sizga halol xulosa yozadi — o'z tilingizda, sababi bilan.",
+    promiseKicker: 'Tamoyillar',
     promiseHeading: "Bizning va'damiz",
     p1Title: "Avtomatikadan ko'ra ishonch",
     p1Body:

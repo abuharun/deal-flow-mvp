@@ -52,6 +52,47 @@ describe('public pages', () => {
     expect(screen.queryByRole('menu')).not.toBeInTheDocument()
   })
 
+  it('renders both banner images with localized alt text and performance attributes', () => {
+    renderAt('/')
+    const hero = screen.getByRole('img', { name: /yorqin tarmoq chiziqlari/ })
+    expect(hero.getAttribute('src')).toMatch(/assets\/bevosita-global-network\.webp$/)
+    expect(hero).toHaveAttribute('width', '1823')
+    expect(hero).toHaveAttribute('height', '863')
+    expect(hero).toHaveAttribute('loading', 'eager')
+    expect(hero).toHaveAttribute('fetchpriority', 'high')
+    expect(hero).toHaveAttribute('decoding', 'async')
+
+    const flow = screen.getByRole('img', { name: /modulli quvur/ })
+    expect(flow.getAttribute('src')).toMatch(/assets\/bevosita-deal-flow\.webp$/)
+    expect(flow).toHaveAttribute('width', '1823')
+    expect(flow).toHaveAttribute('height', '863')
+    expect(flow).toHaveAttribute('loading', 'lazy')
+    expect(flow).toHaveAttribute('decoding', 'async')
+  })
+
+  it('keeps the sticky landing chrome and the localized hero and flow narrative', () => {
+    renderAt('/')
+    expect(screen.getByRole('banner').parentElement).toHaveClass('landing-topbar')
+    expect(screen.getByText('Inson qaror qiladi · AI yordam beradi')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Tartibli topshirishdan halol qarorgacha' })).toBeInTheDocument()
+    // The deal-flow banner is content-bearing: process copy sits beside the artwork.
+    expect(screen.getByText(/Avtomatik hukm yo'q/)).toBeInTheDocument()
+  })
+
+  it('localizes the banner narrative into Russian', async () => {
+    const user = userEvent.setup()
+    renderAt('/')
+    await user.click(screen.getByRole('button', { name: /Interfeys tili.*O‘zbekcha/ }))
+    await user.click(screen.getByRole('menuitemradio', { name: 'Русский' }))
+
+    expect(screen.getByRole('img', { name: /Центральную Азию/ })).toBeInTheDocument()
+    expect(screen.getByRole('img', { name: /конвейер из прозрачных модулей/ })).toBeInTheDocument()
+    expect(screen.getByText('Решает человек · ИИ помогает')).toBeInTheDocument()
+    expect(
+      screen.getByRole('heading', { name: 'От структурированной подачи — к честному решению' }),
+    ).toBeInTheDocument()
+  })
+
   it('guards role routes behind login', () => {
     renderAt('/app')
     expect(screen.getByRole('heading', { name: 'Kirish' })).toBeInTheDocument()
