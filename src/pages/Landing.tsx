@@ -17,10 +17,10 @@ export default function Landing() {
           >
             {t.landing.assessment}
           </button>
-          <LanguageSwitcher />
           <Link to="/login" className="btn btn-quiet">
             {t.landing.login}
           </Link>
+          <LanguageSwitcher />
           <Link to="/signup" className="btn btn-primary">
             {t.landing.start}
           </Link>

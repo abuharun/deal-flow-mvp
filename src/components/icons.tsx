@@ -112,3 +112,12 @@ export function PersonIcon({ size = 18 }: IconProps) {
     </svg>
   )
 }
+
+/** Chevron for menu triggers — points down closed, rotated open via CSS. */
+export function ChevronDownIcon({ size = 13 }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M3.2 5.4 7 9.2l3.8-3.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}

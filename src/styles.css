@@ -328,11 +328,87 @@ a { color: var(--brand-strong); }
   gap: 8px;
   flex-wrap: wrap;
 }
+
+/* ---------- Compact interface language menu ----------
+   Deliberately separate from .lang-toggle, which controls verdict body language. */
+.lang-switcher {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+.language-trigger {
+  min-width: 54px;
+  min-height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--brand-strong);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 680;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.language-trigger:hover,
+.language-trigger[aria-expanded='true'] {
+  background: var(--brand-wash);
+  border-color: var(--brand);
+}
+.language-chevron {
+  display: inline-flex;
+  transition: transform 0.15s ease;
+}
+.language-chevron.open { transform: rotate(180deg); }
+.language-menu {
+  position: absolute;
+  z-index: 70;
+  top: calc(100% + 7px);
+  right: 0;
+  min-width: 154px;
+  padding: 5px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+}
+.language-menu button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  text-align: left;
+  cursor: pointer;
+}
+.language-menu button:hover,
+.language-menu button:focus-visible {
+  background: var(--brand-wash);
+  color: var(--brand-strong);
+}
+.language-menu button[aria-checked='true'] {
+  color: var(--brand-strong);
+  font-weight: 620;
+}
 .assessment-section { scroll-margin-top: 24px; }
 @media (max-width: 620px) {
   .landing-header { align-items: flex-start; flex-wrap: wrap; }
   .landing-nav { width: 100%; justify-content: flex-start; }
   .landing-nav .btn { padding-inline: 10px; }
+  .language-trigger { min-height: 36px; }
 }
 .landing-main {
   max-width: 1120px;

@@ -37,12 +37,19 @@ describe('public pages', () => {
     expect(screen.getByRole('link', { name: /Startapingizni topshiring/ })).toBeInTheDocument()
   })
 
-  it('places the localized assessment link immediately before the landing language toggle', () => {
+  it('orders assessment, login, the single language trigger, and start in the landing header', () => {
     renderAt('/')
     const assessment = screen.getByRole('button', { name: 'Baholash' })
+    const login = screen.getByRole('link', { name: 'Kirish' })
+    const language = screen.getByRole('button', { name: /Interfeys tili.*O‘zbekcha/ })
+    const start = screen.getByRole('link', { name: 'Boshlash' })
     expect(assessment).toHaveAttribute('type', 'button')
     expect(document.getElementById('assessment')).toBeInTheDocument()
-    expect(assessment.nextElementSibling).toBe(screen.getByRole('group', { name: 'Interfeys tili' }))
+    expect(assessment.nextElementSibling).toBe(login)
+    expect(login.nextElementSibling).toContainElement(language)
+    expect(login.nextElementSibling?.nextElementSibling).toBe(start)
+    expect(language).toHaveAttribute('aria-expanded', 'false')
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
   })
 
   it('guards role routes behind login', () => {
@@ -54,7 +61,8 @@ describe('public pages', () => {
     const user = userEvent.setup()
     const first = renderAt('/')
 
-    await user.click(screen.getByRole('button', { name: 'Русский' }))
+    await user.click(screen.getByRole('button', { name: /Interfeys tili.*O‘zbekcha/ }))
+    await user.click(screen.getByRole('menuitemradio', { name: 'Русский' }))
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Честное заключение')
     expect(document.documentElement).toHaveAttribute('lang', 'ru')
     expect(document.title).toBe('Bevosita — честный поток сделок')
@@ -64,7 +72,7 @@ describe('public pages', () => {
     first.unmount()
     renderAt('/login')
     expect(screen.getByRole('heading', { name: 'Вход' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Русский' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByRole('button', { name: /Язык интерфейса.*Русский/ })).toHaveAttribute('aria-expanded', 'false')
   })
 })
 
