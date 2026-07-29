@@ -1,14 +1,16 @@
-# Oqim — deal-flow MVP (frontend demo)
+# Bevosita — deal-flow MVP (frontend demo)
 
-**Oqim** (Uzbek for *flow*) is an honest deal-flow product connecting startup founders in Uzbekistan
+**Bevosita** is an honest deal-flow product connecting startup founders in Uzbekistan
 with the standards of US venture capital. A founder submits their startup and pays for a serious
 validation; simulated AI standardizes the submission and suggests a priority; a real VC partner
 reviews, verifies, decides, and sends a truthful, warmly-worded verdict in the founder's own
 language. **The AI drafts; the human is always the author of record.**
 
 **The complete interface is available in Uzbek (Latin script) and Russian.** The language switcher
-is available on public, founder, and VC screens; the choice persists independently in
-`localStorage` (`oqim:locale`) and updates the document language, title, and description. Seeded
+is available on public, auth, founder, and VC screens; on the landing page it follows the localized
+**Baholash / Оценка** assessment link. The choice persists independently in `localStorage`
+(`oqim:locale`) and updates the document language, title, and description. The legacy `oqim:*`
+storage namespace is intentionally retained so rebranding does not erase existing browser state. Seeded
 startup content is also localized dynamically, without duplicating or mutating business state.
 Verdict-body language remains a separate choice (Uzbek/Russian/English), and the official English
 original of every verdict is preserved as the editable source of truth.
@@ -40,8 +42,8 @@ chooser; the email decides the role if you use the form:
 
 | Role | Demo identity | Email | Lands on |
 |------|---------------|-------|----------|
-| Founder (Asoschi) | Dilshod Ergashev | `dilshod@oqim.demo` (any non-VC email works) | `/apply` — Mening startapim |
-| VC partner (Venchur hamkori) | Laylo Mirzaeva | `laylo@oqim.demo` | `/app` — Pipeline board |
+| Founder (Asoschi) | Dilshod Ergashev | `dilshod@bevosita.demo` (any non-VC email works) | `/apply` — Mening startapim |
+| VC partner (Venchur hamkori) | Laylo Mirzaeva | `laylo@bevosita.demo` | `/app` — Pipeline board |
 
 **The full loop, playable:** log in as the founder → submit the six-step form → pay the (stubbed)
 validation fee (*baholash to'lovi*) → your startup enters the VC pipeline as *Yangi* (New). Log out,
@@ -73,9 +75,9 @@ VC (`/app`, desktop-first, bottom tabs on mobile):
 
 ## Architecture
 
-React 19 + TypeScript + Vite. No UI framework — a hand-rolled **Warm Clarity** design system in
-`src/styles.css` (warm paper palette, Fraunces display + Inter body, color reserved for signal and
-warmth).
+React 19 + TypeScript + Vite. No UI framework — a hand-rolled **Calm Blue** design system in
+`src/styles.css` (soft blue-white surfaces, dark navy ink, accessible blue brand colors, Fraunces
+display + Inter body, and distinct semantic signal colors).
 
 ```
 src/
@@ -106,10 +108,11 @@ Design decisions worth knowing:
 - **Typed localization.** `Messages` is derived from the Uzbek source dictionary; the Russian
   dictionary must satisfy the same shape at compile time. UI locale (`uz|ru`) is deliberately
   separate from verdict language (`uz|ru|en`).
-- **Storage schema versioning.** The business-state `localStorage` key is `oqim:v2` (v2 = Uzbek seed
+- **Storage schema versioning.** The legacy business-state `localStorage` key remains `oqim:v2` (v2 = Uzbek seed
   content). On first load, `loadState` migrates an existing `oqim:v1` entry by keeping only the
   session, reseeding the content in Uzbek, and removing the old key — deployed users upgrade
-  seamlessly instead of seeing stale English data.
+  seamlessly instead of seeing stale English data. Current v2 state is preserved while old
+  `@oqim.demo` identities and generated Oqim letter branding are migrated to Bevosita display values.
 - **Signal is never color alone.** The green/yellow/red system always renders color + distinct icon
   + text label (`SignalTag`), per the accessibility requirement.
 - **Honest stubs.** Every simulated boundary (payment, uploads, translations, notifications) is
@@ -134,6 +137,7 @@ Design decisions worth knowing:
   → compose → edit → send loop
 - `i18n/localization.test.ts` — deterministic Russian dates, complete seeded-content overlays,
   canonical-state immutability, and verdict-body language independence
+- `styles.test.ts` — deterministic WCAG contrast checks for key text, button, and signal color pairs
 
 ## Deployment (GitHub Pages)
 

@@ -33,7 +33,16 @@ describe('public pages', () => {
   it('renders the landing value proposition in Uzbek', () => {
     renderAt('/')
     expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/halol xulosa/)
+    expect(screen.getByRole('link', { name: 'Bevosita — bosh sahifa' })).toHaveTextContent('bevosita')
     expect(screen.getByRole('link', { name: /Startapingizni topshiring/ })).toBeInTheDocument()
+  })
+
+  it('places the localized assessment link immediately before the landing language toggle', () => {
+    renderAt('/')
+    const assessment = screen.getByRole('button', { name: 'Baholash' })
+    expect(assessment).toHaveAttribute('type', 'button')
+    expect(document.getElementById('assessment')).toBeInTheDocument()
+    expect(assessment.nextElementSibling).toBe(screen.getByRole('group', { name: 'Interfeys tili' }))
   })
 
   it('guards role routes behind login', () => {
@@ -48,7 +57,8 @@ describe('public pages', () => {
     await user.click(screen.getByRole('button', { name: 'Русский' }))
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Честное заключение')
     expect(document.documentElement).toHaveAttribute('lang', 'ru')
-    expect(document.title).toBe('Oqim — честный поток сделок')
+    expect(document.title).toBe('Bevosita — честный поток сделок')
+    expect(screen.getByRole('button', { name: 'Оценка' })).toHaveAttribute('type', 'button')
     expect(localStorage.getItem('oqim:locale')).toBe('ru')
 
     first.unmount()

@@ -8,9 +8,9 @@ import type { Decision, Signal, Stage, StepKey } from '../lib/types'
  */
 export const uz = {
   meta: {
-    title: 'Oqim — halol bitimlar oqimi',
+    title: 'Bevosita — halol bitimlar oqimi',
     description:
-      "Oqim — Toshkent va AQSh kapitali o'rtasida halol startap baholovi. Asoschilar haqiqiy xulosa oladi; investorlar haqiqiy signal.",
+      "Bevosita — Toshkent va AQSh kapitali o'rtasida halol startap baholovi. Asoschilar haqiqiy xulosa oladi; investorlar haqiqiy signal.",
   },
 
   common: {
@@ -27,7 +27,7 @@ export const uz = {
     label: 'Interfeys tili',
   },
 
-  wordmarkAria: 'Oqim — bosh sahifa',
+  wordmarkAria: 'Bevosita — bosh sahifa',
 
   stage: {
     'new': 'Yangi',
@@ -85,11 +85,12 @@ export const uz = {
 
   landing: {
     navAria: 'Hisob',
+    assessment: 'Baholash',
     login: 'Kirish',
     start: 'Boshlash',
     hero1: 'Startapingiz uchun halol xulosa.',
     hero2: 'Haqiqiy kapital uchun haqiqiy signal.',
-    lede: "Oqim O'zbekistondagi asoschilarni AQSh venchur kapitali standartlari bilan bog'laydi. Startapingizni topshiring, inson ko'rib chiqqan halol xulosa oling — agar u investitsiyaga loyiq bo'lsa, oldinga olib boradigan haqiqiy yo'l ham ochiladi.",
+    lede: "Bevosita O'zbekistondagi asoschilarni AQSh venchur kapitali standartlari bilan bog'laydi. Startapingizni topshiring, inson ko'rib chiqqan halol xulosa oling — agar u investitsiyaga loyiq bo'lsa, oldinga olib boradigan haqiqiy yo'l ham ochiladi.",
     ctaSubmit: 'Startapingizni topshiring',
     ctaVc: "Men bitimlarni ko'rib chiqaman",
     howHeading: 'Qanday ishlaydi',
@@ -121,8 +122,8 @@ export const uz = {
       "O'zingizda qoladigan rasmiy xulosa xati",
     ],
     feeCta: 'Topshirishni boshlash',
-    footerLine: 'Oqim — Toshkent · Ostin. Mahsulot demosi; haqiqiy startaplar qabul qilinmaydi.',
-    footerCopyright: '© 2026 Oqim',
+    footerLine: 'Bevosita — Toshkent · Ostin. Mahsulot demosi; haqiqiy startaplar qabul qilinmaydi.',
+    footerCopyright: '© 2026 Bevosita',
   },
 
   auth: {
@@ -347,7 +348,7 @@ export const uz = {
     letterAria: 'Rasmiy xulosa xati',
     letterheadLine: (date: string) => `Rasmiy xulosa xati · ${date}`,
     footer: (id: string, name: string) =>
-      `Raqam: ${id} · Ushbu xat ko'rib chiquvchi hamkorning ${name} startapi bo'yicha qarorini qayd etadi. Oqim tomonidan Toshkentda berilgan.`,
+      `Raqam: ${id} · Ushbu xat ko'rib chiquvchi hamkorning ${name} startapi bo'yicha qarorini qayd etadi. Bevosita tomonidan Toshkentda berilgan.`,
   },
 
   account: {
@@ -507,7 +508,7 @@ export const uz = {
     letters: 'Xulosa xatlari',
     demoOnly: "Demo — faqat ko'rsatish uchun",
     signature: 'Xatlardagi imzo',
-    signatureValue: (name: string) => `${name} — Oqim hamkori`,
+    signatureValue: (name: string) => `${name} — Bevosita hamkori`,
     signatureHint: 'Siz yuboradigan har bir xulosa xatining imzo qismida chiqadi.',
     notifications: 'Bildirishnomalar',
     notifNew: "Pipeline'ga yangi arizalar tushganda",

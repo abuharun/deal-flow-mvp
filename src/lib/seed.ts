@@ -5,11 +5,11 @@ import { formatDateLong } from './format'
 
 /** The demo VC partner. One partner, one country — per the pilot scope. */
 export const VC_NAME = 'Laylo Mirzaeva'
-export const VC_EMAIL = 'laylo@oqim.demo'
+export const VC_EMAIL = 'laylo@bevosita.demo'
 
 /** The demo founder account. */
 export const FOUNDER_NAME = 'Dilshod Ergashev'
-export const FOUNDER_EMAIL = 'dilshod@oqim.demo'
+export const FOUNDER_EMAIL = 'dilshod@bevosita.demo'
 
 export const VALIDATION_FEE = '$199'
 

@@ -70,6 +70,8 @@ describe('composeVerdict', () => {
     expect(letter).toContain('What would change our answer:')
     expect(letter).toContain('— If they hire a commercial lead id look again.')
     expect(letter).toContain('Laylo Mirzaeva')
+    expect(letter).toContain('Partner, Bevosita')
+    expect(letter).not.toContain('Oqim')
     expect(letter).toContain('8 July 2026')
     // Raw shorthand never leaks into the official letter.
     expect(letter).not.toContain('imo')

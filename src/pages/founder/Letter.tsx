@@ -40,7 +40,7 @@ export default function Letter() {
             <span className="mark-wave" aria-hidden="true">
               <WaveIcon size={16} />
             </span>
-            oqim
+            bevosita
           </span>
           <span className="faint">{t.letter.letterheadLine(formatDateLong(verdict.sentAt!, locale))}</span>
         </div>

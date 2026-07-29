@@ -1,40 +1,40 @@
 /* ============================================================
-   Oqim — Warm Clarity design system
-   Color is reserved for signal and warmth, never decoration.
+   Bevosita — Calm Blue design system
+   Blue structures the interface; semantic colors retain distinct meaning.
    ============================================================ */
 
 :root {
-  /* Warm neutrals */
-  --paper: #faf6ef;
-  --surface: #fffdf9;
-  --surface-2: #f4ede1;
-  --ink: #26201a;
-  --ink-soft: #5c5347;
-  --ink-faint: #756a5b;
-  --line: #e7ddcc;
-  --line-strong: #d3c5ac;
+  /* Cool blue-white surfaces and navy text */
+  --paper: #f4f8ff;
+  --surface: #ffffff;
+  --surface-2: #eaf1fb;
+  --ink: #10233f;
+  --ink-soft: #405575;
+  --ink-faint: #5b6f8d;
+  --line: #d7e2f1;
+  --line-strong: #b8c9df;
 
-  /* Brand — warm rust/clay, not enterprise blue */
-  --brand: #a34a24;
-  --brand-strong: #86391a;
-  --brand-soft: #f6e5d8;
-  --brand-wash: #fbf1e8;
+  /* Brand — accessible calm blue */
+  --brand: #2563a9;
+  --brand-strong: #184b85;
+  --brand-soft: #d9e9fb;
+  --brand-wash: #edf5ff;
 
-  /* Signal colors — always paired with icon + label in markup */
-  --green-ink: #1e6b41;
-  --green-soft: #e2f1e5;
-  --green-line: #b6d9c0;
-  --amber-ink: #8a5a12;
-  --amber-soft: #f9eed1;
-  --amber-line: #e5d09c;
-  --red-ink: #a93b2a;
-  --red-soft: #fae5df;
-  --red-line: #eac2b5;
+  /* Signals harmonized with blue; always paired with icon + label */
+  --green-ink: #176044;
+  --green-soft: #e1f4eb;
+  --green-line: #a9d8c5;
+  --amber-ink: #75510b;
+  --amber-soft: #fff2cf;
+  --amber-line: #e2c77a;
+  --red-ink: #9b2f3f;
+  --red-soft: #fbe9ed;
+  --red-line: #e5b5bf;
 
   --radius: 10px;
   --radius-lg: 16px;
-  --shadow-sm: 0 1px 2px rgba(72, 55, 34, 0.07), 0 1px 6px rgba(72, 55, 34, 0.05);
-  --shadow-md: 0 2px 6px rgba(72, 55, 34, 0.08), 0 8px 28px rgba(72, 55, 34, 0.09);
+  --shadow-sm: 0 1px 2px rgba(20, 49, 88, 0.07), 0 1px 6px rgba(20, 49, 88, 0.05);
+  --shadow-md: 0 2px 6px rgba(20, 49, 88, 0.08), 0 8px 28px rgba(20, 49, 88, 0.1);
 
   --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
   --font-body: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -320,6 +320,19 @@ a { color: var(--brand-strong); }
   padding: 18px clamp(20px, 5vw, 56px);
   max-width: 1120px;
   margin: 0 auto;
+}
+.landing-nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.assessment-section { scroll-margin-top: 24px; }
+@media (max-width: 620px) {
+  .landing-header { align-items: flex-start; flex-wrap: wrap; }
+  .landing-nav { width: 100%; justify-content: flex-start; }
+  .landing-nav .btn { padding-inline: 10px; }
 }
 .landing-main {
   max-width: 1120px;
@@ -885,7 +898,7 @@ a { color: var(--brand-strong); }
   padding: 40px 24px 80px;
 }
 .letter-sheet {
-  background: #fffefb;
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 4px;
   box-shadow: var(--shadow-md);

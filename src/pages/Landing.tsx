@@ -9,7 +9,14 @@ export default function Landing() {
     <>
       <header className="landing-header">
         <Wordmark />
-        <nav aria-label={t.landing.navAria} style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+        <nav aria-label={t.landing.navAria} className="landing-nav">
+          <button
+            type="button"
+            className="btn btn-quiet landing-assessment"
+            onClick={() => document.getElementById('assessment')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          >
+            {t.landing.assessment}
+          </button>
           <LanguageSwitcher />
           <Link to="/login" className="btn btn-quiet">
             {t.landing.login}
@@ -74,7 +81,7 @@ export default function Landing() {
           </div>
         </section>
 
-        <section className="card" style={{ marginTop: 56, background: 'var(--brand-wash)' }}>
+        <section id="assessment" className="card assessment-section" style={{ marginTop: 56, background: 'var(--brand-wash)' }}>
           <h2 style={{ marginBottom: 6 }}>{t.landing.feeHeading}</h2>
           <p className="muted" style={{ maxWidth: 640 }}>
             {t.landing.feeBody}

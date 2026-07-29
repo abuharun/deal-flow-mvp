@@ -1,8 +1,8 @@
 {
-  "name": "oqim-deal-flow-mvp",
+  "name": "bevosita-deal-flow-mvp",
   "private": true,
   "version": "0.1.0",
-  "description": "Bilingual Uzbek/Russian deal-flow demo for startup founders and venture partners",
+  "description": "Bevosita bilingual Uzbek/Russian deal-flow demo for startup founders and venture partners",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -23,6 +23,7 @@
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^26.1.2",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",

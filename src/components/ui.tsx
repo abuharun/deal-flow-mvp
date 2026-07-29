@@ -29,7 +29,7 @@ export function Wordmark({ to = '/', sub }: { to?: string; sub?: string }) {
       <span className="mark-wave" aria-hidden="true">
         <WaveIcon />
       </span>
-      oqim
+      bevosita
       {sub && <span className="wordmark-sub">&nbsp;{sub}</span>}
     </Link>
   )

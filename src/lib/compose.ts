@@ -103,7 +103,7 @@ const FRAMES: Record<Lang, Frame> = {
   en: {
     salutation: (f) => `Dear ${f},`,
     opening: (s) =>
-      `Thank you for submitting ${s} for validation through Oqim. We reviewed your materials in full — the summary below is our honest assessment, written to be useful rather than flattering.`,
+      `Thank you for submitting ${s} for validation through Bevosita. We reviewed your materials in full — the summary below is our honest assessment, written to be useful rather than flattering.`,
     decision: {
       recommend: (s) =>
         `Our decision: we are recommending ${s}. Based on our review, we will put ${s} forward to our partner investors with a positive recommendation.`,
@@ -127,14 +127,14 @@ const FRAMES: Record<Lang, Frame> = {
     },
     closing:
       'This verdict was written to be honest because your time and effort deserve honesty. If anything here is unclear, reply and we will explain our thinking.',
-    signoff: (vc) => `With respect,\n${vc}\nPartner, Oqim`,
+    signoff: (vc) => `With respect,\n${vc}\nPartner, Bevosita`,
     demoNote:
       "(Demo note: the reasons above are shown in the language of the partner's notes; the production version translates them fully.)",
   },
   uz: {
     salutation: (f) => `Hurmatli ${f},`,
     opening: (s) =>
-      `${s} loyihangizni Oqim orqali baholashga topshirganingiz uchun rahmat. Biz materiallaringizni to'liq ko'rib chiqdik — quyidagi xulosa xushomad uchun emas, foydali bo'lishi uchun halol yozildi.`,
+      `${s} loyihangizni Bevosita orqali baholashga topshirganingiz uchun rahmat. Biz materiallaringizni to'liq ko'rib chiqdik — quyidagi xulosa xushomad uchun emas, foydali bo'lishi uchun halol yozildi.`,
     decision: {
       recommend: (s) =>
         `Qarorimiz: biz ${s} loyihasini tavsiya qilamiz. Ko'rib chiqish natijasida biz uni hamkor investorlarimizga ijobiy tavsiya bilan taqdim etamiz.`,
@@ -158,13 +158,13 @@ const FRAMES: Record<Lang, Frame> = {
     },
     closing:
       "Bu xulosa halol yozildi, chunki sizning vaqtingiz va mehnatingiz halollikka loyiq. Biror narsa tushunarsiz bo'lsa, javob yozing — fikrimizni tushuntiramiz.",
-    signoff: (vc) => `Hurmat bilan,\n${vc}\nOqim hamkori`,
+    signoff: (vc) => `Hurmat bilan,\n${vc}\nBevosita hamkori`,
     demoNote: null,
   },
   ru: {
     salutation: (f) => `Уважаемый(ая) ${f},`,
     opening: (s) =>
-      `Спасибо, что представили ${s} на оценку через Oqim. Мы полностью изучили ваши материалы — заключение ниже написано честно, чтобы быть полезным, а не лестным.`,
+      `Спасибо, что представили ${s} на оценку через Bevosita. Мы полностью изучили ваши материалы — заключение ниже написано честно, чтобы быть полезным, а не лестным.`,
     decision: {
       recommend: (s) =>
         `Наше решение: мы рекомендуем ${s}. По итогам рассмотрения мы представим проект нашим партнёрам-инвесторам с положительной рекомендацией.`,
@@ -188,7 +188,7 @@ const FRAMES: Record<Lang, Frame> = {
     },
     closing:
       'Это заключение написано честно, потому что ваше время и труд заслуживают честности. Если что-то неясно — ответьте, и мы объясним ход наших рассуждений.',
-    signoff: (vc) => `С уважением,\n${vc}\nПартнёр Oqim`,
+    signoff: (vc) => `С уважением,\n${vc}\nПартнёр Bevosita`,
     demoNote: '(Примечание демо: причины показаны на языке заметок партнёра; в рабочей версии письмо переводится полностью.)',
   },
 }

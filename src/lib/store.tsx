@@ -25,6 +25,32 @@ import { formatDateLong, DECISION_STAGE } from './format'
 const STORAGE_KEY = 'oqim:v2'
 const LEGACY_STORAGE_KEYS = ['oqim:v1']
 
+/**
+ * Keep the legacy storage namespace so existing deployments retain state, but
+ * update rebranded demo-only display values in place. Business fields, stages,
+ * notes, payments, drafts, and record IDs are preserved exactly.
+ */
+function migrateVisibleBranding(state: AppState): AppState {
+  const demoEmail = (email: string) => email.replace(/@oqim\.demo$/i, '@bevosita.demo')
+  const brandText = (text: string) => text.replace(/Oqim/g, 'Bevosita')
+
+  return {
+    ...state,
+    session: state.session ? { ...state.session, email: demoEmail(state.session.email) } : null,
+    startups: state.startups.map((startup) => ({
+      ...startup,
+      founder: { ...startup.founder, email: demoEmail(startup.founder.email) },
+      verdict: startup.verdict
+        ? {
+            ...startup.verdict,
+            en: brandText(startup.verdict.en),
+            local: brandText(startup.verdict.local),
+          }
+        : null,
+    })),
+  }
+}
+
 export function emptyDraft(): SubmissionDraft {
   const fields = {} as Record<StepKey, string>
   for (const k of STEP_KEYS) fields[k] = ''
@@ -59,7 +85,7 @@ export function loadState(): AppState {
     if (rawJson) {
       const parsed = JSON.parse(rawJson) as AppState
       if (!Array.isArray(parsed.startups) || !parsed.draft) return initialState()
-      return parsed
+      return migrateVisibleBranding(parsed)
     }
     // Older schema found: keep the user logged in, replace the stale English
     // content with the current (Uzbek) seed, and retire the old key.
@@ -70,7 +96,7 @@ export function loadState(): AppState {
       const legacy = JSON.parse(legacyJson) as Partial<AppState>
       const role = legacy?.session?.role
       if (legacy.session && (role === 'founder' || role === 'vc')) {
-        return { ...initialState(), session: legacy.session }
+        return migrateVisibleBranding({ ...initialState(), session: legacy.session })
       }
     }
     return initialState()

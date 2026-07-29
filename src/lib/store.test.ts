@@ -112,6 +112,35 @@ describe('loadState', () => {
     expect(loadState().session?.role).toBe('vc')
   })
 
+  it('migrates legacy demo emails and generated branding without losing business state', () => {
+    const state = reducer(initialState(), { type: 'login', role: 'vc' })
+    state.session!.email = 'laylo@oqim.demo'
+    state.startups[0] = {
+      ...state.startups[0],
+      stage: 'in-review',
+      notes: 'Keep this partner note exactly.',
+      founder: { ...state.startups[0].founder, email: 'dilshod@oqim.demo' },
+      verdict: {
+        decision: 'recommend',
+        en: 'Reviewed through Oqim.',
+        local: 'Oqim orqali ko‘rib chiqildi.',
+        localLang: 'uz',
+        composedAt: '2026-07-29T00:00:00Z',
+        sentAt: null,
+        edited: false,
+      },
+    }
+    localStorage.setItem('oqim:v2', JSON.stringify(state))
+
+    const loaded = loadState()
+    expect(loaded.session?.email).toBe('laylo@bevosita.demo')
+    expect(loaded.startups[0].founder.email).toBe('dilshod@bevosita.demo')
+    expect(loaded.startups[0].verdict?.en).toBe('Reviewed through Bevosita.')
+    expect(loaded.startups[0].verdict?.local).toBe('Bevosita orqali ko‘rib chiqildi.')
+    expect(loaded.startups[0].stage).toBe('in-review')
+    expect(loaded.startups[0].notes).toBe('Keep this partner note exactly.')
+  })
+
   it('migrates a legacy v1 entry: session kept, content reseeded, old key removed', () => {
     const legacy = reducer(initialState(), { type: 'login', role: 'vc' })
     localStorage.setItem('oqim:v1', JSON.stringify(legacy))
