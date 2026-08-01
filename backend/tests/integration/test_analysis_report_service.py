@@ -195,7 +195,11 @@ async def _source_rows(engine, report_id) -> list[dict]:
 async def _job_row(engine, job_id) -> dict:
     async with engine.connect() as conn:
         result = await conn.execute(
-            sa.text("SELECT status FROM analysis_jobs WHERE id = :id"), {"id": job_id}
+            sa.text(
+                "SELECT status, input_tokens, output_tokens, cost_estimate_usd "
+                "FROM analysis_jobs WHERE id = :id"
+            ),
+            {"id": job_id},
         )
         return dict(result.mappings().one())
 
@@ -280,6 +284,58 @@ class TestLegalCompletionPath:
         rows = await _report_rows(engine, startup_id)
         assert rows[0]["partial"] is True
         assert rows[0]["generated_at"] == generated_at
+
+    async def test_token_and_cost_provenance_passes_through_to_the_job(self, engine):
+        """The worker's real token/cost provenance must land on the job row,
+        never silently nulled out by the completion service (see the module
+        docstring)."""
+        from decimal import Decimal
+
+        startup_id, job_id = await _make_running_job(engine)
+
+        async with build_sessionmaker(engine)() as session:
+            job, startup = await _load_locked(session, startup_id, job_id)
+            await analysis_report_service.complete_job_with_report(
+                session,
+                job=job,
+                startup=startup,
+                input_revision=1,
+                report_input=_valid_report_input(),
+                model="gpt-test",
+                prompt_version="v1",
+                generated_at=datetime(2026, 1, 15, 12, 0, tzinfo=UTC),
+                input_tokens=12_345,
+                output_tokens=6_789,
+                cost_estimate_usd=Decimal("0.1234"),
+            )
+            await session.commit()
+
+        job_row = await _job_row(engine, job_id)
+        assert job_row["input_tokens"] == 12_345
+        assert job_row["output_tokens"] == 6_789
+        assert job_row["cost_estimate_usd"] == Decimal("0.1234")
+
+    async def test_omitted_token_and_cost_provenance_stays_null(self, engine):
+        startup_id, job_id = await _make_running_job(engine)
+
+        async with build_sessionmaker(engine)() as session:
+            job, startup = await _load_locked(session, startup_id, job_id)
+            await analysis_report_service.complete_job_with_report(
+                session,
+                job=job,
+                startup=startup,
+                input_revision=1,
+                report_input=_valid_report_input(),
+                model="gpt-test",
+                prompt_version="v1",
+                generated_at=datetime(2026, 1, 15, 12, 0, tzinfo=UTC),
+            )
+            await session.commit()
+
+        job_row = await _job_row(engine, job_id)
+        assert job_row["input_tokens"] is None
+        assert job_row["output_tokens"] is None
+        assert job_row["cost_estimate_usd"] is None
 
 
 class TestJobStatusGuard:

@@ -1,5 +1,6 @@
 """Settings fail-fast contract: safe local defaults, strict production validation."""
 
+from decimal import Decimal
 from pathlib import Path
 
 import pytest
@@ -251,3 +252,52 @@ class TestDotenvLoading:
         gitignore = (REPO_DIR / ".gitignore").read_text()
         assert "backend/.env" in gitignore.splitlines()
         assert not (BACKEND_DIR / ".env").exists()
+
+
+class TestOpenAiAnalysisConfig:
+    """The API must start with zero OpenAI config; bounds still apply when set."""
+
+    def test_defaults_are_safe_and_present(self):
+        settings = make_settings(env="test", database_url=TEST_DB_URL)
+        assert settings.openai_api_key is None
+        assert settings.openai_analysis_model
+        assert settings.openai_prompt_version
+        assert settings.openai_request_timeout_seconds > 0
+        assert settings.openai_max_output_tokens > 0
+        assert settings.openai_input_price_per_million_usd is None
+        assert settings.openai_output_price_per_million_usd is None
+        assert settings.analysis_max_cost_usd == Decimal("0.25")
+
+    def test_analysis_max_cost_usd_over_hard_cap_rejected(self):
+        with pytest.raises(ValidationError, match="(?i)analysis_max_cost_usd"):
+            make_settings(env="test", database_url=TEST_DB_URL, analysis_max_cost_usd="0.26")
+
+    def test_analysis_max_cost_usd_zero_or_negative_rejected(self):
+        with pytest.raises(ValidationError, match="(?i)analysis_max_cost_usd"):
+            make_settings(env="test", database_url=TEST_DB_URL, analysis_max_cost_usd="0")
+
+    def test_prompt_version_over_32_chars_rejected(self):
+        with pytest.raises(ValidationError, match="(?i)prompt_version"):
+            make_settings(env="test", database_url=TEST_DB_URL, openai_prompt_version="x" * 33)
+
+    def test_request_timeout_must_be_positive(self):
+        with pytest.raises(ValidationError, match="(?i)timeout"):
+            make_settings(env="test", database_url=TEST_DB_URL, openai_request_timeout_seconds=0)
+
+    def test_max_output_tokens_must_be_positive(self):
+        with pytest.raises(ValidationError, match="(?i)max_output_tokens"):
+            make_settings(env="test", database_url=TEST_DB_URL, openai_max_output_tokens=0)
+
+    def test_negative_pricing_rejected(self):
+        with pytest.raises(ValidationError, match="(?i)price"):
+            make_settings(
+                env="test",
+                database_url=TEST_DB_URL,
+                openai_input_price_per_million_usd="-1",
+            )
+
+    def test_settings_are_constructible_in_production_without_openai_key(self):
+        # The web app must run in production with zero AI config; only the
+        # worker's explicit startup check (require_worker_config) enforces it.
+        settings = make_prod()
+        assert settings.openai_api_key is None

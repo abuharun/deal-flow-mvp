@@ -8,6 +8,11 @@ exist without its job being completed and the startup moving to
 report_ready, and a failure at any point leaves the job RUNNING with no
 partial report/sources.
 
+`input_tokens`/`output_tokens`/`cost_estimate_usd` are the same token/cost
+provenance the worker already computed (see app.services.openai_provider and
+app.services.analysis_worker) and pass straight through to the job's
+completed transition -- never re-derived here and never silently nulled out.
+
 Callers of `complete_job_with_report` must already hold row locks on both
 `job` (analysis_repository.get_for_update) and `startup` (startup_repository.
 get_owned_startup(..., for_update=True)) -- the same pattern every other
@@ -24,6 +29,7 @@ text, citation snippets, or source URLs.
 """
 
 from datetime import datetime
+from decimal import Decimal
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -87,6 +93,9 @@ async def complete_job_with_report(
     prompt_version: str,
     generated_at: datetime,
     partial: bool = False,
+    input_tokens: int | None = None,
+    output_tokens: int | None = None,
+    cost_estimate_usd: Decimal | None = None,
 ) -> AnalysisReport:
     """Validate everything, then insert the report+sources and complete the job.
 
@@ -138,7 +147,14 @@ async def complete_job_with_report(
     await analysis_report_repository.insert_report(session, report=report_row, sources=source_rows)
 
     analysis_state.mark_completed(
-        job, completion=AnalysisCompletionInput(model=model, prompt_version=prompt_version)
+        job,
+        completion=AnalysisCompletionInput(
+            model=model,
+            prompt_version=prompt_version,
+            input_tokens=input_tokens,
+            output_tokens=output_tokens,
+            cost_estimate_usd=cost_estimate_usd,
+        ),
     )
     startup.status = StartupStatus.REPORT_READY
 

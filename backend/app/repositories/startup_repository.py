@@ -33,6 +33,21 @@ async def get_owned_startup(
     return (await session.execute(stmt)).scalar_one_or_none()
 
 
+async def get_for_update(
+    session: AsyncSession, *, startup_id: uuid.UUID, with_submission: bool = False
+) -> Startup | None:
+    """Row-locked load for the worker: no founder scoping.
+
+    The job already identifies the startup unambiguously (analysis_jobs.
+    startup_id), so unlike get_owned_startup this never takes a founder_id --
+    the worker is a system actor, not acting on behalf of one specific user.
+    """
+    stmt = select(Startup).where(Startup.id == startup_id).with_for_update()
+    if with_submission:
+        stmt = stmt.options(selectinload(Startup.submission))
+    return (await session.execute(stmt)).scalar_one_or_none()
+
+
 async def list_startups_for_founder(
     session: AsyncSession, *, founder_id: uuid.UUID
 ) -> list[Startup]:

@@ -2,6 +2,7 @@
 
 import ipaddress
 import re
+from decimal import Decimal
 from pathlib import Path
 from typing import Annotated, Literal
 from urllib.parse import urlsplit
@@ -10,6 +11,19 @@ from pydantic import field_validator, model_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
 BACKEND_DIR = Path(__file__).resolve().parent.parent
+
+# Hard ceiling on estimated per-run AI cost, independent of anything an
+# operator sets: analysis_max_cost_usd may only ever tighten this, never
+# loosen it. Mirrors app.models.analysis_job.MAX_COST_ESTIMATE_USD (not
+# imported directly, to keep config.py free of any app.models dependency).
+_MAX_ANALYSIS_COST_USD = Decimal("0.25")
+_MAX_OPENAI_PROMPT_VERSION_LENGTH = 32
+# The only report schema this codebase can validate/persist today (see
+# app.models.analysis_report.SCHEMA_VERSION_REPORT_V1 and
+# app.schemas.report.ReportV1Input.schema_version, which is pinned to the
+# same literal). Not imported directly for the same reason as above; kept in
+# lockstep by the cross-check in tests/unit/test_config.py.
+SUPPORTED_REPORT_SCHEMA_VERSIONS = ("report.v1",)
 
 # Wording that marks a secret as a stand-in rather than a provisioned value.
 _PLACEHOLDER_MARKERS = ("change", "placeholder", "example", "dummy", "local", "dev-")
@@ -67,6 +81,88 @@ class Settings(BaseSettings):
     resend_api_key: str | None = None
     email_from: str = _RESEND_ONBOARDING_SENDER
     resend_test_recipient: str | None = None
+
+    # OpenAI analysis-worker config: every field here is optional with a safe
+    # default so the WEB API can construct Settings and start with zero AI
+    # config. Only the worker's explicit startup check (see
+    # app.services.analysis_worker_config.require_worker_config) requires the
+    # key and pricing to be present -- never this class's validators, and
+    # never _fail_fast_in_production below.
+    openai_api_key: str | None = None
+    openai_analysis_model: str = "gpt-4o-mini"
+    openai_prompt_version: str = "analysis.v1"
+    openai_request_timeout_seconds: float = 60.0
+    openai_max_output_tokens: int = 4000
+    openai_input_price_per_million_usd: Decimal | None = None
+    openai_output_price_per_million_usd: Decimal | None = None
+    # Conservative, explicitly configured flat charge for the ONE web_search
+    # tool enablement per attempt (the tool may run several internal
+    # searches; this is a single flat estimate for that whole call, not
+    # per-search) -- required at worker startup alongside the token prices,
+    # see require_worker_config.
+    openai_web_search_cost_usd: Decimal | None = None
+    # Pinned to the one schema this codebase currently validates/persists
+    # (see SUPPORTED_REPORT_SCHEMA_VERSIONS above); rejects any other value
+    # up front rather than allowing silent schema drift between the worker's
+    # request and app.schemas.report.ReportV1Input.
+    openai_report_schema_version: str = "report.v1"
+    analysis_max_cost_usd: Decimal = _MAX_ANALYSIS_COST_USD
+
+    @field_validator("openai_report_schema_version")
+    @classmethod
+    def _supported_report_schema_version(cls, value: str) -> str:
+        if value not in SUPPORTED_REPORT_SCHEMA_VERSIONS:
+            raise ValueError(
+                "openai_report_schema_version must be one of "
+                f"{SUPPORTED_REPORT_SCHEMA_VERSIONS}, got {value!r}"
+            )
+        return value
+
+    @field_validator("openai_web_search_cost_usd")
+    @classmethod
+    def _bounded_web_search_cost(cls, value: Decimal | None) -> Decimal | None:
+        if value is not None and (value < 0 or value > _MAX_ANALYSIS_COST_USD):
+            raise ValueError(
+                f"openai_web_search_cost_usd must be >= 0 and <= {_MAX_ANALYSIS_COST_USD}"
+            )
+        return value
+
+    @field_validator("openai_prompt_version")
+    @classmethod
+    def _bounded_openai_prompt_version(cls, value: str) -> str:
+        if not value or len(value) > _MAX_OPENAI_PROMPT_VERSION_LENGTH:
+            raise ValueError(
+                f"openai_prompt_version must be 1..{_MAX_OPENAI_PROMPT_VERSION_LENGTH} characters"
+            )
+        return value
+
+    @field_validator("openai_request_timeout_seconds")
+    @classmethod
+    def _positive_timeout(cls, value: float) -> float:
+        if value <= 0:
+            raise ValueError("openai_request_timeout_seconds must be positive")
+        return value
+
+    @field_validator("openai_max_output_tokens")
+    @classmethod
+    def _positive_max_output_tokens(cls, value: int) -> int:
+        if value <= 0:
+            raise ValueError("openai_max_output_tokens must be positive")
+        return value
+
+    @field_validator("openai_input_price_per_million_usd", "openai_output_price_per_million_usd")
+    @classmethod
+    def _non_negative_price(cls, value: Decimal | None) -> Decimal | None:
+        if value is not None and value < 0:
+            raise ValueError("openai per-million price must not be negative")
+        return value
+
+    @field_validator("analysis_max_cost_usd")
+    @classmethod
+    def _bounded_analysis_max_cost_usd(cls, value: Decimal) -> Decimal:
+        if value <= 0 or value > _MAX_ANALYSIS_COST_USD:
+            raise ValueError(f"analysis_max_cost_usd must be > 0 and <= {_MAX_ANALYSIS_COST_USD}")
+        return value
 
     @field_validator("frontend_origins", "trusted_proxy_cidrs", mode="before")
     @classmethod

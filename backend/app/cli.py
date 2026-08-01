@@ -9,10 +9,12 @@ traceback that could carry a DSN or credential.
 
 import asyncio
 import re
+import signal
 from collections.abc import Awaitable, Callable
 from datetime import UTC, datetime, timedelta
 from typing import TypeVar
 
+import openai
 import typer
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -24,7 +26,8 @@ from app.security.passwords import MIN_PASSWORD_LENGTH, hash_password
 
 # Imported as modules (not names) so the audit dependency stays patchable in
 # tests that force the write to fail.
-from app.services import audit_service, invite_service
+from app.services import analysis_worker, audit_service, invite_service
+from app.services.analysis_worker_config import WorkerConfigError, require_worker_config
 
 app = typer.Typer(pretty_exceptions_enable=False)
 
@@ -153,6 +156,69 @@ def create_vc_owner(
             f"could not create the VC owner ({type(exc).__name__}); nothing was committed"
         ) from None
     typer.echo(f"VC owner created: {email} (id={user_id})")
+
+
+@app.command("run-analysis-worker")
+def run_analysis_worker(
+    once: bool = typer.Option(
+        False, "--once", help="Run one stale-recovery sweep and process at most one job, then exit."
+    ),
+    poll_interval_seconds: float = typer.Option(
+        5.0, "--poll-interval-seconds", min=0.1, help="Idle delay between polls when not --once."
+    ),
+) -> None:
+    """Claim and execute queued AI-analysis jobs (Render worker entrypoint).
+
+    Config is validated HERE, at worker startup -- never at web app import,
+    so the API can run with zero OpenAI config. No import-time loop: the
+    polling loop only starts when this command function runs.
+    """
+    settings = Settings()
+    try:
+        worker_config = require_worker_config(settings)
+    except WorkerConfigError as exc:
+        raise _fail(f"worker config invalid: {exc.reason}") from None
+
+    async def main() -> None:
+        engine = build_engine(settings.database_url)
+        client = openai.AsyncOpenAI(api_key=worker_config.api_key)
+        try:
+            sessionmaker = build_sessionmaker(engine)
+            if once:
+                await analysis_worker.recover_stale_running_jobs(sessionmaker)
+                result = await analysis_worker.run_one_job(
+                    sessionmaker, client=client, config=worker_config
+                )
+                suffix = f" ({result.error_code})" if result.error_code else ""
+                typer.echo(f"worker: {result.outcome.value}{suffix}")
+                return
+
+            stop = asyncio.Event()
+            loop = asyncio.get_running_loop()
+            for sig in (signal.SIGTERM, signal.SIGINT):
+                loop.add_signal_handler(sig, stop.set)
+
+            async def sleep_or_stop(seconds: float) -> None:
+                # Interruptible sleep: a shutdown signal wakes this
+                # immediately instead of waiting out the full poll interval.
+                try:
+                    await asyncio.wait_for(stop.wait(), timeout=seconds)
+                except TimeoutError:
+                    pass
+
+            await analysis_worker.run_worker_loop(
+                sessionmaker,
+                client=client,
+                config=worker_config,
+                should_continue=lambda: not stop.is_set(),
+                sleep=sleep_or_stop,
+                poll_interval_seconds=poll_interval_seconds,
+            )
+        finally:
+            await client.close()
+            await engine.dispose()
+
+    asyncio.run(main())
 
 
 if __name__ == "__main__":
