@@ -10,6 +10,14 @@ logs
 *.log
 npm-debug.log*
 
+# Backend (Python)
+backend/.venv
+backend/.env
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
 # Editor
 .vscode/*
 !.vscode/extensions.json
