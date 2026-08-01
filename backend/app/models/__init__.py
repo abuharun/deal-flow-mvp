@@ -12,6 +12,7 @@ class Base(DeclarativeBase):
 
 
 from app.models.analysis_job import AnalysisJob  # noqa: E402
+from app.models.analysis_report import AnalysisReport, ReportSource  # noqa: E402
 from app.models.audit import AuditActorType, AuditLog  # noqa: E402
 from app.models.auth_session import AuthSession  # noqa: E402
 from app.models.consent import Consent  # noqa: E402
@@ -24,6 +25,7 @@ from app.models.user import UiLocale, User, UserRole  # noqa: E402
 
 __all__ = [
     "AnalysisJob",
+    "AnalysisReport",
     "AuditActorType",
     "AuditLog",
     "AuthSession",
@@ -34,6 +36,7 @@ __all__ = [
     "Invite",
     "Payment",
     "PitchDeck",
+    "ReportSource",
     "Startup",
     "StartupStatus",
     "Submission",

@@ -373,7 +373,3 @@ def test_downgrade_removes_analysis_jobs_and_preserves_earlier_tables(
             await conn.execute(sa.text(f"DROP TABLE IF EXISTS {SENTINEL_TABLE}"))
 
         _db(db_at_0010, cleanup)
-
-
-def test_head_is_0010(alembic_head):
-    assert alembic_head == "0010_analysis_jobs"

@@ -14,6 +14,7 @@ from app.routers.founder_analysis import router as founder_analysis_router
 from app.routers.founder_consent import router as founder_consent_router
 from app.routers.founder_decks import router as founder_decks_router
 from app.routers.founder_payment import router as founder_payment_router
+from app.routers.founder_report import router as founder_report_router
 from app.routers.founder_startups import router as founder_startups_router
 from app.routers.health import router as health_router
 from app.security.client_ip import parse_trusted_proxies
@@ -123,4 +124,5 @@ def create_app(
     app.include_router(founder_payment_router)
     app.include_router(founder_consent_router)
     app.include_router(founder_analysis_router)
+    app.include_router(founder_report_router)
     return app
