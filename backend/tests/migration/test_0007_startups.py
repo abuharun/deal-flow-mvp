@@ -368,5 +368,5 @@ def test_downgrade_removes_startup_tables_and_preserves_all_auth_tables(
         _db(db_at_0007, cleanup)
 
 
-def test_head_is_0007(alembic_head):
-    assert alembic_head == "0007_startups"
+def test_startups_revision_precedes_current_head(alembic_head):
+    assert alembic_head == "0008_pitch_decks"

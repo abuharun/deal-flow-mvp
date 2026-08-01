@@ -15,6 +15,7 @@ from app.models.audit import AuditActorType, AuditLog  # noqa: E402
 from app.models.auth_session import AuthSession  # noqa: E402
 from app.models.email_token import EmailToken, EmailTokenPurpose  # noqa: E402
 from app.models.invite import Invite  # noqa: E402
+from app.models.pitch_deck import PitchDeck  # noqa: E402
 from app.models.startup import Startup, StartupStatus, Submission  # noqa: E402
 from app.models.user import UiLocale, User, UserRole  # noqa: E402
 
@@ -26,6 +27,7 @@ __all__ = [
     "EmailToken",
     "EmailTokenPurpose",
     "Invite",
+    "PitchDeck",
     "Startup",
     "StartupStatus",
     "Submission",

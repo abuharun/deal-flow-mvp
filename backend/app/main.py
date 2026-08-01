@@ -10,6 +10,7 @@ from app.config import Settings
 from app.db import alembic_script_head, build_engine, build_readiness_probe, build_sessionmaker
 from app.errors import register_error_handlers
 from app.routers.auth import router as auth_router
+from app.routers.founder_decks import router as founder_decks_router
 from app.routers.founder_startups import router as founder_startups_router
 from app.routers.health import router as health_router
 from app.security.client_ip import parse_trusted_proxies
@@ -115,4 +116,5 @@ def create_app(
     app.include_router(health_router)
     app.include_router(auth_router)
     app.include_router(founder_startups_router)
+    app.include_router(founder_decks_router)
     return app
