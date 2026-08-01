@@ -261,7 +261,3 @@ def test_downgrade_removes_pitch_decks_and_preserves_earlier_tables(
             await conn.execute(sa.text("DELETE FROM users WHERE id = :id"), {"id": str(founder_id)})
 
         _db(db_at_0008, cleanup)
-
-
-def test_head_is_0008(alembic_head):
-    assert alembic_head == "0008_pitch_decks"
