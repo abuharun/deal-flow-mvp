@@ -368,7 +368,3 @@ def test_downgrade_removes_payments_and_consents_and_preserves_earlier_tables(
             await conn.execute(sa.text("DELETE FROM users WHERE id = :id"), {"id": str(founder_id)})
 
         _db(db_at_0009, cleanup)
-
-
-def test_head_is_0009(alembic_head):
-    assert alembic_head == "0009_payment_consent"

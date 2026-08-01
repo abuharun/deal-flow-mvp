@@ -10,6 +10,7 @@ from app.config import Settings
 from app.db import alembic_script_head, build_engine, build_readiness_probe, build_sessionmaker
 from app.errors import register_error_handlers
 from app.routers.auth import router as auth_router
+from app.routers.founder_analysis import router as founder_analysis_router
 from app.routers.founder_consent import router as founder_consent_router
 from app.routers.founder_decks import router as founder_decks_router
 from app.routers.founder_payment import router as founder_payment_router
@@ -121,4 +122,5 @@ def create_app(
     app.include_router(founder_decks_router)
     app.include_router(founder_payment_router)
     app.include_router(founder_consent_router)
+    app.include_router(founder_analysis_router)
     return app
