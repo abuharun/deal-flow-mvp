@@ -9,8 +9,22 @@
 import { request } from './client'
 import type { AccessTokenResponse, LoginResponse, UiLocale } from './types'
 
+/**
+ * Sign in, and let the browser keep the refresh cookie the server issues.
+ *
+ * `withCredentials` is required in BOTH directions here: with `omit`, the
+ * fetch spec tells the browser to ignore the response's `Set-Cookie`
+ * entirely, so the session would live only until the tab reloaded. Login is
+ * where the cookie is minted (backend/app/routers/auth.py), which makes it
+ * the third and last credentialed call, alongside refresh and logout.
+ */
 export function login(email: string, password: string, signal?: AbortSignal): Promise<LoginResponse> {
-  return request<LoginResponse>('/auth/login', { method: 'POST', json: { email, password }, signal })
+  return request<LoginResponse>('/auth/login', {
+    method: 'POST',
+    json: { email, password },
+    withCredentials: true,
+    signal,
+  })
 }
 
 /** Rotate the refresh cookie into a fresh access token. */

@@ -23,4 +23,9 @@ export default tseslint.config([
       'react-refresh/only-export-components': 'off',
     },
   },
+  {
+    // Playwright specs and config run in Node, not the browser.
+    files: ['e2e/**/*.ts', 'playwright.config.ts'],
+    languageOptions: { globals: globals.node },
+  },
 ])

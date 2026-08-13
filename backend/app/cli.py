@@ -27,9 +27,24 @@ from app.security.passwords import MIN_PASSWORD_LENGTH, hash_password
 # Imported as modules (not names) so the audit dependency stays patchable in
 # tests that force the write to fail.
 from app.services import analysis_worker, audit_service, invite_service
-from app.services.analysis_worker_config import WorkerConfigError, require_worker_config
+from app.services.analysis_worker_config import (
+    WorkerConfig,
+    WorkerConfigError,
+    require_local_stub_worker_config,
+    require_worker_config,
+)
+from app.services.local_stub_provider import LocalStubResponsesClient
 
 app = typer.Typer(pretty_exceptions_enable=False)
+
+PROVIDER_OPENAI = "openai"
+PROVIDER_LOCAL_STUB = "local-stub"
+# The complete set of analysis providers this CLI can start, and the config
+# validator each one demands. `local-stub` refuses to load in production.
+_PROVIDERS: dict[str, Callable[[Settings], WorkerConfig]] = {
+    PROVIDER_OPENAI: require_worker_config,
+    PROVIDER_LOCAL_STUB: require_local_stub_worker_config,
+}
 
 # Minimal shape check to catch operator typos before touching the database;
 # full email schema validation arrives with the signup surface (B3).
@@ -166,22 +181,47 @@ def run_analysis_worker(
     poll_interval_seconds: float = typer.Option(
         5.0, "--poll-interval-seconds", min=0.1, help="Idle delay between polls when not --once."
     ),
+    provider: str = typer.Option(
+        PROVIDER_OPENAI,
+        "--provider",
+        help=(
+            "'openai' calls the real API. 'local-stub' runs the offline, disclosed "
+            "stub provider for local development and is refused when ENV=production."
+        ),
+    ),
 ) -> None:
     """Claim and execute queued AI-analysis jobs (Render worker entrypoint).
 
     Config is validated HERE, at worker startup -- never at web app import,
     so the API can run with zero OpenAI config. No import-time loop: the
     polling loop only starts when this command function runs.
+
+    `--provider local-stub` is an explicit, visible choice (it shows up in
+    `ps`, not only in an env file) that produces reports labelled as stub
+    output; see app.services.local_stub_provider for the honesty contract.
     """
+    if provider not in _PROVIDERS:
+        raise _fail(f"--provider must be one of: {', '.join(sorted(_PROVIDERS))}")
     settings = Settings()
     try:
-        worker_config = require_worker_config(settings)
+        worker_config = _PROVIDERS[provider](settings)
     except WorkerConfigError as exc:
         raise _fail(f"worker config invalid: {exc.reason}") from None
+    if provider == PROVIDER_LOCAL_STUB:
+        typer.echo(
+            "worker: using the OFFLINE local stub provider - reports are labelled "
+            "placeholder text, not AI research."
+        )
 
     async def main() -> None:
         engine = build_engine(settings.database_url)
-        client = openai.AsyncOpenAI(api_key=worker_config.api_key)
+        # Both satisfy openai_provider.ResponsesClient and both expose an
+        # async close(), so the teardown below stays identical either way.
+        client = (
+            LocalStubResponsesClient()
+            if provider == PROVIDER_LOCAL_STUB
+            else openai.AsyncOpenAI(api_key=worker_config.api_key)
+        )
         try:
             sessionmaker = build_sessionmaker(engine)
             if once:

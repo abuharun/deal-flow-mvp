@@ -1,20 +1,23 @@
 /**
- * The founder's real startup list: GET /founder/startups, nothing else.
+ * The founder's real startup list, and the one place a startup is created.
  *
- * The list renders exactly what the API returned — no seeded rows, no
- * placeholder startup, and no optimistic entry. An account with no startups
- * shows an empty state that says so.
+ * The list renders exactly what GET /founder/startups returned — no seeded
+ * rows, no placeholder startup, and no optimistic entry: a created startup
+ * appears because the API answered 201 with it, and the app navigates to the
+ * id the API chose rather than one it guessed.
  */
 
-import { useCallback } from 'react'
-import { Link } from 'react-router-dom'
+import { useCallback, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import * as founderApi from '../../api/founder'
 import type { StartupResponse } from '../../api/types'
 import { useAuth } from '../../auth/session'
 import { useLocale } from '../../i18n'
 import { formatDate } from '../../lib/format'
+import { useMutation } from '../mutation'
 import { useResource } from '../useResource'
-import { EmptyPanel, ErrorPanel, LoadingPanel, NotWiredYet } from '../states'
+import { EmptyPanel, ErrorPanel, LoadingPanel } from '../states'
+import { StartupForm, createPayload, type MetadataDraft } from './StartupForm'
 
 export function StatusChip({ startup }: { startup: StartupResponse }) {
   const { t } = useLocale()
@@ -24,12 +27,25 @@ export function StatusChip({ startup }: { startup: StartupResponse }) {
 export default function StartupList() {
   const { callApi } = useAuth()
   const { locale, t } = useLocale()
+  const navigate = useNavigate()
+  const [creating, setCreating] = useState(false)
 
   const load = useCallback(
     (signal: AbortSignal) => callApi((auth) => founderApi.listStartups({ ...auth, signal }), signal),
     [callApi],
   )
   const { state, reload } = useResource(load)
+
+  const create = useMutation(
+    useCallback(
+      async (draft: MetadataDraft) => {
+        const created = await callApi((auth) => founderApi.createStartup(createPayload(draft), auth))
+        setCreating(false)
+        navigate(`/founder/${created.id}`)
+      },
+      [callApi, navigate],
+    ),
+  )
 
   return (
     <section className="workspace-section">
@@ -42,16 +58,36 @@ export default function StartupList() {
           <button type="button" className="btn btn-quiet btn-sm" onClick={reload}>
             {t.work.refresh}
           </button>
-          {/* Creating a startup is a real API route; the form is not in this slice. */}
-          <NotWiredYet label={t.work.createButton} />
+          {!creating && (
+            <button type="button" className="btn btn-primary btn-sm" onClick={() => setCreating(true)}>
+              {t.work.createButton}
+            </button>
+          )}
         </div>
       </div>
+
+      {creating && (
+        <>
+          <h2>{t.work.createTitle}</h2>
+          <StartupForm
+            idPrefix="create"
+            busy={create.busy}
+            error={create.error}
+            submitLabel={t.work.save}
+            onSubmit={create.run}
+            onCancel={() => {
+              create.reset()
+              setCreating(false)
+            }}
+          />
+        </>
+      )}
 
       {state.status === 'loading' && <LoadingPanel />}
       {state.status === 'error' && <ErrorPanel error={state.error} onRetry={reload} />}
       {state.status === 'ready' &&
         (state.data.length === 0 ? (
-          <EmptyPanel title={t.work.listEmptyTitle} body={t.work.listEmptyBody} />
+          !creating && <EmptyPanel title={t.work.listEmptyTitle} body={t.work.listEmptyBody} />
         ) : (
           <ul className="startup-cards">
             {state.data.map((startup) => (

@@ -89,6 +89,7 @@ export const productUz = {
     cityLabel: 'Shahar',
     profileTitle: 'Startap ma’lumotlari',
     profileSaved: 'Ma’lumotlar saqlandi.',
+    editButton: 'Tahrirlash',
 
     status: {
       draft: 'Qoralama',
@@ -127,6 +128,7 @@ export const productUz = {
     growthLabel: 'O‘sish (matn)',
     askAmountLabel: 'So‘ralayotgan summa (USD)',
     dataroomLabel: 'Data-room havolasi',
+    submissionSave: 'Javoblarni saqlash',
     submitTitle: 'Arizani topshirish',
     submitBody: 'Topshirgandan so‘ng javoblarni yana tahrirlashingiz mumkin, ammo tahlil topshirilgan holatdan boshlanadi.',
     submitButton: 'Arizani topshirish',
@@ -178,6 +180,7 @@ export const productUz = {
     analysisQueuedAt: 'Navbatga qo‘yilgan',
     analysisFinishedAt: 'Yakunlangan',
     analysisStale: 'Tadqiqotdan keyin javoblar o‘zgargan — natija eskirgan.',
+    analysisAutoRefresh: 'Holat avtomatik yangilanib turadi.',
     analysisFailed: (code: string) => `Tadqiqot xatosi: ${code}`,
     analysisStatus: {
       queued: 'Navbatda',

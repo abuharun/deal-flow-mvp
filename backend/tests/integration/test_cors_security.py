@@ -4,7 +4,8 @@ Contracts under test:
 - CORS is configured from validated Settings.frontend_origins only, with
   allow_credentials=True: an allowed preflight answers the EXACT requesting
   origin (never `*`) plus Access-Control-Allow-Credentials, the explicit
-  method list GET,POST,PATCH,DELETE,OPTIONS, and the explicit header list
+  method list GET,POST,PUT,PATCH,DELETE,OPTIONS (PUT included because the
+  pitch-deck upload is a PUT), and the explicit header list
   Authorization,Content-Type,X-Request-ID; X-Request-ID is exposed.
 - Disallowed, `null`, prefix, and suffix origins can never pass preflight
   and never receive Access-Control-Allow-Origin on any response.
@@ -43,7 +44,7 @@ JWT_SECRET = "test-cors-jwt-secret-0123456789abcdef0123456789abcdef"
 PASSWORD = "correct-horse-battery-staple"
 PASSWORD_HASH = hash_password(PASSWORD)
 
-EXPECTED_METHODS = {"GET", "POST", "PATCH", "DELETE", "OPTIONS"}
+EXPECTED_METHODS = {"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}
 EXPECTED_HEADERS = {"authorization", "content-type", "x-request-id"}
 
 DISALLOWED_ORIGINS = [
@@ -161,7 +162,7 @@ class TestPreflight:
         assert_no_cors_grant(response)
 
     async def test_disallowed_method_cannot_pass_preflight(self, client):
-        response = await client.options(LOGIN, headers=preflight_headers(ORIGIN, method="PUT"))
+        response = await client.options(LOGIN, headers=preflight_headers(ORIGIN, method="TRACE"))
         assert response.status_code == 400
 
     async def test_disallowed_request_header_cannot_pass_preflight(self, client):
@@ -317,3 +318,51 @@ class TestCorsRuntimeContract:
         assert options.get("allow_origin_regex") in (None,), (
             "regex origins would reintroduce pattern matching; only exact origins are allowed"
         )
+
+
+class TestEveryRoutedMethodCanPreflight:
+    """A verb a router exposes but CORS omits is a route no browser can call.
+
+    This caught the pitch-deck upload: it is a PUT, and PUT was missing from
+    the allowlist, so the preflight failed before the request was ever sent.
+    """
+
+    def test_allowlist_covers_exactly_the_methods_the_routers_expose(self):
+        from app.main import (
+            CORS_ALLOW_METHODS,
+            auth_router,
+            founder_analysis_router,
+            founder_consent_router,
+            founder_decks_router,
+            founder_narrative_approval_router,
+            founder_narrative_router,
+            founder_payment_router,
+            founder_report_router,
+            founder_startups_router,
+            health_router,
+            vc_startups_router,
+        )
+
+        routers = (
+            health_router,
+            auth_router,
+            founder_startups_router,
+            founder_decks_router,
+            founder_payment_router,
+            founder_consent_router,
+            founder_analysis_router,
+            founder_report_router,
+            founder_narrative_router,
+            founder_narrative_approval_router,
+            vc_startups_router,
+        )
+        routed = {
+            method
+            for router in routers
+            for route in router.routes
+            for method in getattr(route, "methods", set())
+            if method != "HEAD"
+        }
+        # OPTIONS is CORS's own preflight verb, not one a router declares.
+        assert routed <= set(CORS_ALLOW_METHODS)
+        assert set(CORS_ALLOW_METHODS) - routed == {"OPTIONS"}

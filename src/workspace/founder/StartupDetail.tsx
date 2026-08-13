@@ -1,34 +1,46 @@
 /**
- * One startup's real progress, assembled from the API's own answers.
+ * One startup's whole path, assembled from the API's own answers.
  *
- * Every panel below is a READ of a specific backend resource. Where a
- * resource legitimately does not exist yet, the API says so with a canonical
- * 404/409 and the panel reports that absence — it never fills the gap with
- * sample content. Mutations (upload, pay, consent, trigger, edit, approve)
- * are real API routes that this slice does not wire yet; each is marked as
- * such instead of being faked or silently disabled.
+ * Reads: seven resources fetched together, so the page never renders half-known
+ * progress. Where a resource legitimately does not exist yet, the API says so
+ * with a canonical 404/409 and the panel reports that absence — it never fills
+ * the gap with sample content.
+ *
+ * Writes: every mutation here is a real call to a documented endpoint, and each
+ * one re-reads the snapshot afterwards rather than patching local state. The
+ * backend owns `status`, `input_revision`, the narrative version counter and
+ * the VC-visible lock; guessing any of them client-side would eventually show
+ * the founder something the server does not agree with.
+ *
+ * Locking: once the founder approves, `status` becomes `vc_visible` and every
+ * write answers 409 STARTUP_LOCKED. The panels drop their controls rather than
+ * disable them, so nothing on a frozen startup looks one click away.
  */
 
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import * as founderApi from '../../api/founder'
 import type {
   AnalysisJobResponse,
-  ConsentSummaryResponse,
-  DeckResponse,
-  NarrativeApprovalResponse,
-  NarrativeCurrentResponse,
-  PaymentResponse,
+  PaymentStatus,
   StartupDetailResponse,
+  SubmissionPatchRequest,
 } from '../../api/types'
-import { ANSWER_KEYS } from '../../api/types'
 import { useAuth } from '../../auth/session'
 import { useLocale } from '../../i18n'
-import { formatBytes, formatDate } from '../../lib/format'
+import { formatDate } from '../../lib/format'
 import { computeProgress, isLocked, type StepId, type WorkspaceSnapshot } from '../progress'
+import { useMutation } from '../mutation'
 import { optional, useResource } from '../useResource'
-import { ErrorPanel, LoadingPanel, LockedNotice, NotWiredYet } from '../states'
+import { ErrorPanel, LoadingPanel, LockedNotice } from '../states'
 import { StatusChip } from './StartupList'
+import { StartupForm, changedFields, draftFrom, type MetadataDraft } from './StartupForm'
+import SubmissionPanel from './SubmissionPanel'
+import DeckPanel from './DeckPanel'
+import { ConsentPanel, PaymentPanel } from './PrerequisitePanels'
+import AnalysisPanel from './AnalysisPanel'
+import NarrativePanel from './NarrativePanel'
+import ApprovalPanel from './ApprovalPanel'
 
 interface DetailSnapshot extends WorkspaceSnapshot {
   startup: StartupDetailResponse
@@ -71,168 +83,21 @@ function StepRow({ id, state, children }: { id: StepId; state: string; children?
   )
 }
 
-function SubmissionPanel({ startup }: { startup: StartupDetailResponse }) {
-  const { locale, t } = useLocale()
-  const answered = ANSWER_KEYS.filter((key) => startup.submission[key].trim().length > 0)
-  const answerLabels: Record<string, string> = {
-    problem: t.work.answerProblem,
-    product: t.work.answerProduct,
-    market: t.work.answerMarket,
-    traction: t.work.answerTraction,
-    team: t.work.answerTeam,
-    ask: t.work.answerAsk,
-  }
-  return (
-    <div className="step-body">
-      <p className="muted">
-        {answered.length}/{ANSWER_KEYS.length} · {ANSWER_KEYS.map((key) => answerLabels[key]).join(' · ')}
-      </p>
-      {startup.submitted_at ? (
-        <p className="faint">
-          {t.work.submittedAtLabel}: {formatDate(startup.submitted_at, locale)}
-        </p>
-      ) : (
-        <NotWiredYet label={t.work.submitButton} />
-      )}
-    </div>
-  )
-}
-
-function DeckPanel({ deck }: { deck: DeckResponse | null }) {
-  const { locale, t } = useLocale()
-  if (!deck) {
-    return (
-      <div className="step-body">
-        <p className="muted">{t.work.deckNone}</p>
-        <NotWiredYet label={t.work.deckUpload} />
-      </div>
-    )
-  }
-  return (
-    <div className="step-body">
-      <p>
-        <strong>{deck.filename}</strong>
-      </p>
-      <p className="faint">
-        {t.work.deckPages(deck.page_count)} · {formatBytes(deck.size_bytes, locale)} · {t.work.deckUploadedAt}:{' '}
-        {formatDate(deck.uploaded_at, locale)}
-      </p>
-      <NotWiredYet label={t.work.deckReplace} />
-    </div>
-  )
-}
-
-function PaymentPanel({ payment }: { payment: PaymentResponse | null }) {
-  const { locale, t } = useLocale()
-  return (
-    <div className="step-body">
-      <p className="demo-note">{t.work.paymentDemoNotice}</p>
-      {payment ? (
-        <p>
-          {payment.status === 'paid' ? t.work.paymentStatusPaid : t.work.paymentStatusFailed}
-          {payment.paid_at && <span className="faint"> · {formatDate(payment.paid_at, locale)}</span>}
-        </p>
-      ) : (
-        <>
-          <p className="muted">{t.work.paymentNone}</p>
-          <NotWiredYet label={t.work.paymentPay} />
-        </>
-      )}
-    </div>
-  )
-}
-
-function ConsentPanel({ consents }: { consents: ConsentSummaryResponse | null }) {
-  const { t } = useLocale()
-  if (!consents) return null
-  return (
-    <div className="step-body">
-      <p className="muted">{t.work.consentBody}</p>
-      <p className="faint">{t.work.consentVersion(consents.current_version)}</p>
-      {consents.granted ? <p>{t.work.consentGranted}</p> : <NotWiredYet label={t.work.consentGrant} />}
-    </div>
-  )
-}
-
-function AnalysisPanel({ analysis }: { analysis: AnalysisJobResponse | null }) {
-  const { locale, t } = useLocale()
-  if (!analysis) {
-    return (
-      <div className="step-body">
-        <p className="muted">{t.work.analysisNone}</p>
-        <NotWiredYet label={t.work.analysisTrigger} />
-      </div>
-    )
-  }
-  return (
-    <div className="step-body">
-      <p>
-        {t.work.analysisStatusLabel}: <strong>{t.work.analysisStatus[analysis.status]}</strong>
-        <span className="faint"> · {t.work.analysisAttempts(analysis.attempts, analysis.max_attempts)}</span>
-      </p>
-      <p className="faint">
-        {t.work.analysisQueuedAt}: {formatDate(analysis.queued_at, locale)}
-      </p>
-      {analysis.stale && <p className="error-text">{t.work.analysisStale}</p>}
-      {analysis.status === 'failed' && analysis.last_error_code && (
-        <p className="error-text">{t.work.analysisFailed(analysis.last_error_code)}</p>
-      )}
-    </div>
-  )
-}
-
-function NarrativePanel({ narrative }: { narrative: NarrativeCurrentResponse | null }) {
-  const { t } = useLocale()
-  if (!narrative) {
-    return (
-      <div className="step-body">
-        <p className="muted">{t.work.narrativeNotReady}</p>
-      </div>
-    )
-  }
-  return (
-    <div className="step-body">
-      <p className="faint">
-        {t.work.narrativeVersion(narrative.version)} ·{' '}
-        {narrative.source === 'report_seed' ? t.work.narrativeSourceSeed : t.work.narrativeSourceEdit}
-      </p>
-      <p className="narrative-preview">{narrative.content}</p>
-      <NotWiredYet label={t.work.narrativeSave} />
-    </div>
-  )
-}
-
-function ApprovalPanel({
-  approval,
-  narrative,
-}: {
-  approval: NarrativeApprovalResponse | null
-  narrative: NarrativeCurrentResponse | null
-}) {
-  const { locale, t } = useLocale()
-  if (approval) {
-    return (
-      <div className="step-body">
-        <p>{t.work.approvedVersion(approval.version)}</p>
-        <p className="faint">
-          {t.work.approvedAt}: {formatDate(approval.approved_at, locale)} · {t.work.vcVisibleAt}:{' '}
-          {formatDate(approval.vc_visible_at, locale)}
-        </p>
-      </div>
-    )
-  }
-  return (
-    <div className="step-body">
-      <p className="muted">{t.work.approvalNone}</p>
-      {narrative && <NotWiredYet label={t.work.approvalButton(narrative.version)} />}
-    </div>
-  )
+/** Save the deck bytes the API returned under the name it recorded. */
+function offerDownload(blob: Blob, filename: string): void {
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename
+  link.click()
+  URL.revokeObjectURL(url)
 }
 
 export default function StartupDetail() {
   const { startupId = '' } = useParams()
   const { callApi } = useAuth()
   const { locale, t } = useLocale()
+  const [editingProfile, setEditingProfile] = useState(false)
 
   const load = useCallback(
     async (signal: AbortSignal): Promise<DetailSnapshot> =>
@@ -255,20 +120,189 @@ export default function StartupDetail() {
   )
   const { state, reload } = useResource(load)
 
+  // Every mutation ends in `reload()`: the backend, not this component, is the
+  // authority on what the next state of the page is.
+  const patchProfile = useMutation(
+    useCallback(
+      async (changes: Parameters<typeof founderApi.patchStartup>[1]) => {
+        await callApi((auth) => founderApi.patchStartup(startupId, changes, auth))
+        setEditingProfile(false)
+        reload()
+      },
+      [callApi, startupId, reload],
+    ),
+  )
+  const saveSubmission = useMutation(
+    useCallback(
+      async (changes: SubmissionPatchRequest) => {
+        await callApi((auth) => founderApi.patchSubmission(startupId, changes, auth))
+        reload()
+      },
+      [callApi, startupId, reload],
+    ),
+  )
+  const submit = useMutation(
+    useCallback(async () => {
+      await callApi((auth) => founderApi.submitStartup(startupId, auth))
+      reload()
+    }, [callApi, startupId, reload]),
+  )
+  const uploadDeck = useMutation(
+    useCallback(
+      async (file: File) => {
+        await callApi((auth) => founderApi.uploadDeck(startupId, file, auth))
+        reload()
+      },
+      [callApi, startupId, reload],
+    ),
+  )
+  const deleteDeck = useMutation(
+    useCallback(async () => {
+      await callApi((auth) => founderApi.deleteDeck(startupId, auth))
+      reload()
+    }, [callApi, startupId, reload]),
+  )
+  const downloadDeck = useMutation(
+    useCallback(
+      async (filename: string) => {
+        offerDownload(await callApi((auth) => founderApi.downloadDeck(startupId, auth)), filename)
+      },
+      [callApi, startupId],
+    ),
+  )
+  const pay = useMutation(
+    useCallback(
+      async (outcome: PaymentStatus) => {
+        await callApi((auth) => founderApi.submitPayment(startupId, outcome, auth))
+        reload()
+      },
+      [callApi, startupId, reload],
+    ),
+  )
+  const grantConsent = useMutation(
+    useCallback(
+      async (textVersion: string) => {
+        await callApi((auth) => founderApi.grantConsent(startupId, textVersion, auth))
+        reload()
+      },
+      [callApi, startupId, reload],
+    ),
+  )
+  const triggerAnalysis = useMutation(
+    useCallback(async () => {
+      await callApi((auth) => founderApi.triggerAnalysis(startupId, auth))
+      reload()
+    }, [callApi, startupId, reload]),
+  )
+  const saveNarrative = useMutation(
+    useCallback(
+      async (content: string) => {
+        await callApi((auth) => founderApi.saveNarrative(startupId, content, auth))
+        reload()
+      },
+      [callApi, startupId, reload],
+    ),
+  )
+  const approve = useMutation(
+    useCallback(
+      async (version: number) => {
+        await callApi((auth) => founderApi.approveNarrative(startupId, version, auth))
+        reload()
+      },
+      [callApi, startupId, reload],
+    ),
+  )
+
+  /** One poll of the analysis job; a vanished job simply stops the follow. */
+  const pollAnalysis = useCallback(
+    async (): Promise<AnalysisJobResponse | null> =>
+      callApi((auth) => optional(founderApi.getAnalysis(startupId, auth), ABSENT.analysis)),
+    [callApi, startupId],
+  )
+
   if (state.status === 'loading') return <LoadingPanel />
   if (state.status === 'error') return <ErrorPanel error={state.error} onRetry={reload} />
 
   const snapshot = state.data
   const { startup } = snapshot
+  const locked = isLocked(startup)
   const steps = computeProgress(snapshot)
+
   const panels: Record<StepId, React.ReactNode> = {
-    submission: <SubmissionPanel startup={startup} />,
-    deck: <DeckPanel deck={snapshot.deck} />,
-    payment: <PaymentPanel payment={snapshot.payment} />,
-    consent: <ConsentPanel consents={snapshot.consents} />,
-    analysis: <AnalysisPanel analysis={snapshot.analysis} />,
-    narrative: <NarrativePanel narrative={snapshot.narrative} />,
-    approval: <ApprovalPanel approval={snapshot.approval} narrative={snapshot.narrative} />,
+    submission: (
+      <SubmissionPanel
+        startup={startup}
+        locked={locked}
+        saving={saveSubmission.busy}
+        saveError={saveSubmission.error}
+        onSave={saveSubmission.run}
+        submitting={submit.busy}
+        submitError={submit.error}
+        onSubmit={submit.run}
+      />
+    ),
+    deck: (
+      <DeckPanel
+        deck={snapshot.deck}
+        locked={locked}
+        uploading={uploadDeck.busy}
+        uploadError={uploadDeck.error}
+        onUpload={uploadDeck.run}
+        deleting={deleteDeck.busy}
+        deleteError={deleteDeck.error}
+        onDelete={deleteDeck.run}
+        onDownload={() => downloadDeck.run(snapshot.deck?.filename ?? 'deck.pdf')}
+      />
+    ),
+    payment: (
+      <PaymentPanel
+        payment={snapshot.payment}
+        locked={locked}
+        busy={pay.busy}
+        error={pay.error}
+        onPay={pay.run}
+      />
+    ),
+    consent: (
+      <ConsentPanel
+        consents={snapshot.consents}
+        locked={locked}
+        busy={grantConsent.busy}
+        error={grantConsent.error}
+        onGrant={grantConsent.run}
+      />
+    ),
+    analysis: (
+      <AnalysisPanel
+        snapshot={snapshot}
+        locked={locked}
+        busy={triggerAnalysis.busy}
+        error={triggerAnalysis.error}
+        onTrigger={triggerAnalysis.run}
+        onPoll={pollAnalysis}
+        onSettled={reload}
+      />
+    ),
+    narrative: (
+      <NarrativePanel
+        startupId={startupId}
+        narrative={snapshot.narrative}
+        locked={locked}
+        saving={saveNarrative.busy}
+        saveError={saveNarrative.error}
+        onSave={saveNarrative.run}
+      />
+    ),
+    approval: (
+      <ApprovalPanel
+        approval={snapshot.approval}
+        narrative={snapshot.narrative}
+        locked={locked}
+        busy={approve.busy}
+        error={approve.error}
+        onApprove={approve.run}
+      />
+    ),
   }
 
   return (
@@ -288,13 +322,33 @@ export default function StartupDetail() {
         </div>
         <div className="list-toolbar">
           <StatusChip startup={startup} />
+          {!locked && !editingProfile && (
+            <button type="button" className="btn btn-quiet btn-sm" onClick={() => setEditingProfile(true)}>
+              {t.work.editButton}
+            </button>
+          )}
           <button type="button" className="btn btn-quiet btn-sm" onClick={reload}>
             {t.work.refresh}
           </button>
         </div>
       </div>
 
-      {isLocked(startup) && <LockedNotice />}
+      {editingProfile && (
+        <StartupForm
+          idPrefix="profile"
+          initial={startup}
+          busy={patchProfile.busy}
+          error={patchProfile.error}
+          submitLabel={t.work.save}
+          onSubmit={(draft: MetadataDraft) => patchProfile.run(changedFields(draftFrom(startup), draft))}
+          onCancel={() => {
+            patchProfile.reset()
+            setEditingProfile(false)
+          }}
+        />
+      )}
+
+      {locked && <LockedNotice />}
 
       <ol className="progress-rail" aria-label={t.work.progressAria}>
         {steps.map((step) => (

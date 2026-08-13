@@ -86,6 +86,7 @@ export const productRu: ProductMessages = {
     cityLabel: 'Город',
     profileTitle: 'Данные стартапа',
     profileSaved: 'Данные сохранены.',
+    editButton: 'Редактировать',
 
     status: {
       draft: 'Черновик',
@@ -124,6 +125,7 @@ export const productRu: ProductMessages = {
     growthLabel: 'Рост (текст)',
     askAmountLabel: 'Запрашиваемая сумма (USD)',
     dataroomLabel: 'Ссылка на data-room',
+    submissionSave: 'Сохранить ответы',
     submitTitle: 'Подать заявку',
     submitBody: 'После подачи ответы ещё можно править, но исследование стартует от поданной версии.',
     submitButton: 'Подать заявку',
@@ -175,6 +177,7 @@ export const productRu: ProductMessages = {
     analysisQueuedAt: 'В очереди с',
     analysisFinishedAt: 'Завершено',
     analysisStale: 'После исследования ответы менялись — результат устарел.',
+    analysisAutoRefresh: 'Статус обновляется автоматически.',
     analysisFailed: (code: string) => `Ошибка исследования: ${code}`,
     analysisStatus: {
       queued: 'В очереди',

@@ -278,3 +278,109 @@ class TestOnceProcessesExactlyOneJob:
     def test_api_key_never_appears_in_output(self, cli_env, fake_openai):
         result = runner.invoke(cli_module.app, ["run-analysis-worker", "--once"])
         assert "sk-test-key-value" not in result.output
+
+
+class TestLocalStubProviderPath:
+    """`--provider local-stub`: the offline seam the local pilot walks.
+
+    No OPENAI_API_KEY is set in any test here, and `openai.AsyncOpenAI` is
+    monkeypatched to a fake that records construction -- so "it never touched
+    the OpenAI client" is asserted, not assumed.
+    """
+
+    @pytest.fixture()
+    def stub_env(self, monkeypatch, test_database_url, db_at_head):
+        monkeypatch.setenv("DATABASE_URL", test_database_url)
+        monkeypatch.setenv("ENV", "development")
+        monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+        monkeypatch.delenv("OPENAI_INPUT_PRICE_PER_MILLION_USD", raising=False)
+        monkeypatch.delenv("OPENAI_OUTPUT_PRICE_PER_MILLION_USD", raising=False)
+        monkeypatch.delenv("OPENAI_WEB_SEARCH_COST_USD", raising=False)
+        return test_database_url
+
+    def test_runs_with_no_openai_config_at_all(self, stub_env, fake_openai):
+        FakeAsyncOpenAI.last_instance = None
+        result = runner.invoke(
+            cli_module.app, ["run-analysis-worker", "--once", "--provider", "local-stub"]
+        )
+        assert result.exit_code == 0, result.output
+        assert "no_job_due" in result.output
+        assert FakeAsyncOpenAI.last_instance is None
+
+    def test_discloses_the_stub_in_its_own_output(self, stub_env, fake_openai):
+        result = runner.invoke(
+            cli_module.app, ["run-analysis-worker", "--once", "--provider", "local-stub"]
+        )
+        assert "OFFLINE local stub provider" in result.output
+
+    def test_completes_a_job_and_records_stub_provenance(self, stub_env, fake_openai):
+        import asyncio
+
+        from app.services.analysis_worker_config import LOCAL_STUB_MODEL
+        from app.services.local_stub_provider import LOCAL_STUB_DISCLOSURE
+
+        job_id = asyncio.run(_insert_ready_job(stub_env))
+        result = runner.invoke(
+            cli_module.app, ["run-analysis-worker", "--once", "--provider", "local-stub"]
+        )
+        assert result.exit_code == 0, result.output
+        assert "succeeded" in result.output
+
+        async def check():
+            engine = build_engine(stub_env)
+            try:
+                async with engine.connect() as conn:
+                    return (
+                        (
+                            await conn.execute(
+                                sa.text(
+                                    "SELECT j.status, j.cost_estimate_usd, r.model, "
+                                    "r.prompt_version, r.report "
+                                    "FROM analysis_jobs j "
+                                    "JOIN analysis_reports r ON r.startup_id = j.startup_id "
+                                    "WHERE j.id = :id"
+                                ),
+                                {"id": job_id},
+                            )
+                        )
+                        .mappings()
+                        .one()
+                    )
+            finally:
+                await engine.dispose()
+
+        row = asyncio.run(check())
+        assert row["status"] == "completed"
+        # The stored report credits the stub, not a model that never ran, and
+        # says so in the text a founder actually reads.
+        assert row["model"] == LOCAL_STUB_MODEL
+        assert row["prompt_version"] == LOCAL_STUB_MODEL
+        assert row["cost_estimate_usd"] == 0
+        report = row["report"] if isinstance(row["report"], dict) else json.loads(row["report"])
+        assert LOCAL_STUB_DISCLOSURE in report["executive_summary"]
+
+    def test_refused_when_env_is_production(self, stub_env, monkeypatch, fake_openai):
+        monkeypatch.setenv("ENV", "production")
+        monkeypatch.setenv("JWT_SECRET", "0f9a" * 24)
+        monkeypatch.setenv("FRONTEND_ORIGINS", "https://app.example.com")
+        monkeypatch.setenv("API_PUBLIC_URL", "https://api.example.com")
+        monkeypatch.setenv("FRONTEND_PUBLIC_URL", "https://app.example.com")
+        result = runner.invoke(
+            cli_module.app, ["run-analysis-worker", "--once", "--provider", "local-stub"]
+        )
+        assert result.exit_code != 0
+        assert "local_stub_forbidden_in_production" in result.output
+
+    def test_unknown_provider_is_refused(self, stub_env, fake_openai):
+        result = runner.invoke(
+            cli_module.app, ["run-analysis-worker", "--once", "--provider", "gemini"]
+        )
+        assert result.exit_code != 0
+        assert "--provider must be one of" in result.output
+
+    def test_default_provider_is_still_openai(self, stub_env, fake_openai):
+        # Omitting --provider must never silently fall back to the stub: with
+        # no key configured, the real path fails closed.
+        result = runner.invoke(cli_module.app, ["run-analysis-worker", "--once"])
+        assert result.exit_code != 0
+        assert "openai_api_key_missing" in result.output

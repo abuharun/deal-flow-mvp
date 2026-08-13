@@ -35,7 +35,11 @@ _SAFE_REQUEST_ID = re.compile(r"^[A-Za-z0-9._-]{1,128}$")
 
 # Credentialed CORS must stay exact: explicit origins from validated Settings
 # (which reject any wildcard), explicit methods and headers, never `*`.
-CORS_ALLOW_METHODS = ("GET", "POST", "PATCH", "DELETE", "OPTIONS")
+# This tuple must cover exactly the verbs the routers expose and no more --
+# PUT is here because the pitch-deck upload is a PUT
+# (app.routers.founder_decks), and without it the browser's preflight fails
+# before the request is ever made.
+CORS_ALLOW_METHODS = ("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
 CORS_ALLOW_HEADERS = ("Authorization", "Content-Type", REQUEST_ID_HEADER)
 CORS_EXPOSE_HEADERS = (REQUEST_ID_HEADER,)
 

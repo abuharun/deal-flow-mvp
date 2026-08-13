@@ -26,9 +26,11 @@ afterEach(() => vi.unstubAllGlobals())
 const call = { token: 'tok' }
 
 describe('auth endpoints', () => {
-  it('posts credentials to /auth/login without the ambient cookie', async () => {
+  it('posts credentials to /auth/login and keeps the cookie the server sets', async () => {
     await authApi.login('a@b.uz', 'secret-password')
-    expect(callShape()).toEqual(['/auth/login', 'POST', 'omit'])
+    // `omit` would make the browser discard the response's Set-Cookie, so the
+    // session could never survive a reload.
+    expect(callShape()).toEqual(['/auth/login', 'POST', 'include'])
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ email: 'a@b.uz', password: 'secret-password' })
   })
 

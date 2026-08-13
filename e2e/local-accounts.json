@@ -1,0 +1,13 @@
+{
+  "_comment": "LOCAL-ONLY throwaway credentials for the browser E2E. The domain is example.com's RFC 2606 sibling `.example`, reserved for documentation and never routable; `.local`/`.test` are rejected outright by the API's email validator. These accounts exist on a developer's own Postgres and nowhere else; e2e/seed_local_accounts.py refuses to write them to a non-local database or with ENV=production. Never reuse these values for anything real.",
+  "founder": {
+    "email": "founder@bevosita.example",
+    "password": "local-e2e-founder-pw",
+    "full_name": "Aziza Karimova"
+  },
+  "vc": {
+    "email": "vc@bevosita.example",
+    "password": "local-e2e-vc-pw",
+    "full_name": "Laylo Mirzaeva"
+  }
+}

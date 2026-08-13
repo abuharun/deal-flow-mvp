@@ -9,6 +9,9 @@ export default defineConfig({
   plugins: [react()],
   test: {
     environment: 'jsdom',
+    // Playwright owns everything under e2e/; vitest must not try to run a
+    // browser spec in jsdom.
+    exclude: ['node_modules/**', 'dist/**', 'e2e/**'],
     setupFiles: ['./src/test/setup.ts'],
     globals: true,
     css: false,

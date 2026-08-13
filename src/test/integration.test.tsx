@@ -1,23 +1,16 @@
-/**
- * End-to-end-through-the-router tests: the real `AppRoutes`, mounted with the
- * real `AuthProvider` and the real API modules, against a stubbed HTTP layer.
- *
- * These prove the product routes are wired to the backend rather than to the
- * simulated store: every assertion below is reachable only if the app actually
- * called the documented endpoint and rendered what that endpoint returned.
- */
-
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router-dom'
-import { AppRoutes } from '../App'
-import { AuthProvider } from '../auth/session'
-import { StoreProvider } from '../lib/store'
-import { ToastProvider } from '../components/toast'
-import { LocaleProvider, type Locale } from '../i18n'
 import {
-  makeAccessToken,
+  apiCalls,
+  envelope,
+  grantSession,
+  installFakeApi,
+  json,
+  renderApp,
+  route,
+} from './harness'
+import {
   makeAnalysisJob,
   makeApproval,
   makeConsents,
@@ -27,70 +20,8 @@ import {
   makePayment,
   makeStartup,
   makeStartupDetail,
-  makeUser,
   makeVcSummary,
 } from './factories'
-
-type Handler = (init: RequestInit) => Response | Promise<Response>
-
-let routes: Map<string, Handler>
-let calls: string[]
-
-function json(body: unknown, status = 200): Response {
-  return new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } })
-}
-
-function envelope(code: string, status: number): Response {
-  return json({ error: { code, message_key: `errors.${code}`, detail: 'no', request_id: 'req-7' } }, status)
-}
-
-/** Register `METHOD /path` (path only, query stripped). */
-function route(key: string, handler: Handler) {
-  routes.set(key, handler)
-}
-
-/** A fake backend that answers ONLY the endpoints it was told about. */
-function installFakeApi() {
-  routes = new Map()
-  calls = []
-  vi.stubGlobal(
-    'fetch',
-    vi.fn(async (input: RequestInfo | URL, init: RequestInit = {}) => {
-      const url = new URL(String(input))
-      const key = `${init.method ?? 'GET'} ${url.pathname}`
-      calls.push(key)
-      const handler = routes.get(key)
-      if (!handler) throw new Error(`unexpected API call: ${key}`)
-      return handler(init)
-    }),
-  )
-}
-
-/** Sign-in plus a session the refresh cookie can restore. */
-function grantSession(role: 'founder' | 'vc') {
-  const token = makeAccessToken({ sub: 'user-1', role })
-  route('POST /auth/refresh', () => json({ access_token: token, token_type: 'bearer', expires_in: 900 }))
-  route('POST /auth/login', () =>
-    json({ access_token: token, token_type: 'bearer', expires_in: 900, user: makeUser({ role }) }),
-  )
-  return token
-}
-
-function renderApp(path: string, locale: Locale = 'uz') {
-  return render(
-    <LocaleProvider initial={locale}>
-      <AuthProvider>
-        <StoreProvider>
-          <ToastProvider>
-            <MemoryRouter initialEntries={[path]}>
-              <AppRoutes />
-            </MemoryRouter>
-          </ToastProvider>
-        </StoreProvider>
-      </AuthProvider>
-    </LocaleProvider>,
-  )
-}
 
 beforeEach(() => {
   localStorage.clear()
@@ -115,8 +46,8 @@ describe('real authentication at /login', () => {
 
     // The startup name can only appear if the app called the real endpoint.
     expect(await screen.findByRole('heading', { name: 'Xarid' })).toBeInTheDocument()
-    expect(calls).toContain('POST /auth/login')
-    expect(calls).toContain('GET /founder/startups')
+    expect(apiCalls()).toContain('POST /auth/login')
+    expect(apiCalls()).toContain('GET /founder/startups')
     // No seeded demo startup leaked into the real workspace.
     expect(screen.queryByText(/SolarUz/)).not.toBeInTheDocument()
   })
@@ -157,7 +88,7 @@ describe('session-based route protection', () => {
     renderApp('/founder')
 
     expect(await screen.findByRole('heading', { name: 'Kirish' })).toBeInTheDocument()
-    expect(calls).toEqual(['POST /auth/refresh'])
+    expect(apiCalls()).toEqual(['POST /auth/refresh'])
   })
 
   it('restores a session from the refresh cookie without any stored token', async () => {
@@ -167,7 +98,7 @@ describe('session-based route protection', () => {
     renderApp('/founder')
 
     expect(await screen.findByRole('heading', { name: 'Xarid' })).toBeInTheDocument()
-    expect(calls[0]).toBe('POST /auth/refresh')
+    expect(apiCalls()[0]).toBe('POST /auth/refresh')
     expect(JSON.stringify({ ...localStorage })).not.toContain('eyJ')
   })
 
@@ -178,7 +109,7 @@ describe('session-based route protection', () => {
     renderApp('/founder')
 
     expect(await screen.findByRole('heading', { name: 'Tasdiqlangan startaplar' })).toBeInTheDocument()
-    expect(calls).not.toContain('GET /founder/startups')
+    expect(apiCalls()).not.toContain('GET /founder/startups')
   })
 
   it('routes a founder away from the investor workspace', async () => {
@@ -188,7 +119,7 @@ describe('session-based route protection', () => {
     renderApp('/investor')
 
     expect(await screen.findByRole('heading', { name: 'Startaplarim' })).toBeInTheDocument()
-    expect(calls).not.toContain('GET /vc/startups')
+    expect(apiCalls()).not.toContain('GET /vc/startups')
   })
 
   it('signs out through POST /auth/logout and returns to the public landing', async () => {
@@ -202,7 +133,7 @@ describe('session-based route protection', () => {
     await user.click(screen.getByRole('button', { name: 'Chiqish' }))
 
     await waitFor(() => expect(screen.getByRole('heading', { level: 1 }).textContent).toMatch(/halol xulosa/))
-    await waitFor(() => expect(calls).toContain('POST /auth/logout'))
+    await waitFor(() => expect(apiCalls()).toContain('POST /auth/logout'))
   })
 })
 
@@ -409,6 +340,6 @@ describe('the simulated demo stays separate', () => {
     await user.click(await screen.findByRole('button', { name: /Asoschi/ }))
     await screen.findByRole('heading', { name: /investitsiyaga loyiqmi/ })
 
-    await waitFor(() => expect(calls).toEqual(['POST /auth/refresh']))
+    await waitFor(() => expect(apiCalls()).toEqual(['POST /auth/refresh']))
   })
 })
