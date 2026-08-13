@@ -21,6 +21,7 @@ from app.routers.founder_payment import router as founder_payment_router
 from app.routers.founder_report import router as founder_report_router
 from app.routers.founder_startups import router as founder_startups_router
 from app.routers.health import router as health_router
+from app.routers.vc_startups import router as vc_startups_router
 from app.security.client_ip import parse_trusted_proxies
 from app.security.rate_limit import RateLimiter
 from app.services.email_service import (
@@ -39,8 +40,10 @@ CORS_ALLOW_HEADERS = ("Authorization", "Content-Type", REQUEST_ID_HEADER)
 CORS_EXPOSE_HEADERS = (REQUEST_ID_HEADER,)
 
 # Auth responses carry or set credentials (tokens, cookies) and their errors
-# reveal account-flow state; none of it may land in any HTTP cache.
-_AUTH_PATH_PREFIX = "/auth/"
+# reveal account-flow state; VC responses carry founder-approved commercial
+# material for a named investor. Neither may land in any HTTP cache, shared
+# or private, and neither may leak its URL to a third party via Referer.
+_SENSITIVE_PATH_PREFIXES = ("/auth/", "/vc/")
 
 
 @asynccontextmanager
@@ -104,11 +107,14 @@ def create_app(
     )
 
     @app.middleware("http")
-    async def auth_no_store_middleware(request: Request, call_next):
+    async def sensitive_response_headers_middleware(request: Request, call_next):
         response = await call_next(request)
-        if request.url.path.startswith(_AUTH_PATH_PREFIX):
+        if request.url.path.startswith(_SENSITIVE_PATH_PREFIXES):
+            # Errors get these too: a 401/403/404 on these surfaces is itself
+            # state a cache or a referrer must not carry.
             response.headers["Cache-Control"] = "no-store"
             response.headers["Pragma"] = "no-cache"
+            response.headers["Referrer-Policy"] = "no-referrer"
         return response
 
     @app.middleware("http")
@@ -131,4 +137,5 @@ def create_app(
     app.include_router(founder_report_router)
     app.include_router(founder_narrative_router)
     app.include_router(founder_narrative_approval_router)
+    app.include_router(vc_startups_router)
     return app
