@@ -57,7 +57,13 @@ function DemoRoleChooser() {
   )
 }
 
-export function Login() {
+/**
+ * The simulated demo's entry point (mounted at `/demo`).
+ *
+ * This is NOT the product's sign-in: it hands out a local, seeded session and
+ * never contacts the API. The real login lives in `src/auth/pages/Login.tsx`.
+ */
+export function DemoEntry() {
   const { login } = useStore()
   const { t } = useLocale()
   const navigate = useNavigate()
@@ -100,8 +106,8 @@ export function Login() {
         </button>
       </form>
       <p className="faint" style={{ marginTop: 14 }}>
-        <Link to="/reset">{t.auth.forgot}</Link> · {t.auth.newHere}{' '}
-        <Link to="/signup">{t.auth.signupLink}</Link>
+        <Link to="/demo/reset">{t.auth.forgot}</Link> · {t.auth.newHere}{' '}
+        <Link to="/demo/signup">{t.auth.signupLink}</Link>
       </p>
     </AuthFrame>
   )
@@ -143,7 +149,7 @@ export function Signup() {
         {t.auth.signupDemoNote(FOUNDER_NAME)}
       </p>
       <p className="faint" style={{ marginTop: 14 }}>
-        {t.auth.haveAccount} <Link to="/login">{t.auth.loginLink}</Link>
+        {t.auth.haveAccount} <Link to="/demo">{t.auth.loginLink}</Link>
       </p>
     </AuthFrame>
   )
@@ -166,7 +172,7 @@ export function Reset() {
             {t.auth.resetSent}
           </div>
           <p className="muted" style={{ marginTop: 14 }}>
-            {t.auth.resetNote(<Link to="/login">{t.auth.resetBackLink}</Link>)}
+            {t.auth.resetNote(<Link to="/demo">{t.auth.resetBackLink}</Link>)}
           </p>
         </>
       ) : (
@@ -179,7 +185,7 @@ export function Reset() {
             {t.auth.resetButton}
           </button>
           <p className="faint" style={{ marginTop: 14 }}>
-            {t.auth.remembered} <Link to="/login">{t.auth.loginLink}</Link>
+            {t.auth.remembered} <Link to="/demo">{t.auth.loginLink}</Link>
           </p>
         </form>
       )}

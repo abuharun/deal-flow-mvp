@@ -1,4 +1,5 @@
 import type { Decision, Signal, Stage, StepKey } from '../lib/types'
+import { productRu } from './product.ru'
 import type { Messages } from './uz'
 
 /** Russian plural helper: ruPlural(3, ['стартап', 'стартапа', 'стартапов']). */
@@ -12,6 +13,8 @@ function ruPlural(n: number, [one, few, many]: [string, string, string]): string
 }
 
 export const ru: Messages = {
+  ...productRu,
+
   meta: {
     title: 'Bevosita — честный поток сделок',
     description:

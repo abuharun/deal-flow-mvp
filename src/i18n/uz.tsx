@@ -1,12 +1,18 @@
 import type { ReactNode } from 'react'
 import type { Decision, Signal, Stage, StepKey } from '../lib/types'
+import { productUz } from './product.uz'
 
 /**
  * The Uzbek interface dictionary — the source of truth for the message schema.
  * `Messages` is derived from this object; the Russian dictionary must satisfy
  * the same shape, so a missing or extra key is a type error, not a runtime bug.
+ *
+ * `productUz` carries the backend-connected surface (auth + workspaces); the
+ * sections below carry the landing page and the older simulated demo.
  */
 export const uz = {
+  ...productUz,
+
   meta: {
     title: 'Bevosita — halol bitimlar oqimi',
     description:

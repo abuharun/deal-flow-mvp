@@ -1461,3 +1461,152 @@ a { color: var(--brand-strong); }
 }
 
 .error-text { color: var(--red-ink); font-size: 0.88rem; font-weight: 560; margin-top: 4px; }
+
+/* ============================================================
+   Backend-connected workspaces (founder + investor)
+   Restrained futuristic surfaces: the same calm blue system as the
+   landing, with state made explicit rather than decorative.
+   ============================================================ */
+
+.workspace-section {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 28px 20px 64px;
+}
+.workspace-head {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+}
+.workspace-head h1 { margin-bottom: 6px; }
+.workspace-head p { margin-bottom: 4px; }
+
+.auth-card-head {
+  margin-bottom: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.account-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.86rem;
+  font-weight: 560;
+  color: var(--ink-soft);
+}
+
+/* ---------- Loading / error / empty ---------- */
+
+.state-panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 26px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+.state-panel p { margin-bottom: 8px; }
+.state-panel h3 { margin-bottom: 6px; }
+.state-error {
+  border-color: var(--red-line);
+  background: var(--red-soft);
+  color: var(--red-ink);
+}
+.state-error .btn { margin-top: 6px; }
+.state-request-id { font-family: var(--font-mono); font-size: 0.74rem; }
+.state-empty { border-style: dashed; }
+
+.state-spinner {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  border: 2.5px solid var(--brand-soft);
+  border-top-color: var(--brand);
+  animation: state-spin 0.9s linear infinite;
+}
+@keyframes state-spin { to { transform: rotate(360deg); } }
+
+.notice-locked {
+  background: var(--brand-wash);
+  border-color: var(--brand-soft);
+  color: var(--ink);
+  margin-bottom: 20px;
+}
+.notice-locked p { margin: 4px 0 0; }
+
+/* A real API capability the UI has not wired yet — never a fake control. */
+.stub-pending { border-style: dotted; }
+
+/* ---------- Startup cards ---------- */
+
+.startup-cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.startup-card { display: block; text-decoration: none; color: inherit; transition: box-shadow 0.18s ease, border-color 0.18s ease; }
+.startup-card:hover { border-color: var(--line-strong); box-shadow: var(--shadow-blue-sm); }
+.startup-card h2 { font-size: 1.15rem; margin: 0; }
+.startup-card-head { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.startup-card-meta { display: flex; gap: 22px; flex-wrap: wrap; margin: 10px 0 0; }
+.startup-card-meta dt { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-faint); }
+.startup-card-meta dd { margin: 2px 0 0; font-weight: 560; }
+
+.status-draft { color: var(--ink-soft); }
+.status-submitted, .status-analyzing { background: var(--brand-wash); border-color: var(--brand-soft); color: var(--brand-strong); }
+.status-report_ready { background: var(--amber-soft); border-color: var(--amber-line); color: var(--amber-ink); }
+.status-vc_visible { background: var(--green-soft); border-color: var(--green-line); color: var(--green-ink); }
+
+/* ---------- Founder progress rail ---------- */
+
+.progress-rail { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.progress-step {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+}
+.progress-step h3 { margin: 0; font-size: 1rem; }
+.progress-step-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.step-body { margin-top: 10px; font-size: 0.92rem; }
+.step-body p { margin-bottom: 6px; }
+.step-done { border-left-color: var(--green-line); }
+.step-current { border-left-color: var(--brand); box-shadow: var(--shadow-sm); }
+.step-todo { opacity: 0.85; }
+.step-locked { background: var(--surface-2); }
+
+.step-state {
+  font-size: 0.72rem;
+  font-weight: 660;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--line-strong);
+  white-space: nowrap;
+}
+.step-state-done { background: var(--green-soft); border-color: var(--green-line); color: var(--green-ink); }
+.step-state-current { background: var(--brand-soft); border-color: var(--brand); color: var(--brand-strong); }
+.step-state-todo { color: var(--ink-faint); }
+.step-state-locked { background: var(--surface-2); color: var(--ink-faint); }
+
+.narrative-preview {
+  white-space: pre-wrap;
+  background: var(--brand-wash);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+/* ---------- Investor dossier ---------- */
+
+.narrative-text { white-space: pre-wrap; font-size: 1.02rem; }
+.citations { margin-left: 3px; }
+.citation { color: var(--brand-strong); font-weight: 620; }
+.source-list { padding-left: 20px; font-size: 0.9rem; }
+.source-list li { margin-bottom: 10px; }
+.source-list p { margin: 2px 0 0; }

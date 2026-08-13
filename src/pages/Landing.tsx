@@ -30,7 +30,7 @@ export default function Landing() {
               {t.landing.login}
             </Link>
             <LanguageSwitcher />
-            <Link to="/signup" className="btn btn-primary">
+            <Link to="/login" className="btn btn-primary">
               {t.landing.start}
             </Link>
           </nav>
@@ -48,7 +48,7 @@ export default function Landing() {
             </h1>
             <p className="lede">{t.landing.lede}</p>
             <div className="hero-actions">
-              <Link to="/signup" className="btn btn-primary btn-lg">
+              <Link to="/login" className="btn btn-primary btn-lg">
                 {t.landing.ctaSubmit}
               </Link>
               <Link to="/login" className="btn btn-secondary btn-lg">
@@ -138,7 +138,7 @@ export default function Landing() {
               </li>
             ))}
           </ul>
-          <Link to="/signup" className="btn btn-primary">
+          <Link to="/login" className="btn btn-primary">
             {t.landing.feeCta}
           </Link>
         </section>

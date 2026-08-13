@@ -7,17 +7,23 @@ import { StoreProvider, initialState, reducer } from '../lib/store'
 import { ToastProvider } from '../components/toast'
 import { opaqueId } from '../lib/simulate'
 import { LocaleProvider } from '../i18n'
+import { AuthProvider } from '../auth/session'
 
+// Mirrors main.tsx's provider stack. Session restore is off here: these tests
+// cover the public pages and the simulated demo, neither of which may contact
+// the API. The real session paths are covered in src/test/integration.test.tsx.
 function renderAt(path: string) {
   return render(
     <LocaleProvider>
-      <StoreProvider>
-        <ToastProvider>
-          <MemoryRouter initialEntries={[path]}>
-            <AppRoutes />
-          </MemoryRouter>
-        </ToastProvider>
-      </StoreProvider>
+      <AuthProvider restoreSession={false}>
+        <StoreProvider>
+          <ToastProvider>
+            <MemoryRouter initialEntries={[path]}>
+              <AppRoutes />
+            </MemoryRouter>
+          </ToastProvider>
+        </StoreProvider>
+      </AuthProvider>
     </LocaleProvider>,
   )
 }
@@ -117,17 +123,17 @@ describe('public pages', () => {
   })
 })
 
-describe('demo login', () => {
+describe('demo entry', () => {
   it('lands the founder on My Startup', async () => {
     const user = userEvent.setup()
-    renderAt('/login')
+    renderAt('/demo')
     await user.click(screen.getByRole('button', { name: /Asoschi/ }))
     expect(await screen.findByRole('heading', { name: /investitsiyaga loyiqmi/ })).toBeInTheDocument()
   })
 
   it('lands the VC on the pipeline board', async () => {
     const user = userEvent.setup()
-    renderAt('/login')
+    renderAt('/demo')
     await user.click(screen.getByRole('button', { name: /Venchur hamkori/ }))
     expect(await screen.findByRole('heading', { name: 'Pipeline' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Yangi' })).toBeInTheDocument()
