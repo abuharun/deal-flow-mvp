@@ -49,6 +49,14 @@ class NarrativeVersion(Base):
     __tablename__ = "narrative_versions"
     __table_args__ = (
         UniqueConstraint("startup_id", "version", name="uq_narrative_versions_startup_version"),
+        # FK target for an approval's whole-identity reference (see
+        # app.models.narrative_approval and revision 0013). Redundant for
+        # uniqueness -- id is the primary key -- and required by PostgreSQL,
+        # which only accepts a UNIQUE constraint covering exactly the
+        # referenced columns.
+        UniqueConstraint(
+            "id", "startup_id", "version", "report_id", name="uq_narrative_versions_identity"
+        ),
         CheckConstraint("version >= 1", name="ck_narrative_versions_version_min"),
         CheckConstraint("input_revision >= 1", name="ck_narrative_versions_input_revision_min"),
         CheckConstraint(

@@ -14,6 +14,9 @@ from app.routers.founder_analysis import router as founder_analysis_router
 from app.routers.founder_consent import router as founder_consent_router
 from app.routers.founder_decks import router as founder_decks_router
 from app.routers.founder_narrative import router as founder_narrative_router
+from app.routers.founder_narrative_approval import (
+    router as founder_narrative_approval_router,
+)
 from app.routers.founder_payment import router as founder_payment_router
 from app.routers.founder_report import router as founder_report_router
 from app.routers.founder_startups import router as founder_startups_router
@@ -127,4 +130,5 @@ def create_app(
     app.include_router(founder_analysis_router)
     app.include_router(founder_report_router)
     app.include_router(founder_narrative_router)
+    app.include_router(founder_narrative_approval_router)
     return app
