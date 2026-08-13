@@ -18,6 +18,7 @@ from app.models.auth_session import AuthSession  # noqa: E402
 from app.models.consent import Consent  # noqa: E402
 from app.models.email_token import EmailToken, EmailTokenPurpose  # noqa: E402
 from app.models.invite import Invite  # noqa: E402
+from app.models.narrative import NarrativeVersion, StartupNarrative  # noqa: E402
 from app.models.payment import Payment  # noqa: E402
 from app.models.pitch_deck import PitchDeck  # noqa: E402
 from app.models.startup import Startup, StartupStatus, Submission  # noqa: E402
@@ -34,10 +35,12 @@ __all__ = [
     "EmailToken",
     "EmailTokenPurpose",
     "Invite",
+    "NarrativeVersion",
     "Payment",
     "PitchDeck",
     "ReportSource",
     "Startup",
+    "StartupNarrative",
     "StartupStatus",
     "Submission",
     "UiLocale",
