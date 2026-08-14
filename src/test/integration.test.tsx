@@ -305,6 +305,27 @@ describe('investor workspace against the real API', () => {
     expect(screen.queryByRole('button', { name: /Saqlash|Tasdiqlash/ })).not.toBeInTheDocument()
   })
 
+  it('colors the report’s confidence and checklist labels, not just its text', async () => {
+    const user = userEvent.setup()
+    grantSession('vc')
+    route('GET /vc/startups', () =>
+      json({ items: [makeVcSummary({ name: 'Xarid' })], limit: 20, offset: 0, total: 1 }),
+    )
+    route('GET /vc/startups/startup-1', () => json(makeDossier()))
+
+    renderApp('/investor')
+    await user.click(await screen.findByRole('heading', { name: 'Xarid' }))
+    const checklistHeading = await screen.findByRole('heading', { name: 'Tayyorlik ro‘yxati' })
+    const checklist = within(checklistHeading.closest('.section-block')!)
+
+    // readiness_checklist[0]: status 'unknown', confidence 'low'.
+    expect(checklist.getByText('Noma’lum').closest('.tag-neutral')).not.toBeNull()
+    expect(checklist.getByText('Past ishonch').closest('.tag-low')).not.toBeNull()
+    // readiness_checklist[1]: status 'partially_met', confidence 'medium'.
+    expect(checklist.getByText('Qisman').closest('.tag-medium')).not.toBeNull()
+    expect(checklist.getByText('O‘rtacha ishonch').closest('.tag-medium')).not.toBeNull()
+  })
+
   it('renders the whole investor surface in Russian when the locale is RU', async () => {
     grantSession('vc')
     route('GET /vc/startups', () =>

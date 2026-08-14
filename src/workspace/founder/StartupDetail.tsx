@@ -29,10 +29,11 @@ import type {
 import { useAuth } from '../../auth/session'
 import { useLocale } from '../../i18n'
 import { formatDate } from '../../lib/format'
-import { computeProgress, isLocked, type StepId, type WorkspaceSnapshot } from '../progress'
+import { computeProgress, isLocked, STEP_IDS, type StepId, type WorkspaceSnapshot } from '../progress'
 import { useMutation } from '../mutation'
 import { optional, useResource } from '../useResource'
 import { ErrorPanel, LoadingPanel, LockedNotice } from '../states'
+import { CheckIcon } from '../../components/icons'
 import { StatusChip } from './StartupList'
 import { StartupForm, changedFields, draftFrom, type MetadataDraft } from './StartupForm'
 import SubmissionPanel from './SubmissionPanel'
@@ -55,6 +56,20 @@ const ABSENT = {
   approval: ['NARRATIVE_NOT_APPROVED', 'NARRATIVE_NOT_READY'],
 } as const
 
+/** A step's position among the seven, 1-based — purely for the marker glyph. */
+function stepNumber(id: StepId): number {
+  return STEP_IDS.indexOf(id) + 1
+}
+
+/** Done gets a check, everything else its ordinal — decorative, the state pill next to it carries the meaning. */
+function StepMarker({ id, state }: { id: StepId; state: string }) {
+  return (
+    <span className={`step-marker step-marker-${state}`} aria-hidden="true">
+      {state === 'done' ? <CheckIcon size={12} /> : stepNumber(id)}
+    </span>
+  )
+}
+
 function StepRow({ id, state, children }: { id: StepId; state: string; children?: React.ReactNode }) {
   const { t } = useLocale()
   const label: Record<StepId, string> = {
@@ -75,12 +90,22 @@ function StepRow({ id, state, children }: { id: StepId; state: string; children?
   return (
     <li className={`progress-step step-${state}`}>
       <div className="progress-step-head">
-        <h3>{label[id]}</h3>
+        <h3>
+          <StepMarker id={id} state={state} />
+          {label[id]}
+        </h3>
         <span className={`step-state step-state-${state}`}>{stateLabel[state]}</span>
       </div>
       {children}
     </li>
   )
+}
+
+/** A compact "N/7 done" readout above the full rail — the at-a-glance answer to "how far along is this?" */
+function ProgressSummary({ steps }: { steps: { state: string }[] }) {
+  const { t } = useLocale()
+  const done = steps.filter((step) => step.state === 'done').length
+  return <p className="progress-summary">{t.work.progressSummary(done, steps.length)}</p>
 }
 
 /** Save the deck bytes the API returned under the name it recorded. */
@@ -227,6 +252,7 @@ export default function StartupDetail() {
   const { startup } = snapshot
   const locked = isLocked(startup)
   const steps = computeProgress(snapshot)
+  const stateOf = (id: StepId): string => steps.find((step) => step.id === id)?.state ?? 'todo'
 
   const panels: Record<StepId, React.ReactNode> = {
     submission: (
@@ -258,6 +284,7 @@ export default function StartupDetail() {
       <PaymentPanel
         payment={snapshot.payment}
         locked={locked}
+        isCurrent={stateOf('payment') === 'current'}
         busy={pay.busy}
         error={pay.error}
         onPay={pay.run}
@@ -267,6 +294,7 @@ export default function StartupDetail() {
       <ConsentPanel
         consents={snapshot.consents}
         locked={locked}
+        isCurrent={stateOf('consent') === 'current'}
         busy={grantConsent.busy}
         error={grantConsent.error}
         onGrant={grantConsent.run}
@@ -350,6 +378,7 @@ export default function StartupDetail() {
 
       {locked && <LockedNotice />}
 
+      <ProgressSummary steps={steps} />
       <ol className="progress-rail" aria-label={t.work.progressAria}>
         {steps.map((step) => (
           <StepRow key={step.id} id={step.id} state={step.state}>

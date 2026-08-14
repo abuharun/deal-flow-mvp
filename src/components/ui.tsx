@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react'
 import { Link } from 'react-router-dom'
 import type { Signal, Stage } from '../lib/types'
+import type { ChecklistStatus, Confidence } from '../api/types'
 import { cx } from '../lib/format'
 import { LOCALES, LOCALE_NAME, useLocale, type Locale } from '../i18n'
 import { CheckIcon, ChevronDownIcon, SignalHighIcon, SignalLowIcon, SignalMediumIcon, SparkIcon, WaveIcon } from './icons'
@@ -21,6 +22,31 @@ export function SignalTag({ signal, overridden }: { signal: Signal; overridden?:
 export function StageBadge({ stage }: { stage: Stage }) {
   const { t } = useLocale()
   return <span className="stage-badge">{t.stageBadge[stage]}</span>
+}
+
+/** How sure a report claim, source or checklist row is — color + icon + label, same rule as SignalTag. */
+export function ConfidenceTag({ level }: { level: Confidence }) {
+  const { t } = useLocale()
+  const Icon = level === 'high' ? SignalHighIcon : level === 'medium' ? SignalMediumIcon : SignalLowIcon
+  return (
+    <span className={cx('tag', `tag-${level}`)}>
+      <Icon />
+      {t.work.confidence[level]}
+    </span>
+  )
+}
+
+const CHECKLIST_TAG_CLASS: Record<ChecklistStatus, string> = {
+  met: 'tag-high',
+  partially_met: 'tag-medium',
+  not_met: 'tag-low',
+  unknown: 'tag-neutral',
+}
+
+/** A readiness checklist row's status — never color alone, the label is always there too. */
+export function ChecklistStatusTag({ status }: { status: ChecklistStatus }) {
+  const { t } = useLocale()
+  return <span className={cx('tag', CHECKLIST_TAG_CLASS[status])}>{t.work.checklistStatus[status]}</span>
 }
 
 export function Wordmark({ to = '/', sub }: { to?: string; sub?: string }) {

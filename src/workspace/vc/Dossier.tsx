@@ -17,6 +17,7 @@ import { useLocale } from '../../i18n'
 import { formatDate } from '../../lib/format'
 import { useResource } from '../useResource'
 import { ErrorPanel, LoadingPanel } from '../states'
+import { ChecklistStatusTag, ConfidenceTag } from '../../components/ui'
 
 /** Citation markers reference the report's own 1-based source ordinals. */
 function Citations({ ids }: { ids: number[] }) {
@@ -68,7 +69,7 @@ function SourceList({ sources }: { sources: ReportSourceResponse[] }) {
             </a>
             <span className="faint">
               {' '}
-              · {source.source_quality} · {t.work.confidence[source.confidence]} ·{' '}
+              {source.source_quality} · <ConfidenceTag level={source.confidence} /> ·{' '}
               {formatDate(source.accessed_date, locale)}
             </span>
             {source.snippet && <p className="muted">{source.snippet}</p>}
@@ -156,10 +157,8 @@ export default function Dossier() {
               {body.claims.map((claim) => (
                 <li key={claim.statement}>
                   {claim.statement}
-                  <span className="faint">
-                    {' '}
-                    · {t.work.claimSupport[claim.support]} · {t.work.confidence[claim.confidence]}
-                  </span>
+                  <span className="faint"> · {t.work.claimSupport[claim.support]} </span>
+                  <ConfidenceTag level={claim.confidence} />
                   <Citations ids={claim.citation_ids} />
                 </li>
               ))}
@@ -193,10 +192,13 @@ export default function Dossier() {
           <h3>{t.work.reportChecklist}</h3>
           <ul className="check-list">
             {body.readiness_checklist.map((item) => (
-              <li key={item.item}>
-                <strong>{item.item}</strong> — {t.work.checklistStatus[item.status]}
-                <span className="faint"> · {t.work.confidence[item.confidence]}</span>
-                <Citations ids={item.evidence} />
+              <li key={item.item} className="checklist-row">
+                <div className="checklist-row-head">
+                  <strong>{item.item}</strong>
+                  <ChecklistStatusTag status={item.status} />
+                  <ConfidenceTag level={item.confidence} />
+                  <Citations ids={item.evidence} />
+                </div>
                 {item.evidence_gap && <p className="muted">{item.evidence_gap}</p>}
               </li>
             ))}

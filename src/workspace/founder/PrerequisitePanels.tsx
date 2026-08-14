@@ -16,18 +16,21 @@
 
 import type { ConsentSummaryResponse, PaymentResponse, PaymentStatus } from '../../api/types'
 import { useLocale } from '../../i18n'
-import { formatDate } from '../../lib/format'
+import { cx, formatDate } from '../../lib/format'
 import { ErrorPanel } from '../states'
 
 export function PaymentPanel({
   payment,
   locked,
+  isCurrent,
   busy,
   error,
   onPay,
 }: {
   payment: PaymentResponse | null
   locked: boolean
+  /** Whether this is the step the founder should act on next — only then is the CTA the loud one on the page. */
+  isCurrent: boolean
   busy: boolean
   error: unknown
   onPay: (outcome: PaymentStatus) => void
@@ -49,7 +52,12 @@ export function PaymentPanel({
       {error !== null && error !== undefined && <ErrorPanel error={error} />}
       {!paid && !locked && (
         <div className="list-toolbar">
-          <button type="button" className="btn btn-primary btn-sm" disabled={busy} onClick={() => onPay('paid')}>
+          <button
+            type="button"
+            className={cx('btn', isCurrent ? 'btn-primary' : 'btn-secondary', 'btn-sm')}
+            disabled={busy}
+            onClick={() => onPay('paid')}
+          >
             {busy ? t.work.paymentBusy : t.work.paymentPay}
           </button>
           <button type="button" className="btn btn-quiet btn-sm" disabled={busy} onClick={() => onPay('failed')}>
@@ -64,12 +72,15 @@ export function PaymentPanel({
 export function ConsentPanel({
   consents,
   locked,
+  isCurrent,
   busy,
   error,
   onGrant,
 }: {
   consents: ConsentSummaryResponse | null
   locked: boolean
+  /** Whether this is the step the founder should act on next — only then is the CTA the loud one on the page. */
+  isCurrent: boolean
   busy: boolean
   error: unknown
   onGrant: (textVersion: string) => void
@@ -99,7 +110,7 @@ export function ConsentPanel({
           {!locked && (
             <button
               type="button"
-              className="btn btn-primary btn-sm"
+              className={cx('btn', isCurrent ? 'btn-primary' : 'btn-secondary', 'btn-sm')}
               disabled={busy}
               onClick={() => onGrant(consents.current_version)}
             >

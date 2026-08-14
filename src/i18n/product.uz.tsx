@@ -104,6 +104,7 @@ export const productUz = {
     stepStateTodo: 'Kutilmoqda',
     stepStateLocked: 'Qulflangan',
     progressAria: 'Ariza bosqichlari',
+    progressSummary: (done: number, total: number) => `${done}/${total} bosqich bajarildi`,
     stepSubmission: 'Savollarga javob',
     stepDeck: 'Taqdimot (PDF)',
     stepPayment: 'Baholash to‘lovi',

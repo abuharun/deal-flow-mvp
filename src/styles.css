@@ -294,6 +294,7 @@ a { color: var(--brand-strong); }
 .tag-high { color: var(--green-ink); background: var(--green-soft); border-color: var(--green-line); }
 .tag-medium { color: var(--amber-ink); background: var(--amber-soft); border-color: var(--amber-line); }
 .tag-low { color: var(--red-ink); background: var(--red-soft); border-color: var(--red-line); }
+.tag-neutral { color: var(--ink-soft); background: var(--surface-2); border-color: var(--line-strong); }
 
 .stage-badge {
   display: inline-flex;
@@ -1563,6 +1564,13 @@ a { color: var(--brand-strong); }
 
 /* ---------- Founder progress rail ---------- */
 
+.progress-summary {
+  margin: 0 0 14px;
+  font-size: 0.86rem;
+  font-weight: 620;
+  color: var(--ink-soft);
+}
+
 .progress-rail { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
 .progress-step {
   background: var(--surface);
@@ -1570,15 +1578,42 @@ a { color: var(--brand-strong); }
   border-left: 3px solid var(--line-strong);
   border-radius: var(--radius-lg);
   padding: 16px 18px;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
-.progress-step h3 { margin: 0; font-size: 1rem; }
+.progress-step h3 { margin: 0; font-size: 1rem; display: flex; align-items: center; gap: 10px; }
 .progress-step-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .step-body { margin-top: 10px; font-size: 0.92rem; }
 .step-body p { margin-bottom: 6px; }
 .step-done { border-left-color: var(--green-line); }
-.step-current { border-left-color: var(--brand); box-shadow: var(--shadow-sm); }
-.step-todo { opacity: 0.85; }
+.step-current {
+  border-left-color: var(--brand);
+  background: linear-gradient(180deg, var(--brand-wash), var(--surface) 60%);
+  box-shadow: var(--shadow-sm);
+}
+.step-todo { background: var(--surface-2); }
+.step-todo h3 { color: var(--ink-soft); }
 .step-locked { background: var(--surface-2); }
+
+/* Ordinal marker: a check once done, the step number otherwise — the state
+   pill next to it still carries the actual meaning, this is only a scan aid. */
+.step-marker {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  border: 1.5px solid var(--line-strong);
+  color: var(--ink-faint);
+  background: var(--surface);
+}
+.step-marker-done { background: var(--green-ink); border-color: var(--green-ink); color: #fff; }
+.step-marker-current { background: var(--brand); border-color: var(--brand); color: #fff; }
+.step-marker-locked { background: var(--surface-2); }
 
 .step-state {
   font-size: 0.72rem;
@@ -1602,11 +1637,81 @@ a { color: var(--brand-strong); }
   padding: 12px 14px;
 }
 
+/* ---------- Submission answers (read-only, once frozen) ---------- */
+.answer-readonly { margin-bottom: 14px; }
+.answer-readonly:last-child { margin-bottom: 0; }
+.answer-readonly h4 {
+  font-size: 0.78rem;
+  font-weight: 660;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 4px;
+}
+.answer-readonly p { margin: 0; }
+
+/* ---------- AI research preconditions ---------- */
+.precondition-list {
+  list-style: disc;
+  padding-left: 20px;
+  margin: 0 0 10px;
+  font-size: 0.88rem;
+  color: var(--ink-soft);
+  display: grid;
+  gap: 4px;
+}
+
+/* ---------- Narrative version history ---------- */
+.version-history { margin-top: 18px; }
+.version-history h4 {
+  font-size: 0.78rem;
+  font-weight: 660;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0 0 8px;
+}
+.version-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.version-list li {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 8px 12px;
+}
+.version-list li > span:first-child { font-weight: 620; }
+.version-list li > .btn { margin-left: auto; }
+.version-preview {
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: var(--brand-wash);
+  border-radius: var(--radius);
+}
+.version-preview .narrative-text { margin: 6px 0 10px; }
+
 /* ---------- Investor dossier ---------- */
 
+/* Prose reads best at a controlled line length, even inside a wide card. */
+.narrative-text,
+.section-block > p,
+.section-block li {
+  max-width: 74ch;
+}
 .narrative-text { white-space: pre-wrap; font-size: 1.02rem; }
 .citations { margin-left: 3px; }
 .citation { color: var(--brand-strong); font-weight: 620; }
 .source-list { padding-left: 20px; font-size: 0.9rem; }
-.source-list li { margin-bottom: 10px; }
+.source-list li { margin-bottom: 10px; max-width: 74ch; }
 .source-list p { margin: 2px 0 0; }
+.source-list .tag,
+.check-list .tag {
+  vertical-align: middle;
+  margin: 0 2px;
+}
+
+.checklist-row { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 12px; }
+.checklist-row-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
+.checklist-row p { margin: 6px 0 0; }

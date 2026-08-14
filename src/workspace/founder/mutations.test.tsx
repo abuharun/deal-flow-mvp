@@ -173,6 +173,32 @@ describe('editing startup metadata', () => {
   })
 })
 
+describe('the progress summary above the rail', () => {
+  it('counts only the steps the API actually reports as done', async () => {
+    detailRoutes({ startup: () => json(readyDetail()) })
+
+    renderApp('/founder/startup-1')
+
+    // Only the submission is done at this point (deck/payment/consent/analysis/narrative/approval are not).
+    expect(await screen.findByText('1/7 bosqich bajarildi')).toBeInTheDocument()
+  })
+
+  it('advances as each prerequisite becomes done', async () => {
+    detailRoutes({
+      startup: () => json(readyDetail()),
+      deck: () => json(makeDeck()),
+      payment: () => json(makePayment()),
+      consents: () => json(makeConsents()),
+      analysis: () => json(makeAnalysisJob({ status: 'completed' })),
+      narrative: () => json(makeNarrative()),
+    })
+
+    renderApp('/founder/startup-1')
+
+    expect(await screen.findByText('6/7 bosqich bajarildi')).toBeInTheDocument()
+  })
+})
+
 describe('answering the submission and submitting it', () => {
   it('saves only the answers that actually changed', async () => {
     const user = userEvent.setup()
@@ -300,6 +326,39 @@ describe('the demo payment and the AI consent', () => {
 
     await waitFor(() => expect(apiCalls()).toContain('POST /founder/startups/startup-1/payment'))
     expect(bodyOf('POST /founder/startups/startup-1/payment')).toEqual({ simulate_outcome: 'failed' })
+  })
+
+  it('keeps the payment and consent controls secondary while an earlier step is still open', async () => {
+    detailRoutes({ startup: () => json(readyDetail()) })
+
+    renderApp('/founder/startup-1')
+
+    const pay = await screen.findByRole('button', { name: 'Muvaffaqiyatli to‘lovni qayd etish' })
+    expect(pay).toHaveClass('btn-secondary')
+    expect(pay).not.toHaveClass('btn-primary')
+    const grant = screen.getByRole('button', { name: 'Roziligimni beraman' })
+    expect(grant).toHaveClass('btn-secondary')
+    expect(grant).not.toHaveClass('btn-primary')
+  })
+
+  it('promotes the payment control to primary once the deck is uploaded, while consent stays secondary', async () => {
+    detailRoutes({ startup: () => json(readyDetail()), deck: () => json(makeDeck()) })
+
+    renderApp('/founder/startup-1')
+
+    const pay = await screen.findByRole('button', { name: 'Muvaffaqiyatli to‘lovni qayd etish' })
+    expect(pay).toHaveClass('btn-primary')
+    const grant = screen.getByRole('button', { name: 'Roziligimni beraman' })
+    expect(grant).toHaveClass('btn-secondary')
+  })
+
+  it('promotes the consent control to primary once payment is recorded', async () => {
+    detailRoutes({ startup: () => json(readyDetail()), deck: () => json(makeDeck()), payment: () => json(makePayment()) })
+
+    renderApp('/founder/startup-1')
+
+    const grant = await screen.findByRole('button', { name: 'Roziligimni beraman' })
+    expect(grant).toHaveClass('btn-primary')
   })
 
   it('grants consent at the exact version the server is currently asking for', async () => {

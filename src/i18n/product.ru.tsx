@@ -101,6 +101,7 @@ export const productRu: ProductMessages = {
     stepStateTodo: 'Ожидает',
     stepStateLocked: 'Заблокировано',
     progressAria: 'Этапы заявки',
+    progressSummary: (done: number, total: number) => `Выполнено ${done}/${total} этапов`,
     stepSubmission: 'Ответы на вопросы',
     stepDeck: 'Презентация (PDF)',
     stepPayment: 'Оплата оценки',
