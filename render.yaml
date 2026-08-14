@@ -1,0 +1,196 @@
+# Render Blueprint for the Bevosita pilot: Postgres + FastAPI API + analysis
+# worker + static Vite frontend. Deploy with the Render dashboard's
+# "New > Blueprint" flow pointed at this repo, or `render blueprint launch`.
+#
+# Cost (Oregon region, current Render plan slugs, see README "Deployment
+# (Render)"): Postgres basic-256mb ~$6/mo + API starter ~$7/mo + worker
+# starter ~$7/mo + static site (always free) = ~$20/mo, leaving headroom
+# under the ~$25/mo pilot budget for bandwidth/storage growth.
+#
+# DATABASE_URL note: Render's Postgres connectionString is `postgresql://…`,
+# but app/config.py requires the `postgresql+asyncpg://` driver prefix in
+# production (see Settings._require_asyncpg_database_url). Every command
+# below rewrites the scheme in-shell before the Python process starts, so no
+# application code needs to know about Render's URL shape.
+#
+# Service name caveat: FRONTEND_ORIGINS / API_PUBLIC_URL / FRONTEND_PUBLIC_URL
+# / VITE_API_BASE_URL below hardcode the *.onrender.com URLs implied by the
+# `name` fields. If `bevosita-api` or `bevosita-app` is already taken, Render
+# suffixes the hostname and these four values must be updated by hand after
+# the first deploy (Render blueprints cannot cross-reference another
+# service's public URL, only host/port via `fromService`).
+databases:
+  - name: bevosita-db
+    databaseName: bevosita
+    user: bevosita
+    plan: basic-256mb
+    region: oregon
+
+services:
+  - type: web
+    name: bevosita-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter
+    region: oregon
+    healthCheckPath: /readyz
+    preDeployCommand: "sh -c 'export DATABASE_URL=$(printf \"%s\" \"$DATABASE_URL\" | sed -E \"s#^postgres(ql)?://#postgresql+asyncpg://#\") && python -m app.cli migrate'"
+    dockerCommand: "sh -c 'export DATABASE_URL=$(printf \"%s\" \"$DATABASE_URL\" | sed -E \"s#^postgres(ql)?://#postgresql+asyncpg://#\") && exec uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000'"
+    envVars:
+      - key: ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bevosita-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_ORIGINS
+        value: https://bevosita-app.onrender.com
+      - key: API_PUBLIC_URL
+        value: https://bevosita-api.onrender.com
+      - key: FRONTEND_PUBLIC_URL
+        value: https://bevosita-app.onrender.com
+      # Empty on purpose: Render's edge proxy IP range isn't a published,
+      # stable CIDR, so trusting a guessed one would let X-Forwarded-For be
+      # spoofed. Effect: the rate limiter buckets by Render's proxy peer
+      # address, not the real visitor — acceptable for a pilot, see README.
+      - key: TRUSTED_PROXY_CIDRS
+        value: ""
+      # Console mode needs no real mail provider: founder/VC accounts are
+      # CLI-provisioned for the pilot (`python -m app.cli create-invite` /
+      # `create-vc-owner`), so no outbound email is required to onboard
+      # them. Switch to resend_prod + set RESEND_API_KEY/EMAIL_FROM (a
+      # verified sender) once self-serve signup email delivery is needed.
+      - key: EMAIL_MODE
+        value: console
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        value: onboarding@resend.dev
+      - key: SENTRY_DSN
+        sync: false
+      - key: BACKUP_BUCKET_URL
+        sync: false
+      - key: BACKUP_AGE_PUBLIC_KEY
+        sync: false
+      # Not read by the API process itself (only the worker's
+      # require_worker_config does), but Settings() still constructs and
+      # validates these fields on every boot, so they must be set here too.
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_ANALYSIS_MODEL
+        value: gpt-4o-mini
+      - key: OPENAI_PROMPT_VERSION
+        value: analysis.v1
+      - key: OPENAI_REPORT_SCHEMA_VERSION
+        value: report.v1
+      - key: OPENAI_REQUEST_TIMEOUT_SECONDS
+        value: "60"
+      - key: OPENAI_MAX_OUTPUT_TOKENS
+        value: "4000"
+      - key: OPENAI_INPUT_PRICE_PER_MILLION_USD
+        value: "0.15"
+      - key: OPENAI_OUTPUT_PRICE_PER_MILLION_USD
+        value: "0.60"
+      - key: OPENAI_WEB_SEARCH_COST_USD
+        value: "0.01"
+      - key: ANALYSIS_MAX_COST_USD
+        value: "0.25"
+
+  - type: worker
+    name: bevosita-analysis-worker
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter
+    region: oregon
+    dockerCommand: "sh -c 'export DATABASE_URL=$(printf \"%s\" \"$DATABASE_URL\" | sed -E \"s#^postgres(ql)?://#postgresql+asyncpg://#\") && exec python -m app.cli run-analysis-worker --provider openai'"
+    envVars:
+      # Settings() validates the full production contract (jwt_secret,
+      # frontend_origins, email_from, ...) on every boot regardless of
+      # entrypoint, so the worker needs the same non-AI env vars as the API
+      # even though it never uses most of them — see app/config.py
+      # Settings._fail_fast_in_production. JWT_SECRET here is deliberately
+      # its own generated value (independent of the API's): the worker never
+      # issues or verifies a JWT, so the two secrets never need to match.
+      - key: ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: bevosita-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: FRONTEND_ORIGINS
+        value: https://bevosita-app.onrender.com
+      - key: API_PUBLIC_URL
+        value: https://bevosita-api.onrender.com
+      - key: FRONTEND_PUBLIC_URL
+        value: https://bevosita-app.onrender.com
+      - key: TRUSTED_PROXY_CIDRS
+        value: ""
+      - key: EMAIL_MODE
+        value: console
+      - key: RESEND_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        value: onboarding@resend.dev
+      - key: SENTRY_DSN
+        sync: false
+      - key: BACKUP_BUCKET_URL
+        sync: false
+      - key: BACKUP_AGE_PUBLIC_KEY
+        sync: false
+      # Required for real reports: the worker refuses to start without a
+      # real key and pricing (require_worker_config) and will crash-loop
+      # until OPENAI_API_KEY is set from the Render dashboard.
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_ANALYSIS_MODEL
+        value: gpt-4o-mini
+      - key: OPENAI_PROMPT_VERSION
+        value: analysis.v1
+      - key: OPENAI_REPORT_SCHEMA_VERSION
+        value: report.v1
+      - key: OPENAI_REQUEST_TIMEOUT_SECONDS
+        value: "60"
+      - key: OPENAI_MAX_OUTPUT_TOKENS
+        value: "4000"
+      - key: OPENAI_INPUT_PRICE_PER_MILLION_USD
+        value: "0.15"
+      - key: OPENAI_OUTPUT_PRICE_PER_MILLION_USD
+        value: "0.60"
+      - key: OPENAI_WEB_SEARCH_COST_USD
+        value: "0.01"
+      - key: ANALYSIS_MAX_COST_USD
+        value: "0.25"
+
+  - type: web
+    name: bevosita-app
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://bevosita-api.onrender.com
+      - key: VITE_BASE_PATH
+        value: /
+    routes:
+      # Defensive only: routing is HashRouter (see src/main.tsx), so deep
+      # links already work without a server rewrite; this just keeps a
+      # future switch to path-based routing from 404ing on refresh.
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin

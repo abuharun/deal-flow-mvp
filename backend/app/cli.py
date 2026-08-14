@@ -16,11 +16,13 @@ from typing import TypeVar
 
 import openai
 import typer
+from alembic.config import Config as AlembicConfig
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from alembic import command as alembic_command
 from app.config import Settings
-from app.db import build_engine, build_sessionmaker
+from app.db import BACKEND_DIR, build_engine, build_sessionmaker
 from app.models import AuditActorType, UiLocale, User, UserRole
 from app.security.passwords import MIN_PASSWORD_LENGTH, hash_password
 
@@ -171,6 +173,23 @@ def create_vc_owner(
             f"could not create the VC owner ({type(exc).__name__}); nothing was committed"
         ) from None
     typer.echo(f"VC owner created: {email} (id={user_id})")
+
+
+@app.command("migrate")
+def migrate() -> None:
+    """Upgrade the database to the latest Alembic revision (deploy release command)."""
+    settings = Settings()
+    cfg = AlembicConfig(str(BACKEND_DIR / "alembic.ini"))
+    cfg.set_main_option("script_location", str(BACKEND_DIR / "alembic"))
+    cfg.set_main_option("sqlalchemy.url", settings.database_url)
+    try:
+        alembic_command.upgrade(cfg, "head")
+    except Exception as exc:
+        # Exception text may carry a DSN or driver detail; only the type is safe.
+        raise _fail(
+            f"migration failed ({type(exc).__name__}); nothing else was attempted"
+        ) from None
+    typer.echo("migrations: up to date")
 
 
 @app.command("run-analysis-worker")

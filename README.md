@@ -159,6 +159,58 @@ Design decisions worth knowing:
   Then enable **Settings → Pages → Source: Deploy from a branch → `gh-pages` / root** in the
   repo once. Re-run the steps above to publish updates.
 
+## Deployment (Render pilot)
+
+[`render.yaml`](render.yaml) is a Render Blueprint that stands up the full stack for a paid pilot:
+managed Postgres, the FastAPI API, the AI analysis background worker, and the static frontend —
+all on the smallest paid plans, roughly **$20/month** (Postgres `basic-256mb` ~$6 + API `starter`
+~$7 + worker `starter` ~$7; the static site is always free on Render), leaving headroom under a
+~$25/month budget.
+
+**Deploy:** Render dashboard → **New → Blueprint** → point at this repo/branch → apply. This
+creates `bevosita-db`, `bevosita-api`, `bevosita-analysis-worker`, and `bevosita-app`.
+
+**What's wired up already:**
+- Health checks: the API's `healthCheckPath` is `/readyz` (DB reachable *and* migrations at head),
+  so Render won't cut a new deploy over until the database is actually ready; `/healthz` stays a
+  pure liveness check.
+- Migrations: `preDeployCommand` runs `python -m app.cli migrate` (`backend/app/cli.py`) before
+  every new API release goes live — an `alembic upgrade head` wrapper with a safe, DSN-free error
+  message on failure.
+- `DATABASE_URL` scheme: Render's Postgres connection string is `postgresql://…`, but
+  `Settings` requires the `postgresql+asyncpg://` driver prefix in production. Every service's
+  start/pre-deploy command rewrites the scheme in-shell before Python starts — no app code needs to
+  know about Render's URL shape.
+- CORS / public URLs: `FRONTEND_ORIGINS`, `API_PUBLIC_URL`, and `FRONTEND_PUBLIC_URL` are
+  pre-filled from the blueprint's own service names (`https://bevosita-api.onrender.com` /
+  `https://bevosita-app.onrender.com`). **If either name is already taken**, Render suffixes the
+  hostname and you must update these three values (plus the frontend's `VITE_API_BASE_URL`) by hand
+  after the first deploy — Blueprints can't cross-reference another service's public URL.
+- Static frontend routing: the frontend build sets `VITE_BASE_PATH=/` (see `vite.config.ts`, which
+  otherwise defaults to `/deal-flow-mvp/` for GitHub Pages) and a catch-all rewrite to
+  `index.html`. Routing is HashRouter, so this rewrite is defense-in-depth, not strictly required.
+- `JWT_SECRET` is a Render `generateValue` secret (independently generated for the API and the
+  worker — the worker never issues or verifies a JWT, so the two never need to match).
+
+**You must supply before the stack is fully functional** (Render prompts for these at blueprint
+creation, or set them later in the dashboard — never commit them):
+- `OPENAI_API_KEY` on `bevosita-analysis-worker` (and pricing already defaults to `gpt-4o-mini`
+  rates) — without it the worker starts, refuses to process jobs, and exits/restarts
+  (`require_worker_config` in `backend/app/services/analysis_worker_config.py`); the API and
+  frontend still work, founder submissions just queue with no analysis produced.
+- `RESEND_API_KEY` and a verified `EMAIL_FROM` — only if you switch `EMAIL_MODE` from its pilot
+  default of `console` to `resend_prod`. The pilot ships with founder/VC accounts provisioned via
+  `python -m app.cli create-invite` / `create-vc-owner` (prints the activation URL directly), so no
+  outbound email is required to onboard pilot users.
+- `SENTRY_DSN`, `BACKUP_BUCKET_URL`, `BACKUP_AGE_PUBLIC_KEY` — reserved keys for future
+  observability/backup wiring; not read by the app yet, safe to leave unset.
+
+**Known limitation:** `TRUSTED_PROXY_CIDRS` is left empty because Render's edge-proxy IP range
+isn't a published, stable CIDR — trusting a guessed range would let `X-Forwarded-For` be spoofed
+(see `backend/app/security/client_ip.py`). Effect: the per-IP rate limiter currently buckets by
+Render's proxy peer address rather than the real visitor's IP. Fine for a pilot; revisit if
+precise per-user rate limiting becomes a launch requirement.
+
 ## Limitations (deliberate, frontend-only)
 
 - No backend: auth, data, and "notifications" live in `localStorage`; two browsers don't share state.
