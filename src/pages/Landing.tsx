@@ -29,10 +29,15 @@ export default function Landing() {
             <Link to="/login" className="btn btn-quiet">
               {t.landing.login}
             </Link>
-            <LanguageSwitcher />
-            <Link to="/login" className="btn btn-primary">
-              {t.landing.start}
-            </Link>
+            {/* The language selector and the primary CTA are one unit: they must
+                stay side by side on every width, so the nav wraps them together
+                rather than letting the Start button drop to its own line. */}
+            <div className="landing-cta-group">
+              <LanguageSwitcher />
+              <Link to="/login" className="btn btn-primary">
+                {t.landing.start}
+              </Link>
+            </div>
           </nav>
         </header>
       </div>

@@ -52,8 +52,13 @@ describe('public pages', () => {
     expect(assessment).toHaveAttribute('type', 'button')
     expect(document.getElementById('assessment')).toBeInTheDocument()
     expect(assessment.nextElementSibling).toBe(login)
-    expect(login.nextElementSibling).toContainElement(language)
-    expect(login.nextElementSibling?.nextElementSibling).toBe(start)
+    // The language selector and the Start CTA live in one group that stays
+    // adjacent on every width — the selector sits directly beside the CTA.
+    const ctaGroup = login.nextElementSibling
+    expect(ctaGroup).toHaveClass('landing-cta-group')
+    expect(ctaGroup).toContainElement(language)
+    expect(ctaGroup).toContainElement(start)
+    expect(language.closest('.lang-switcher')?.nextElementSibling).toBe(start)
     expect(language).toHaveAttribute('aria-expanded', 'false')
     expect(screen.queryByRole('menu')).not.toBeInTheDocument()
   })

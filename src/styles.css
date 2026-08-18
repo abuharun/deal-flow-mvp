@@ -353,6 +353,13 @@ a { color: var(--brand-strong); }
 .landing-nav .language-trigger {
   min-height: 44px;
 }
+/* Language selector + primary CTA travel together: never split across a wrap. */
+.landing-cta-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
 
 /* ---------- Compact interface language menu ----------
    Deliberately separate from .lang-toggle, which controls verdict body language. */
@@ -836,7 +843,8 @@ a { color: var(--brand-strong); }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px 12px;
+  flex-wrap: wrap;
   padding: 14px clamp(16px, 4vw, 32px);
   border-bottom: 1px solid var(--line);
   background: var(--surface);
@@ -900,7 +908,8 @@ a { color: var(--brand-strong); }
 .vc-header {
   display: flex;
   align-items: center;
-  gap: 26px;
+  gap: 10px 26px;
+  flex-wrap: wrap;
   padding: 12px clamp(16px, 3vw, 32px);
   border-bottom: 1px solid var(--line);
   background: var(--surface);
