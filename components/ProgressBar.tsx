@@ -1,0 +1,1 @@
+export function ProgressBar({value,label}:{value:number;label?:string}){return <div className="progresswrap">{label&&<span>{label}</span>}<div className="progress" role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100}><i style={{width:`${value}%`}}/></div></div>}

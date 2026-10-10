@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics><meta name="design_doc_mode" content="canvas"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"><style>body{margin:0;background:#ebe6d6;font-family:Inter,system-ui,sans-serif;color:#0a0a0a}a{color:#0a0a0a}a:hover{color:#3a3a3a}.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 20px}.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}.dv-tname{font:600 13px/1.2 Inter,system-ui,sans-serif;color:#1a1a1a}.dv-opts{display:flex;flex-wrap:wrap;gap:40px 28px;align-items:flex-start}.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.08);color:#1a1a1a;border-radius:5px;text-decoration:none}.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 12px/1.3 Inter,system-ui,sans-serif;color:rgba(0,0,0,.6)}.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}.dv-next{margin:22px 0 0;font:12px/1.5 Inter,system-ui,sans-serif;color:rgba(0,0,0,.5)}</style></helmet>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Bvosita — low-fi wireframes, all screens (Clay tokens: cream canvas, ink CTAs, state chips in brand accents)</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:0 0 28px;font-size:12px;color:#3a3a3a;align-items:center;background:#fffaf0;padding:10px 14px;border-radius:12px;width:fit-content">
+<span style="font-weight:600;margin-right:4px">State chips:</span>
+<sc-for list="{{ legend }}" as="c" hint-placeholder-count="10"><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:{{ c.bg }};color:{{ c.fg }};border:{{ c.bd }};white-space:nowrap">{{ c.t }}</span></sc-for>
+</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Login — single-user sign-in</div><div class="dv-card" style="width:1280px">
+<div style="width:1280px;height:640px;background:#fffaf0;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif;font-size:13px">
+<div style="width:380px;display:flex;flex-direction:column;gap:16px;padding:36px;border:1px solid #e5e5e5;border-radius:24px;background:#faf5e8">
+<div style="display:flex;align-items:center;gap:10px"><div style="width:34px;height:34px;border-radius:10px;background:#0a0a0a;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600">B</div><div style="display:flex;flex-direction:column"><span style="font-weight:600;font-size:16px">Bvosita</span><span style="font-size:11.5px;color:#6a6a6a">bvosita.uz · admin</span></div></div>
+<h1 style="font-size:32px;font-weight:500;letter-spacing:-1px;margin:8px 0 0">Sign in</h1>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Email</span><div style="height:44px;border:1px solid #d6d0bf;border-radius:12px;background:#fffaf0;padding:0 14px;display:flex;align-items:center;color:#3a3a3a">admin@bvosita.uz</div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Password</span><div style="height:44px;border:1.5px solid #0a0a0a;border-radius:12px;background:#fffaf0;padding:0 14px;display:flex;align-items:center;color:#3a3a3a">••••••••••••</div></div>
+<div style="font-size:12px;color:#b3261e;background:#fff0ee;border:1px solid #ffb4aa;border-radius:10px;padding:8px 12px">Incorrect password. 2 attempts left before a 15-minute lock.</div>
+<div style="height:44px;border-radius:12px;background:#0a0a0a;color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center">Sign in</div>
+<span style="font-size:11.5px;color:#6a6a6a;text-align:center">Single account. Password reset via server console.</span>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>Dashboard — per-subject totals, status, staleness, runs, needs attention</div><div class="dv-card" style="width:1280px">
+<div style="display:flex;width:1280px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px">
+<dc-import name="Sidebar" active="Dashboard" hint-size="220px,900px"></dc-import>
+<div style="flex:1;min-width:0;padding:28px 32px 32px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#6a6a6a">Saturday, 10 Oct 2026</span><h1 style="font-size:28px;font-weight:500;letter-spacing:-0.8px;margin:0">Dashboard</h1></div>
+<div style="display:flex;gap:8px"><div style="display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:12px;background:#fffaf0;border:1px solid #d6d0bf;font-weight:600">Import workbook</div><div style="display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:12px;background:#0a0a0a;color:#fff;font-weight:600">New run</div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4"><div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:4px"><span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a">{{ k.l }}</span><span style="font-size:30px;font-weight:500;letter-spacing:-1px">{{ k.n }}</span><span style="font-size:12px;color:#6a6a6a">{{ k.d }}</span></div></sc-for>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px">
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><h2 style="font-size:15px;font-weight:600;margin:0">Completeness by subject</h2><span style="font-size:12px;color:#6a6a6a">% of programmes with a sourced value or "Not found"</span></div>
+<div style="display:grid;grid-template-columns:140px 44px 54px repeat(5,minmax(0,1fr));gap:10px;font-size:10.5px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase;color:#6a6a6a;padding-bottom:6px;border-bottom:1px solid #e5e5e5"><span>Subject</span><span>Unis</span><span>Progs</span><span>Dates</span><span>Fee</span><span>Entry</span><span>Schol.</span><span>Subj.</span></div>
+<sc-for list="{{ subjTotals }}" as="s" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:140px 44px 54px repeat(5,minmax(0,1fr));gap:10px;align-items:center;padding:4px 0">
+<span style="font-weight:600">{{ s.name }}</span><span>{{ s.unis }}</span><span>{{ s.progs }}</span>
+<sc-for list="{{ s.f }}" as="f" hint-placeholder-count="5"><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px">{{ f.p }}</span><div style="height:6px;border-radius:3px;background:#ebe6d6;overflow:hidden"><div style="height:6px;background:#0a0a0a;width:{{ f.p }}"></div></div></div></sc-for>
+</div></sc-for>
+<div style="display:flex;gap:20px;padding-top:12px;border-top:1px solid #e5e5e5;align-items:center">
+<span style="font-size:12px;font-weight:600">Research status</span>
+<sc-for list="{{ statusCounts }}" as="c" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:8px"><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:{{ c.st.bg }};color:{{ c.st.fg }};border:{{ c.st.bd }};white-space:nowrap">{{ c.st.t }}</span><span style="font-weight:600">{{ c.n }}</span></div></sc-for>
+</div>
+</div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><h2 style="font-size:15px;font-weight:600;margin:0">Needs attention</h2><span style="font-size:12px;color:#6a6a6a">74 items</span></div>
+<sc-for list="{{ attention }}" as="a" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid #f0f0f0">
+<span style="height:32px;border-radius:10px;background:{{ a.bg }};display:flex;align-items:center;justify-content:center;font-weight:600">{{ a.n }}</span>
+<div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-weight:600">{{ a.kind }}</span><span style="font-size:12px;color:#6a6a6a">{{ a.d }}</span></div>
+<span style="font-size:12px;font-weight:600;text-decoration:underline">{{ a.cta }}</span>
+</div></sc-for>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:16px">
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><h2 style="font-size:15px;font-weight:600;margin:0">Upcoming scheduled runs</h2><span style="font-size:12px;text-decoration:underline">Schedules</span></div>
+<sc-for list="{{ upcoming }}" as="u" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid #f0f0f0"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">{{ u.name }}</span><span style="font-size:12px;color:#6a6a6a">{{ u.scope }}</span></div><div style="display:flex;flex-direction:column;gap:2px;text-align:right"><span style="font-weight:600">{{ u.when }}</span><span style="font-size:12px;color:#6a6a6a">{{ u.rel }}</span></div></div></sc-for>
+</div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><h2 style="font-size:15px;font-weight:600;margin:0">Recent runs</h2><span style="font-size:12px;text-decoration:underline">All runs</span></div>
+<div style="display:grid;grid-template-columns:70px 90px minmax(0,1fr) 110px 100px 90px;gap:10px;font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a;padding-bottom:6px;border-bottom:1px solid #e5e5e5"><span>Run</span><span>Type</span><span>Scope</span><span>Started</span><span>Result</span><span>Failed</span></div>
+<sc-for list="{{ recent }}" as="r" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:70px 90px minmax(0,1fr) 110px 100px 90px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid #f0f0f0">
+<span style="font-family:ui-monospace,Menlo,monospace;font-size:12px">{{ r.id }}</span><span style="color:#3a3a3a">{{ r.type }}</span><span>{{ r.scope }}</span><span style="color:#3a3a3a">{{ r.when }}</span><span><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:{{ r.st.bg }};color:{{ r.st.fg }};border:{{ r.st.bd }}">{{ r.st.t }}</span></span><span style="color:#3a3a3a">{{ r.failed }}</span>
+</div></sc-for>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Import — several subject workbooks, mapping preview, validation, per-subject summary</div><div class="dv-card" style="width:1280px">
+<div style="display:flex;width:1280px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px">
+<dc-import name="Sidebar" active="Import" hint-size="220px,1000px"></dc-import>
+<div style="flex:1;min-width:0;padding:28px 32px 32px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#6a6a6a">QS subject rankings · one workbook per subject · Bachelor + Masters sheets</span><h1 style="font-size:28px;font-weight:500;letter-spacing:-0.8px;margin:0">Import workbooks</h1></div>
+<div style="display:flex;gap:6px;align-items:center;font-size:12px">
+<span style="padding:6px 12px;border-radius:999px;background:#0a0a0a;color:#fff;font-weight:600">1 Upload</span><span style="color:#9a9a9a">—</span><span style="padding:6px 12px;border-radius:999px;background:#0a0a0a;color:#fff;font-weight:600">2 Map columns</span><span style="color:#9a9a9a">—</span><span style="padding:6px 12px;border-radius:999px;background:#ebe6d6;font-weight:600">3 Validate</span><span style="color:#9a9a9a">—</span><span style="padding:6px 12px;border-radius:999px;border:1px solid #d6d0bf;color:#6a6a6a">4 Summary</span>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px">
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<h2 style="font-size:15px;font-weight:600;margin:0">Files (3)</h2>
+<div style="display:grid;grid-template-columns:minmax(0,1.3fr) 200px minmax(0,1fr) 30px;gap:12px;font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a;padding-bottom:6px;border-bottom:1px solid #e5e5e5"><span>Workbook</span><span>Subject</span><span>Sheets detected</span><span></span></div>
+<sc-for list="{{ files }}" as="f" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:minmax(0,1.3fr) 200px minmax(0,1fr) 30px;gap:12px;align-items:center;padding:6px 0;border-bottom:1px solid #f0f0f0">
+<div style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font-weight:600;font-family:ui-monospace,Menlo,monospace;font-size:12px">{{ f.name }}</span><span style="font-size:11.5px;color:#6a6a6a">{{ f.size }}</span></div>
+<div style="display:flex;flex-direction:column;gap:3px"><div style="height:32px;border:{{ f.selBd }};border-radius:10px;background:#fffaf0;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-size:12.5px"><span>{{ f.subject }}</span><span style="color:#6a6a6a">▾</span></div><span style="font-size:11px;color:{{ f.howFg }}">{{ f.how }}</span></div>
+<span style="color:#3a3a3a">{{ f.sheets }}</span>
+<span style="color:#6a6a6a;text-align:center">×</span>
+</div></sc-for>
+<div style="border:1.5px dashed #d6d0bf;border-radius:12px;padding:16px;text-align:center;color:#6a6a6a">Drop more .xlsx files here or <span style="color:#0a0a0a;font-weight:600;text-decoration:underline">browse</span></div>
+</div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<h2 style="font-size:15px;font-weight:600;margin:0">Validation</h2>
+<sc-for list="{{ warnings }}" as="w" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:12px;background:#faf5e8;border:1px solid #e8b94a"><div style="display:flex;justify-content:space-between"><span style="font-weight:600">{{ w.t }}</span><span style="font-weight:600">{{ w.n }}</span></div><span style="font-size:12px;color:#3a3a3a">{{ w.d }}</span><span style="font-size:12px;font-weight:600;text-decoration:underline">{{ w.cta }}</span></div></sc-for>
+</div>
+</div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="font-size:15px;font-weight:600;margin:0">Column mapping</h2><div style="display:flex;gap:6px;font-size:12px"><span style="padding:5px 12px;border-radius:999px;background:#ebe6d6;font-weight:600">QS_2026_Mechanical_Engineering · Bachelor</span><span style="padding:5px 12px;border-radius:999px;color:#6a6a6a">Masters</span><span style="padding:5px 12px;border-radius:999px;color:#6a6a6a">Computer Science…</span></div></div>
+<div style="display:grid;grid-template-columns:200px 30px 220px minmax(0,1fr);gap:12px;font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a;padding-bottom:6px;border-bottom:1px solid #e5e5e5"><span>Workbook column</span><span></span><span>Bvosita field</span><span>First row value</span></div>
+<sc-for list="{{ mapping }}" as="m" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:200px 30px 220px minmax(0,1fr);gap:12px;align-items:center;padding:3px 0">
+<span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;color:{{ m.srcFg }}">{{ m.src }}</span><span style="color:#9a9a9a">→</span>
+<div style="height:30px;border:1px solid #d6d0bf;border-radius:10px;padding:0 10px;display:flex;align-items:center;justify-content:space-between;font-size:12.5px"><span>{{ m.dst }}</span><span style="color:#6a6a6a">▾</span></div>
+<span style="color:#3a3a3a">{{ m.sample }}</span>
+</div></sc-for>
+<span style="font-size:12px;color:#6a6a6a">Programme rows (Degree Program, five value + source pairs, Notes, Status, Last Verified) are created empty with status Pending and filled by runs.</span>
+</div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><h2 style="font-size:15px;font-weight:600;margin:0">Result summary</h2><span style="font-size:12px;color:#6a6a6a">286 universities appear in more than one file and merge into one university record</span></div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+<sc-for list="{{ importSummary }}" as="s" hint-placeholder-count="3"><div style="border-radius:16px;background:#f5f0e0;padding:16px;display:flex;flex-direction:column;gap:8px"><span style="font-weight:600">{{ s.s }}</span>
+<div style="display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:12.5px;color:#3a3a3a"><span>Universities</span><span style="font-weight:600;color:#0a0a0a">{{ s.unis }}</span><span>New records</span><span style="font-weight:600;color:#0a0a0a">{{ s.nw }}</span><span>Merged with existing</span><span style="font-weight:600;color:#0a0a0a">{{ s.merged }}</span><span>Rows Bachelor / Masters</span><span style="font-weight:600;color:#0a0a0a">{{ s.rows }}</span><span>Skipped</span><span style="font-weight:600;color:#0a0a0a">{{ s.skip }}</span></div></div></sc-for>
+</div>
+<div style="display:flex;justify-content:flex-end;gap:8px"><div style="display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:12px;background:#fffaf0;border:1px solid #d6d0bf;font-weight:600">Back</div><div style="display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:12px;background:#e5e5e5;color:#6a6a6a;font-weight:600">Import 3 files — assign subject first</div></div>
+</div>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>Universities — filters, subjects covered, multi-select → Start run / Add to schedule</div><div class="dv-card" style="width:1280px">
+<div style="display:flex;width:1280px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px">
+<dc-import name="Sidebar" active="Universities" hint-size="220px,820px"></dc-import>
+<div style="flex:1;min-width:0;padding:28px 32px 32px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#6a6a6a">486 universities · 3,392 programmes</span><h1 style="font-size:28px;font-weight:500;letter-spacing:-0.8px;margin:0">Universities</h1></div>
+<div style="height:36px;width:320px;border:1px solid #d6d0bf;border-radius:12px;background:#fffaf0;padding:0 12px;display:flex;align-items:center;color:#9a9a9a">Search university, country or website…</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<span style="height:32px;padding:0 12px;border-radius:999px;border:1px solid #d6d0bf;background:#fffaf0;display:flex;align-items:center;gap:6px">Country: Any ▾</span>
+<span style="height:32px;padding:0 12px;border-radius:999px;border:1px solid #d6d0bf;background:#fffaf0;display:flex;align-items:center;gap:6px">Region: Any ▾</span>
+<span style="height:32px;padding:0 12px;border-radius:999px;background:#0a0a0a;color:#fff;display:flex;align-items:center;gap:6px;font-weight:500">QS rank 1–150 ×</span>
+<span style="height:32px;padding:0 12px;border-radius:999px;background:#0a0a0a;color:#fff;display:flex;align-items:center;gap:6px;font-weight:500">Subject: Mech. Eng., Comp. Sci. ×</span>
+<span style="height:32px;padding:0 12px;border-radius:999px;border:1px solid #d6d0bf;background:#fffaf0;display:flex;align-items:center;gap:6px">Level: Bachelor + Master ▾</span>
+<span style="height:32px;padding:0 12px;border-radius:999px;border:1px solid #d6d0bf;background:#fffaf0;display:flex;align-items:center;gap:6px">Status: Any ▾</span>
+<span style="height:32px;padding:0 12px;border-radius:999px;border:1px solid #d6d0bf;background:#fffaf0;display:flex;align-items:center;gap:6px">Freshness: Any ▾</span>
+<span style="font-size:12px;text-decoration:underline;margin-left:4px">Save as filter</span>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:14px;background:#0a0a0a;color:#fff">
+<span style="font-weight:600">3 selected <span style="font-weight:400;color:#a0a0a0">· 16 programmes · 2 stale</span></span>
+<div style="display:flex;gap:8px"><span style="height:32px;padding:0 14px;border-radius:10px;border:1px solid #3a3a3a;display:flex;align-items:center;font-weight:600">Add to schedule</span><span style="height:32px;padding:0 14px;border-radius:10px;background:#fffaf0;color:#0a0a0a;display:flex;align-items:center;font-weight:600">Start run</span></div>
+</div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:6px 16px 10px">
+<div style="display:grid;grid-template-columns:24px 30px 36px minmax(0,1.6fr) minmax(110px,1fr) 96px 120px 40px 118px 92px 64px;gap:10px;font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a;padding:10px 0 8px;border-bottom:1px solid #e5e5e5"><span style="width:14px;height:14px;border:1.5px solid #0a0a0a;border-radius:4px;background:#ebe6d6"></span><span>#</span><span>QS</span><span>University</span><span>Country</span><span>Region</span><span>Subjects</span><span>Progs</span><span>Status</span><span>Verified</span><span>Fresh</span></div>
+<sc-for list="{{ unis }}" as="u" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:24px 30px 36px minmax(0,1.6fr) minmax(110px,1fr) 96px 120px 40px 118px 92px 64px;gap:10px;align-items:center;padding:9px 0;border-bottom:1px solid #f0f0f0;background:{{ u.rowBg }}">
+<span style="width:14px;height:14px;border:1.5px solid #0a0a0a;border-radius:4px;background:{{ u.cb }}"></span>
+<span style="color:#6a6a6a">{{ u.idx }}</span><span>{{ u.qs }}</span><span style="font-weight:600;text-decoration:underline;text-decoration-color:#d6d0bf">{{ u.name }}</span><span style="color:#3a3a3a">{{ u.country }}</span><span style="color:#3a3a3a">{{ u.region }}</span>
+<div style="display:flex;gap:4px"><sc-for list="{{ u.subs }}" as="s" hint-placeholder-count="2"><span style="font-size:11px;font-weight:600;padding:1px 7px;border-radius:6px;background:#ebe6d6">{{ s.t }}</span></sc-for></div>
+<span>{{ u.progs }}</span>
+<span><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:{{ u.st.bg }};color:{{ u.st.fg }};border:{{ u.st.bd }};white-space:nowrap">{{ u.st.t }}</span></span>
+<span style="color:#3a3a3a">{{ u.ver }}</span>
+<span><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:{{ u.fr.bg }};color:{{ u.fr.fg }};border:{{ u.fr.bd }}">{{ u.fr.t }}</span></span>
+</div></sc-for>
+<div style="display:flex;justify-content:space-between;padding-top:10px;font-size:12px;color:#6a6a6a"><span>Showing 1–10 of 150 · ME = Mechanical Eng., CS = Computer Science, CE = Civil Eng.</span><span>‹ 1 2 3 … 15 ›</span></div>
+</div>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1e"><div class="dv-olabel"><a class="dv-oid" href="#1e">1e</a>University detail — programmes per subject, run history, per-field change history</div><div class="dv-card" style="width:1280px">
+<div style="display:flex;width:1280px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px">
+<dc-import name="Sidebar" active="Universities" hint-size="220px,900px"></dc-import>
+<div style="flex:1;min-width:0;padding:28px 32px 32px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#6a6a6a">Universities / Massachusetts Institute of Technology</span><h1 style="font-size:28px;font-weight:500;letter-spacing:-0.8px;margin:0">Massachusetts Institute of Technology</h1>
+<div style="display:flex;gap:14px;font-size:12.5px;color:#3a3a3a;margin-top:4px"><span>QS #1 ME · #1 CS · #1 CE</span><span>United States · North America</span><span style="text-decoration:underline;color:#0a0a0a">web.mit.edu ↗</span><span>Last verified 08 Oct 2026</span></div></div>
+<div style="display:flex;gap:8px"><div style="display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:12px;background:#fffaf0;border:1px solid #d6d0bf;font-weight:600">Add to schedule</div><div style="display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:12px;background:#0a0a0a;color:#fff;font-weight:600">Start run</div></div>
+</div>
+<div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px">
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px">
+<h2 style="font-size:15px;font-weight:600;margin:0">Programmes found (7)</h2>
+<sc-for list="{{ mitProgs }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:4px">
+<span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a">{{ g.s }}</span>
+<sc-for list="{{ g.p }}" as="p" hint-placeholder-count="2"><div style="display:grid;grid-template-columns:minmax(0,1fr) 64px 64px 130px;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid #f0f0f0"><span style="font-weight:500">{{ p.n }}</span><span style="color:#3a3a3a">{{ p.l }}</span><span style="color:#3a3a3a">{{ p.f }} fields</span><span><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:{{ p.st.bg }};color:{{ p.st.fg }};border:{{ p.st.bd }};white-space:nowrap">{{ p.st.t }}</span></span></div></sc-for>
+</div></sc-for>
+</div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:8px">
+<h2 style="font-size:15px;font-weight:600;margin:0 0 4px">Run history</h2>
+<sc-for list="{{ mitRuns }}" as="r" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:64px minmax(0,1fr) auto;gap:10px;padding:9px 0;border-top:1px solid #f0f0f0;align-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px">{{ r.id }}</span><div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:500">{{ r.d }} · {{ r.t }}</span><span style="font-size:12px;color:#6a6a6a">{{ r.p }}</span></div><span style="font-size:12px;color:#3a3a3a">{{ r.c }}</span></div></sc-for>
+<div style="margin-top:8px;padding:12px;border-radius:12px;background:#f5f0e0;font-size:12px;color:#3a3a3a">Official website is the crawl root. Edit: <span style="text-decoration:underline;color:#0a0a0a">https://web.mit.edu</span> · Blocked paths: /news, /events</div>
+</div>
+</div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><h2 style="font-size:15px;font-weight:600;margin:0">Field change history</h2><div style="display:flex;gap:8px"><span style="height:30px;padding:0 12px;border-radius:999px;border:1px solid #d6d0bf;display:flex;align-items:center;font-size:12px">Field: All ▾</span><span style="height:30px;padding:0 12px;border-radius:999px;border:1px solid #d6d0bf;display:flex;align-items:center;font-size:12px">Programme: All ▾</span></div></div>
+<div style="display:grid;grid-template-columns:100px minmax(0,1fr) 160px minmax(0,1fr) minmax(0,1.2fr) 140px;gap:10px;font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a;padding-bottom:6px;border-bottom:1px solid #e5e5e5"><span>Date</span><span>Programme</span><span>Field</span><span>Old</span><span>New</span><span>By</span></div>
+<sc-for list="{{ mitChanges }}" as="c" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:100px minmax(0,1fr) 160px minmax(0,1fr) minmax(0,1.2fr) 140px;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0f0"><span style="color:#3a3a3a">{{ c.d }}</span><span>{{ c.p }}</span><span style="font-weight:500">{{ c.f }}</span><span style="color:#6a6a6a;text-decoration:line-through">{{ c.o }}</span><span>{{ c.n }}</span><span style="font-size:12px;color:#3a3a3a">{{ c.by }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1f"><div class="dv-olabel"><a class="dv-oid" href="#1f">1f</a>New run — subjects × levels × fields, options, job breakdown, estimate</div><div class="dv-card" style="width:1280px">
+<div style="display:flex;width:1280px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px">
+<dc-import name="Sidebar" active="New run" hint-size="220px,820px"></dc-import>
+<div style="flex:1;min-width:0;padding:28px 32px 32px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#6a6a6a">From Universities · filter "QS 1–150, ME + CS" · 42 selected</span><h1 style="font-size:28px;font-weight:500;letter-spacing:-0.8px;margin:0">New run</h1></div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><h2 style="font-size:15px;font-weight:600;margin:0">Selection</h2><span style="font-size:12px;text-decoration:underline">Edit selection</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:6px"><span style="padding:4px 12px;border-radius:999px;background:#f5f0e0">Massachusetts Institute of Technology</span><span style="padding:4px 12px;border-radius:999px;background:#f5f0e0">ETH Zurich</span><span style="padding:4px 12px;border-radius:999px;background:#f5f0e0">The University of Queensland</span><span style="padding:4px 12px;border-radius:999px;background:#f5f0e0">Tsinghua University</span><span style="padding:4px 12px;border-radius:999px;background:#f5f0e0">Delft University of Technology</span><span style="padding:4px 12px;border-radius:999px;color:#6a6a6a">+ 37 more</span></div>
+<span style="font-size:12px;color:#7a5200">2 universities have no official website and will be skipped.</span>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px">
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px"><h2 style="font-size:15px;font-weight:600;margin:0">Subjects</h2>
+<sc-for list="{{ runSubjects }}" as="s" hint-placeholder-count="3"><div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid #0a0a0a;border-radius:4px;background:{{ s.bg }}"></span>{{ s.t }}</div></sc-for></div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px"><h2 style="font-size:15px;font-weight:600;margin:0">Study level</h2>
+<div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid #0a0a0a;border-radius:4px;background:#0a0a0a"></span>Bachelor</div><div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid #0a0a0a;border-radius:4px;background:#0a0a0a"></span>Master</div></div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px"><h2 style="font-size:15px;font-weight:600;margin:0">Fields to collect</h2>
+<sc-for list="{{ runFields }}" as="s" hint-placeholder-count="5"><div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid #0a0a0a;border-radius:4px;background:{{ s.bg }}"></span>{{ s.t }}</div></sc-for></div>
+</div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:4px"><h2 style="font-size:15px;font-weight:600;margin:0 0 6px">Options</h2>
+<sc-for list="{{ runOptions }}" as="o" hint-placeholder-count="4"><div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid #f0f0f0"><span>{{ o.t }}</span>
+<sc-if value="{{ o.isTog }}" hint-placeholder-val="{{ true }}"><span style="width:36px;height:20px;border-radius:999px;background:{{ o.tbg }};display:flex;justify-content:{{ o.tj }};padding:2px;box-sizing:border-box"><span style="width:16px;height:16px;border-radius:50%;background:#fff"></span></span></sc-if>
+<sc-if value="{{ o.isInput }}" hint-placeholder-val="{{ false }}"><span style="height:30px;width:80px;border:1px solid #d6d0bf;border-radius:10px;display:flex;align-items:center;padding:0 10px">{{ o.v }}</span></sc-if>
+</div></sc-for></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="background:#f5f0e0;border-radius:24px;padding:22px;display:flex;flex-direction:column;gap:12px">
+<h2 style="font-size:15px;font-weight:600;margin:0">Job breakdown</h2>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 50px 50px 50px;gap:8px;font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a;padding-bottom:6px;border-bottom:1px solid #d6d0bf"><span>Subject</span><span>Bach.</span><span>Mast.</span><span>Jobs</span></div>
+<sc-for list="{{ breakdown }}" as="b" hint-placeholder-count="2"><div style="display:grid;grid-template-columns:minmax(0,1fr) 50px 50px 50px;gap:8px"><span>{{ b.s }}</span><span>{{ b.b }}</span><span>{{ b.m }}</span><span style="font-weight:600">{{ b.j }}</span></div></sc-for>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 50px;gap:8px;padding-top:8px;border-top:1px solid #d6d0bf;font-weight:600"><span>Extraction jobs</span><span>153</span><span>Site crawls</span><span>40</span></div>
+<div style="font-size:12px;color:#3a3a3a;line-height:1.5">Each university site is crawled once (up to 40 pages) and every selected subject is extracted from the same pages. Universities × subjects × levels = 40 × 2 × 2, minus 7 combinations with no matching programme.</div>
+<div style="display:grid;grid-template-columns:1fr auto;gap:6px;padding-top:8px;border-top:1px solid #d6d0bf"><span>Estimated time</span><span style="font-weight:600">≈ 2 h 50 min</span><span>Estimated model cost</span><span style="font-weight:600">≈ USD 17.90</span><span>Pages to fetch</span><span style="font-weight:600">≤ 1,600</span></div>
+</div>
+<div style="height:44px;border-radius:12px;background:#0a0a0a;color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center">Start now</div>
+<div style="height:44px;border-radius:12px;background:#fffaf0;border:1px solid #d6d0bf;font-weight:600;display:flex;align-items:center;justify-content:center">Save as schedule</div>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1g"><div class="dv-olabel"><a class="dv-oid" href="#1g">1g</a>Schedules — recurring runs list + create/edit panel with per-field refresh</div><div class="dv-card" style="width:1280px">
+<div style="display:flex;width:1280px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px">
+<dc-import name="Sidebar" active="Schedules" hint-size="220px,820px"></dc-import>
+<div style="flex:1;min-width:0;padding:28px 0 32px 32px;display:flex;gap:20px">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#6a6a6a">4 schedules · 3 enabled · times in Asia/Tashkent</span><h1 style="font-size:28px;font-weight:500;letter-spacing:-0.8px;margin:0">Schedules</h1></div>
+<div style="display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:12px;background:#0a0a0a;color:#fff;font-weight:600">New schedule</div>
+</div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:6px 16px 10px">
+<div style="display:grid;grid-template-columns:minmax(140px,1.3fr) minmax(110px,1fr) 96px 84px 112px 40px;gap:10px;font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a;padding:10px 0 8px;border-bottom:1px solid #e5e5e5"><span>Name</span><span>Scope</span><span>Frequency</span><span>Next run</span><span>Last run</span><span>On</span></div>
+<sc-for list="{{ schedules }}" as="s" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:minmax(140px,1.3fr) minmax(110px,1fr) 96px 84px 112px 40px;gap:10px;align-items:center;padding:11px 8px;margin:0 -8px;border-radius:10px;border-bottom:1px solid #f0f0f0;background:{{ s.rowBg }}">
+<span style="font-weight:600">{{ s.name }}</span><div style="display:flex;flex-direction:column;gap:2px"><span style="color:#3a3a3a">{{ s.scope }}</span><span style="font-size:11.5px;color:#6a6a6a">{{ s.subj }}</span></div><span style="color:#3a3a3a">{{ s.freq }}</span><span style="font-weight:500">{{ s.next }}</span>
+<div style="display:flex;flex-direction:column;gap:3px;align-items:flex-start"><span style="font-size:12px;color:#3a3a3a">{{ s.last }}</span><span style="padding:1px 8px;border-radius:999px;font-size:11px;font-weight:500;background:{{ s.st.bg }};color:{{ s.st.fg }};border:{{ s.st.bd }}">{{ s.st.t }} · {{ s.resD }}</span></div>
+<span style="width:36px;height:20px;border-radius:999px;background:{{ s.tbg }};display:flex;justify-content:{{ s.tj }};padding:2px;box-sizing:border-box"><span style="width:16px;height:16px;border-radius:50%;background:#fff"></span></span>
+</div></sc-for>
+</div>
+<span style="font-size:12px;color:#6a6a6a">A scheduled run behaves like a manual run: results land in Review in "Changes since last run" mode, and a summary is emailed to admin@bvosita.uz.</span>
+</div>
+<div style="width:360px;flex:none;background:#fffaf0;border-left:1px solid #e5e5e5;padding:0 24px 24px;display:flex;flex-direction:column;gap:14px;margin-top:-28px;padding-top:28px">
+<div style="display:flex;justify-content:space-between;align-items:center"><h2 style="font-size:18px;font-weight:600;margin:0">Edit schedule</h2><span style="color:#6a6a6a">×</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Name</span><div style="height:36px;border:1px solid #d6d0bf;border-radius:12px;padding:0 12px;display:flex;align-items:center">Entry requirements & study subjects</div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Scope (saved filter)</span><div style="height:36px;border:1px solid #d6d0bf;border-radius:12px;padding:0 12px;display:flex;align-items:center;justify-content:space-between"><span>All universities</span><span style="color:#6a6a6a">▾</span></div><span style="font-size:11.5px;color:#6a6a6a">Resolved at run time · currently 486 universities</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Subjects</span><div style="display:flex;gap:6px"><span style="padding:5px 12px;border-radius:999px;background:#0a0a0a;color:#fff">Mech. Eng.</span><span style="padding:5px 12px;border-radius:999px;background:#0a0a0a;color:#fff">Comp. Sci.</span><span style="padding:5px 12px;border-radius:999px;border:1px solid #d6d0bf">Civil Eng.</span></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600">Frequency</span>
+<div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border-radius:50%;border:1.5px solid #0a0a0a"></span>Yearly on a date</div>
+<div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border-radius:50%;border:4.5px solid #0a0a0a;box-sizing:border-box"></span>Every <span style="height:28px;width:44px;border:1px solid #d6d0bf;border-radius:8px;display:flex;align-items:center;justify-content:center">18</span> months, starting <span style="height:28px;padding:0 8px;border:1px solid #d6d0bf;border-radius:8px;display:flex;align-items:center">15 Jan 2027</span></div>
+<div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border-radius:50%;border:1.5px solid #0a0a0a"></span>Custom dates</div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Fields to refresh</span>
+<sc-for list="{{ schedFields }}" as="f" hint-placeholder-count="5"><div style="display:flex;gap:10px;align-items:center;justify-content:space-between;padding:4px 0"><div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid #0a0a0a;border-radius:4px;background:{{ f.bg }}"></span>{{ f.t }}</div><span style="font-size:12px;color:#6a6a6a">{{ f.v }}</span></div></sc-for>
+<span style="font-size:11.5px;color:#6a6a6a;line-height:1.5">Tip: fees and deadlines change yearly; keep them in a yearly schedule. Entry requirements and study subjects change less often.</span></div>
+<div style="display:flex;justify-content:space-between;align-items:center"><span>Only stale rows</span><span style="width:36px;height:20px;border-radius:999px;background:#d6d0bf;display:flex;padding:2px;box-sizing:border-box"><span style="width:16px;height:16px;border-radius:50%;background:#fff"></span></span></div>
+<div style="padding:10px 12px;border-radius:12px;background:#f5f0e0;font-size:12px">Next run <b>15 Jan 2027, 02:00</b> · ≈ 486 crawls, 1,640 jobs · ≈ USD 190</div>
+<div style="display:flex;gap:8px"><div style="flex:1;height:40px;border-radius:12px;background:#0a0a0a;color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center">Save</div><div style="height:40px;padding:0 14px;border-radius:12px;border:1px solid #d6d0bf;font-weight:600;display:flex;align-items:center">Run now</div><div style="height:40px;padding:0 14px;border-radius:12px;color:#b3261e;font-weight:600;display:flex;align-items:center">Delete</div></div>
+</div>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1i"><div class="dv-olabel"><a class="dv-oid" href="#1i">1i</a>Review — All results · three panes, field selected, validation banner</div><div class="dv-card" style="width:1440px">
+<div style="display:flex;width:1440px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px">
+<dc-import name="Sidebar" active="Review" hint-size="220px,1100px"></dc-import>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px 16px;border-bottom:1px solid #e5e5e5">
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#6a6a6a">Run R-0142 · Scheduled · 08 Oct 2026</span><h1 style="font-size:24px;font-weight:500;letter-spacing:-0.6px;margin:0">Review</h1></div>
+<div style="display:flex;padding:3px;border-radius:999px;background:#ebe6d6;gap:2px"><span style="padding:6px 14px;border-radius:999px;background:#fffaf0;font-weight:600">All results</span><span style="padding:6px 14px;border-radius:999px;color:#3a3a3a">Changes since last run · 47</span></div>
+<div style="display:flex;gap:16px;font-size:12px;color:#3a3a3a"><span><b style="color:#0a0a0a">1,212</b> approved</span><span><b style="color:#0a0a0a">74</b> to review</span><span><b style="color:#0a0a0a">12</b> blocked</span></div>
+</div>
+<div style="display:grid;grid-template-columns:250px minmax(0,1fr) 360px;flex:1">
+<div style="border-right:1px solid #e5e5e5;padding:16px 12px;display:flex;flex-direction:column;gap:8px">
+<div style="height:32px;border:1px solid #d6d0bf;border-radius:10px;background:#fffaf0;padding:0 10px;display:flex;align-items:center;color:#9a9a9a;font-size:12.5px">Filter universities…</div>
+<div style="display:flex;flex-wrap:wrap;gap:4px;font-size:11.5px"><span style="padding:3px 9px;border-radius:999px;background:#0a0a0a;color:#fff">All subjects</span><span style="padding:3px 9px;border-radius:999px;border:1px solid #d6d0bf">ME</span><span style="padding:3px 9px;border-radius:999px;border:1px solid #d6d0bf">CS</span><span style="padding:3px 9px;border-radius:999px;border:1px solid #d6d0bf">CE</span><span style="padding:3px 9px;border-radius:999px;border:1px solid #d6d0bf">Issues only</span></div>
+<sc-for list="{{ reviewUnis }}" as="u" hint-placeholder-count="7"><div style="display:flex;flex-direction:column;gap:5px;padding:10px;border-radius:12px;background:{{ u.bg }}"><span style="font-weight:{{ u.fw }};line-height:1.3">{{ u.n }}</span><div style="display:flex;justify-content:space-between;align-items:center"><span style="padding:1px 8px;border-radius:999px;font-size:11px;font-weight:500;background:{{ u.st.bg }};color:{{ u.st.fg }};border:{{ u.st.bd }}">{{ u.st.t }}</span><span style="font-size:11.5px;color:#6a6a6a">{{ u.i }}</span></div></div></sc-for>
+</div>
+<div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px;min-width:0">
+<div style="display:flex;justify-content:space-between;align-items:flex-end"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:18px;font-weight:600">The University of Queensland</span><span style="font-size:12px;color:#3a3a3a">QS #41 · Australia · <span style="text-decoration:underline">uq.edu.au ↗</span> · 41 pages fetched · English</span></div><span style="font-size:12px;color:#6a6a6a">6 programmes · 3 subjects</span></div>
+<div style="display:flex;flex-direction:column;gap:4px;padding:12px 14px;border-radius:12px;background:#fff0ee;border:1px solid #ff6b5a"><span style="font-weight:600;color:#b3261e">2 provenance issues block approval</span><span style="font-size:12px;color:#3a3a3a">Scholarships (Bachelor of Engineering) has no source URL. Entry Requirements (Master of Engineering) cites a URL that was not among the fetched pages.</span></div>
+<span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a">Mechanical Engineering · 2 programmes</span>
+<sc-for list="{{ reviewProgs }}" as="p" hint-placeholder-count="2"><div style="background:#f5f0e0;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:14px">{{ p.name }}</span><span style="font-size:12px;color:#3a3a3a">{{ p.lvl }} · {{ p.subj }}</span></div>
+<div style="display:flex;gap:6px;align-items:center;font-size:12px;flex:none;white-space:nowrap"><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:{{ p.status.bg }};color:{{ p.status.fg }};white-space:nowrap;flex:none">{{ p.status.t }} ▾</span><span style="height:28px;padding:0 10px;border-radius:8px;border:1px solid #d6d0bf;background:#fffaf0;display:flex;align-items:center">Add note</span><span style="height:28px;padding:0 10px;border-radius:8px;background:#0a0a0a;color:#fff;display:flex;align-items:center;font-weight:600">Approve all</span></div></div>
+<sc-for list="{{ p.fields }}" as="f" hint-placeholder-count="5"><div style="display:flex;flex-direction:column;gap:8px;padding:10px 12px;border-radius:12px;border:{{ f.rowBd }};background:{{ f.rowBg }}">
+<div style="display:grid;grid-template-columns:120px minmax(0,1fr) 104px;gap:12px;align-items:start">
+<span style="font-size:12px;font-weight:600;color:#3a3a3a">{{ f.label }}</span>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="color:{{ f.valFg }};font-style:{{ f.valStyle }}">{{ f.value }}</span><span style="font-size:11.5px;color:{{ f.srcFg }};text-decoration:underline;text-decoration-color:#d6d0bf">{{ f.src }}</span></div>
+<div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:{{ f.st.bg }};color:{{ f.st.fg }};border:{{ f.st.bd }};white-space:nowrap">{{ f.st.t }}</span><span style="font-size:11px;color:#6a6a6a;white-space:nowrap">✓ {{ f.ver }}</span></div>
+</div>
+<sc-if value="{{ f.hasWarn }}" hint-placeholder-val="{{ false }}"><span style="font-size:11.5px;color:#b3261e;padding-left:132px">⚠ {{ f.warn }}</span></sc-if>
+<sc-if value="{{ f.sel }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:6px;padding-left:132px;font-size:12px;flex-wrap:wrap"><span style="height:28px;padding:0 12px;border-radius:8px;background:#0a0a0a;color:#fff;display:flex;align-items:center;font-weight:600">Approve</span><span style="height:28px;padding:0 10px;border-radius:8px;border:1px solid #d6d0bf;display:flex;align-items:center">Edit value</span><span style="height:28px;padding:0 10px;border-radius:8px;border:1px solid #d6d0bf;display:flex;align-items:center">Replace source URL</span><span style="height:28px;padding:0 10px;border-radius:8px;border:1px solid #d6d0bf;display:flex;align-items:center">Mark not found</span><span style="height:28px;padding:0 10px;border-radius:8px;border:1px solid #d6d0bf;display:flex;align-items:center;color:#9a9a9a">Keep old value</span></div></sc-if>
+</div></sc-for>
+</div></sc-for>
+<span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a">Computer Science · 2 programmes</span>
+<div style="background:#f5f0e0;border-radius:16px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Bachelor of Computer Science</span><span style="font-size:12px;color:#3a3a3a">5 / 5 approved ▸</span></div>
+</div>
+<div style="border-left:1px solid #e5e5e5;background:#fffaf0;padding:16px 18px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a">Source · Tuition Fee (International)</span><span style="font-size:12px;font-weight:600;text-decoration:underline">Open live page ↗</span></div>
+<div style="display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:12px;background:#f5f0e0"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11.5px;word-break:break-all">https://study.uq.edu.au/study-options/programs/bachelor-engineering-honours-2342#fees</span><span style="font-size:11.5px;color:#6a6a6a">Fetched 08 Oct 2026 14:22 · page 12 of 41 · HTTP 200 · JS rendered</span></div>
+<span style="font-size:12px;font-weight:600">Extracted snippet</span>
+<div style="padding:14px;border-radius:12px;border:1px solid #e5e5e5;line-height:1.6;color:#3a3a3a;font-size:12.5px">…International students. <b style="color:#0a0a0a">Indicative annual fee 2027:</b> <span style="background:#e8b94a;color:#0a0a0a;padding:0 3px;border-radius:3px;font-weight:600">AUD $58,384</span>. Fees are charged per unit and the annual amount assumes a standard full-time study load of 16 units. Fees are reviewed annually…</div>
+<div style="height:220px;border-radius:12px;border:1px solid #e5e5e5;background:repeating-linear-gradient(135deg,#f5f0e0 0 8px,#fffaf0 8px 16px);display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;color:#6a6a6a">stored page capture</div>
+<div style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:#3a3a3a"><span style="font-weight:600;color:#0a0a0a">Other pages mentioning fees (2)</span><span style="text-decoration:underline">study.uq.edu.au/…/fees-scholarships · AUD 58,384</span><span style="text-decoration:underline">uq.edu.au/…/international-fees.pdf · AUD 58,384</span></div>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1j"><div class="dv-olabel"><a class="dv-oid" href="#1j">1j</a>Review — Changes since last run · old → new with both sources</div><div class="dv-card" style="width:1440px">
+<div style="display:flex;width:1440px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px">
+<dc-import name="Sidebar" active="Review" hint-size="220px,900px"></dc-import>
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px 24px 16px;border-bottom:1px solid #e5e5e5">
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;color:#6a6a6a">Run R-0142 · Scheduled · compared with R-0115 (14 Sep 2025)</span><h1 style="font-size:24px;font-weight:500;letter-spacing:-0.6px;margin:0">Review</h1></div>
+<div style="display:flex;padding:3px;border-radius:999px;background:#ebe6d6;gap:2px"><span style="padding:6px 14px;border-radius:999px;color:#3a3a3a">All results</span><span style="padding:6px 14px;border-radius:999px;background:#fffaf0;font-weight:600">Changes since last run · 47</span></div>
+<div style="display:flex;gap:16px;font-size:12px;color:#3a3a3a"><span><b style="color:#0a0a0a">47</b> changed</span><span><b style="color:#0a0a0a">1,165</b> unchanged · auto-confirmed</span></div>
+</div>
+<div style="display:grid;grid-template-columns:250px minmax(0,1fr) 360px;flex:1">
+<div style="border-right:1px solid #e5e5e5;padding:16px 12px;display:flex;flex-direction:column;gap:8px">
+<span style="font-size:12px;color:#6a6a6a;padding:0 4px">Only universities with changes</span>
+<div style="display:flex;flex-direction:column;gap:5px;padding:10px;border-radius:12px;background:#ebe6d6"><span style="font-weight:600">KTH Royal Institute of Technology</span><span style="font-size:11.5px;color:#3a3a3a">4 changed · 14 unchanged</span></div>
+<div style="display:flex;flex-direction:column;gap:5px;padding:10px"><span style="font-weight:500">Massachusetts Institute of Technology</span><span style="font-size:11.5px;color:#3a3a3a">3 changed · 32 unchanged</span></div>
+<div style="display:flex;flex-direction:column;gap:5px;padding:10px"><span style="font-weight:500">Imperial College London</span><span style="font-size:11.5px;color:#3a3a3a">2 changed · 23 unchanged</span></div>
+<div style="display:flex;flex-direction:column;gap:5px;padding:10px"><span style="font-weight:500">National University of Singapore</span><span style="font-size:11.5px;color:#3a3a3a">2 changed · 18 unchanged</span></div>
+<span style="font-size:12px;color:#6a6a6a;padding:4px">+ 19 more</span>
+</div>
+<div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px;min-width:0">
+<div style="display:flex;justify-content:space-between;align-items:flex-end"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:18px;font-weight:600">KTH Royal Institute of Technology</span><span style="font-size:12px;color:#3a3a3a">QS #12 · Sweden · Master's taught in English · Bachelor's in Swedish (noted)</span></div><span style="height:32px;padding:0 14px;border-radius:10px;background:#0a0a0a;color:#fff;display:flex;align-items:center;font-weight:600">Approve all new values</span></div>
+<sc-for list="{{ changes }}" as="c" hint-placeholder-count="4"><div style="background:#fffaf0;border:{{ c.bd }};border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:center"><div style="display:flex;gap:8px;align-items:baseline"><span style="font-weight:600">{{ c.field }}</span><span style="font-size:12px;color:#6a6a6a">{{ c.prog }} · {{ c.subj }}</span></div><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:#e8b94a">Changed</span></div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);gap:10px;align-items:stretch">
+<div style="padding:10px 12px;border-radius:12px;background:#f5f0e0;display:flex;flex-direction:column;gap:3px"><span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a">Old</span><span style="color:#3a3a3a">{{ c.o }}</span><span style="font-size:11.5px;text-decoration:underline;color:#6a6a6a">{{ c.oSrc }}</span></div>
+<span style="align-self:center;text-align:center;color:#6a6a6a">→</span>
+<div style="padding:10px 12px;border-radius:12px;background:#fffaf0;border:1px solid #e8b94a;display:flex;flex-direction:column;gap:3px"><span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#7a5200">New</span><span style="font-weight:600">{{ c.n }}</span><span style="font-size:11.5px;text-decoration:underline">{{ c.nSrc }}</span></div>
+</div>
+<div style="display:flex;gap:6px;font-size:12px"><span style="height:28px;padding:0 12px;border-radius:8px;background:#0a0a0a;color:#fff;display:flex;align-items:center;font-weight:600">Approve new</span><span style="height:28px;padding:0 10px;border-radius:8px;border:1px solid #d6d0bf;display:flex;align-items:center">Keep old value</span><span style="height:28px;padding:0 10px;border-radius:8px;border:1px solid #d6d0bf;display:flex;align-items:center">Edit value</span></div>
+</div></sc-for>
+<div style="padding:12px 16px;border-radius:16px;border:1px dashed #d6d0bf;display:flex;justify-content:space-between;color:#3a3a3a"><span>14 unchanged values auto-confirmed · Last Verified set to 08 Oct 2026</span><span style="text-decoration:underline">Show</span></div>
+</div>
+<div style="border-left:1px solid #e5e5e5;background:#fffaf0;padding:16px 18px;display:flex;flex-direction:column;gap:12px">
+<span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a">Source diff · Tuition Fee (International)</span>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Old · fetched 14 Sep 2025</span><div style="padding:12px;border-radius:12px;background:#f5f0e0;line-height:1.6;color:#3a3a3a;font-size:12.5px">…The tuition fee for the full programme is <span style="background:#ebe6d6;text-decoration:line-through;padding:0 3px">SEK 310,000</span> for students starting in autumn 2025…</div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">New · fetched 08 Oct 2026</span><div style="padding:12px;border-radius:12px;border:1px solid #e5e5e5;line-height:1.6;color:#3a3a3a;font-size:12.5px">…The tuition fee for the full programme is <span style="background:#e8b94a;color:#0a0a0a;font-weight:600;padding:0 3px;border-radius:3px">SEK 335,000</span> for students starting in autumn 2027…</div></div>
+<span style="font-size:11.5px;font-family:ui-monospace,Menlo,monospace;color:#3a3a3a;word-break:break-all">kth.se/en/studies/master/engineering-design/tuition</span>
+<span style="font-size:12px;font-weight:600;text-decoration:underline">Open live page ↗</span>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1k"><div class="dv-olabel"><a class="dv-oid" href="#1k">1k</a>Review card states — conflict, closest-equivalent programme, non-English instruction, validation</div><div class="dv-card" style="width:1280px">
+<div style="width:1280px;box-sizing:border-box;padding:28px 32px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a">Conflict · two official sources disagree</span>
+<div style="background:#f5f0e0;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:14px">BSc Mechanical Engineering</span><span style="font-size:12px;color:#3a3a3a">ETH Zurich · Bachelor · Mechanical Engineering</span></div><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:#e8b94a">Language: German</span></div>
+<div style="padding:12px;border-radius:12px;border:1.5px solid #0a0a0a;background:#fffaf0;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between"><span style="font-size:12px;font-weight:600;color:#3a3a3a">Application Deadline</span><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:#ff6b5a">Conflict</span></div>
+<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px">
+<div style="padding:10px 12px;border-radius:12px;border:1.5px solid #0a0a0a;display:flex;flex-direction:column;gap:4px"><div style="display:flex;gap:8px;align-items:center"><span style="width:14px;height:14px;border-radius:50%;border:4.5px solid #0a0a0a;box-sizing:border-box"></span><span style="font-size:11px;font-weight:600;letter-spacing:1px;color:#6a6a6a">SOURCE A</span></div><span style="font-weight:600">1 Nov – 30 Nov 2026</span><span style="font-size:11.5px;text-decoration:underline">ethz.ch/en/studies/registration-application/bachelor.html</span><span style="font-size:11px;color:#6a6a6a">Fetched 08 Oct 2026</span></div>
+<div style="padding:10px 12px;border-radius:12px;border:1px solid #d6d0bf;display:flex;flex-direction:column;gap:4px"><div style="display:flex;gap:8px;align-items:center"><span style="width:14px;height:14px;border-radius:50%;border:1.5px solid #0a0a0a"></span><span style="font-size:11px;font-weight:600;letter-spacing:1px;color:#6a6a6a">SOURCE B</span></div><span style="font-weight:600">1 Nov – 15 Dec 2026</span><span style="font-size:11.5px;text-decoration:underline">ethz.ch/…/mavt/bachelor/admission.html</span><span style="font-size:11px;color:#6a6a6a">Fetched 08 Oct 2026</span></div>
+</div>
+<div style="display:flex;gap:6px;font-size:12px"><span style="height:28px;padding:0 12px;border-radius:8px;background:#0a0a0a;color:#fff;display:flex;align-items:center;font-weight:600">Use A</span><span style="height:28px;padding:0 10px;border-radius:8px;border:1px solid #d6d0bf;display:flex;align-items:center">Use B</span><span style="height:28px;padding:0 10px;border-radius:8px;border:1px solid #d6d0bf;display:flex;align-items:center">Keep both (exported with both links)</span></div>
+</div>
+<span style="font-size:12px;color:#3a3a3a;line-height:1.5">Note added automatically: "Bachelor programme taught in German. Master's in English."</span>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a">Closest equivalent · no exact subject match</span>
+<div style="background:#f5f0e0;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:14px">BA/MEng Engineering</span><span style="font-size:12px;color:#3a3a3a">University of Cambridge · Bachelor · listed under Mechanical Engineering</span></div><span style="padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:#ffb084;white-space:nowrap">Closest equivalent</span></div>
+<div style="padding:10px 12px;border-radius:12px;background:#fffaf0;border:1px solid #ffb084;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:600">Scraper note</span><span style="color:#3a3a3a;line-height:1.5">No programme named "Mechanical Engineering". General Engineering degree; Mechanical Engineering is chosen as a specialisation from Year 3.</span><span style="font-size:11.5px;text-decoration:underline">undergraduate.study.cam.ac.uk/courses/engineering</span><div style="display:flex;gap:6px;font-size:12px;margin-top:4px"><span style="height:28px;padding:0 12px;border-radius:8px;background:#0a0a0a;color:#fff;display:flex;align-items:center;font-weight:600">Accept equivalent</span><span style="height:28px;padding:0 10px;border-radius:8px;border:1px solid #d6d0bf;display:flex;align-items:center">Edit note</span><span style="height:28px;padding:0 10px;border-radius:8px;border:1px solid #d6d0bf;display:flex;align-items:center">Reject — no programme</span></div></div>
+<div style="display:grid;grid-template-columns:150px minmax(0,1fr) 96px;gap:12px;padding:8px 12px;border-radius:12px;border:1px solid #e5e5e5;background:#fffaf0"><span style="font-size:12px;font-weight:600;color:#3a3a3a">Tuition Fee (Intl.)</span><div style="display:flex;flex-direction:column;gap:3px"><span>GBP 41,124 per year (2026/27)</span><span style="font-size:11.5px;text-decoration:underline">undergraduate.study.cam.ac.uk/fees</span></div><span style="justify-self:end;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;background:#a4d4c5;height:fit-content">Found</span></div>
+<div style="display:grid;grid-template-columns:150px minmax(0,1fr) 96px;gap:12px;padding:8px 12px;border-radius:12px;border:1px solid #e5e5e5;background:#fffaf0"><span style="font-size:12px;font-weight:600;color:#3a3a3a">Scholarships</span><div style="display:flex;flex-direction:column;gap:3px"><span style="font-style:italic;color:#6a6a6a">Not found — searched 33 pages</span><span style="font-size:11.5px;color:#6a6a6a">Valid value · exported as "Not found"</span></div><span style="justify-self:end;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:500;border:1px dashed #6a6a6a;height:fit-content;white-space:nowrap">Not found</span></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;grid-column:1 / -1">
+<span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a">Validation banners</span>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+<div style="padding:12px 14px;border-radius:12px;background:#fff0ee;border:1px solid #ff6b5a;display:flex;flex-direction:column;gap:4px"><span style="font-weight:600;color:#b3261e">Missing source</span><span style="font-size:12px;color:#3a3a3a">This value has no source URL. Approve is disabled until a fetched page is linked.</span><span style="font-size:12px;font-weight:600;text-decoration:underline">Pick from fetched pages</span></div>
+<div style="padding:12px 14px;border-radius:12px;background:#fff0ee;border:1px solid #ff6b5a;display:flex;flex-direction:column;gap:4px"><span style="font-weight:600;color:#b3261e">Source not fetched</span><span style="font-size:12px;color:#3a3a3a">uq.edu.au/…/entry-requirements was not among the 41 pages fetched in R-0142.</span><span style="font-size:12px;font-weight:600;text-decoration:underline">Fetch this URL now</span></div>
+<div style="padding:12px 14px;border-radius:12px;background:#fffaf0;border:1px solid #e8b94a;display:flex;flex-direction:column;gap:4px"><span style="font-weight:600;color:#7a5200">Stale</span><span style="font-size:12px;color:#3a3a3a">Last verified 18 Aug 2025 — older than the 12-month threshold.</span><span style="font-size:12px;font-weight:600;text-decoration:underline">Add to next run</span></div>
+</div>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1l"><div class="dv-olabel"><a class="dv-oid" href="#1l">1l</a>Export — scope, subjects, layout, format, contents, preview, history</div><div class="dv-card" style="width:1280px">
+<div style="display:flex;width:1280px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px">
+<dc-import name="Sidebar" active="Export" hint-size="220px,860px"></dc-import>
+<div style="flex:1;min-width:0;padding:28px 32px 32px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:#6a6a6a">Approved results → CSV / XLSX</span><h1 style="font-size:28px;font-weight:500;letter-spacing:-0.8px;margin:0">Export</h1></div>
+<div style="display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 16px;border-radius:12px;background:#e5e5e5;color:#6a6a6a;font-weight:600">Sync to UniAp database <span style="font-size:11px;font-weight:500;padding:1px 7px;border-radius:999px;border:1px solid #9a9a9a">Coming later</span></div>
+</div>
+<div style="display:grid;grid-template-columns:340px minmax(0,1fr);gap:16px;align-items:start">
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600">Scope</span>
+<div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border-radius:50%;border:4.5px solid #0a0a0a;box-sizing:border-box"></span>A run <span style="height:28px;padding:0 10px;border:1px solid #d6d0bf;border-radius:8px;display:flex;align-items:center">R-0142 · 08 Oct ▾</span></div>
+<div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border-radius:50%;border:1.5px solid #0a0a0a"></span>A saved filter</div>
+<div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border-radius:50%;border:1.5px solid #0a0a0a"></span>Everything</div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600">Subjects</span><div style="display:flex;gap:6px;flex-wrap:wrap"><span style="padding:5px 12px;border-radius:999px;background:#0a0a0a;color:#fff">Mech. Eng.</span><span style="padding:5px 12px;border-radius:999px;background:#0a0a0a;color:#fff">Comp. Sci.</span><span style="padding:5px 12px;border-radius:999px;background:#0a0a0a;color:#fff">Civil Eng.</span></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600">File layout</span><div style="display:flex;padding:3px;border-radius:12px;background:#ebe6d6;gap:2px"><span style="flex:1;text-align:center;padding:7px;border-radius:10px;background:#fffaf0;font-weight:600">One file per subject</span><span style="flex:1;text-align:center;padding:7px;border-radius:10px;color:#3a3a3a">One combined file</span></div><span style="font-size:11.5px;color:#6a6a6a">Combined adds a Subject column; per-subject keeps it too.</span></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600">Format</span><div style="display:flex;padding:3px;border-radius:12px;background:#ebe6d6;gap:2px"><span style="flex:1;text-align:center;padding:7px;border-radius:10px;color:#3a3a3a">CSV</span><span style="flex:1;text-align:center;padding:7px;border-radius:10px;background:#fffaf0;font-weight:600">XLSX · Bachelor + Masters sheets</span></div></div>
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600">Contents</span>
+<div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid #0a0a0a;border-radius:4px;background:#0a0a0a"></span>Approved rows</div>
+<div style="display:flex;gap:10px;align-items:center"><span style="width:14px;height:14px;border:1.5px solid #0a0a0a;border-radius:4px"></span>Also include "Researched – needs recheck"</div></div>
+<div style="padding:10px 12px;border-radius:12px;background:#f5f0e0;font-size:12px;line-height:1.5">3 files · 3,392 rows · 22 columns. "Not found" exported as text, never blank. Conflicts kept as both values with both links.</div>
+<div style="height:44px;border-radius:12px;background:#0a0a0a;color:#fff;font-weight:600;display:flex;align-items:center;justify-content:center">Download 3 files (.zip)</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px;min-width:0">
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0">
+<div style="display:flex;justify-content:space-between;align-items:baseline"><h2 style="font-size:15px;font-weight:600;margin:0">Preview · first rows</h2><span style="font-size:12px;color:#6a6a6a">11 of 22 columns · scroll →</span></div>
+<div style="overflow:hidden;border:1px solid #e5e5e5;border-radius:10px">
+<div style="display:grid;grid-template-columns:40px 50px 170px 130px 120px 70px 170px 120px 150px 100px 90px;font-size:10.5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#6a6a6a;background:#f5f0e0"><sc-for list="{{ exportCols }}" as="c" hint-placeholder-count="11"><span style="padding:7px 8px;border-right:1px solid #e5e5e5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.t }}</span></sc-for></div>
+<sc-for list="{{ exportRows }}" as="r" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:40px 50px 170px 130px 120px 70px 170px 120px 150px 100px 90px;font-size:11.5px;border-top:1px solid #e5e5e5"><sc-for list="{{ r.c }}" as="c" hint-placeholder-count="11"><span style="padding:7px 8px;border-right:1px solid #f0f0f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.t }}</span></sc-for></div></sc-for>
+</div>
+</div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:6px">
+<h2 style="font-size:15px;font-weight:600;margin:0 0 6px">Download history</h2>
+<sc-for list="{{ exportHistory }}" as="h" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:minmax(0,1.6fr) 90px minmax(0,1fr) 50px 60px 120px 70px;gap:10px;align-items:center;padding:8px 0;border-top:1px solid #f0f0f0"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11.5px">{{ h.f }}</span><span style="color:#3a3a3a">{{ h.s }}</span><span style="color:#3a3a3a">{{ h.l }}</span><span>{{ h.fmt }}</span><span>{{ h.n }}</span><span style="color:#3a3a3a;font-size:12px">{{ h.d }}</span><span style="font-weight:600;text-decoration:underline;font-size:12px">Download</span></div></sc-for>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1m"><div class="dv-olabel"><a class="dv-oid" href="#1m">1m</a>Settings — model API, crawler, staleness, notifications, retention</div><div class="dv-card" style="width:1280px">
+<div style="display:flex;width:1280px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px">
+<dc-import name="Sidebar" active="Settings" hint-size="220px,760px"></dc-import>
+<div style="flex:1;min-width:0;padding:28px 32px 32px;display:flex;flex-direction:column;gap:16px">
+<h1 style="font-size:28px;font-weight:500;letter-spacing:-0.8px;margin:0">Settings</h1>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start">
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><h2 style="font-size:15px;font-weight:600;margin:0">Model provider</h2>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Provider</span><div style="height:36px;border:1px solid #d6d0bf;border-radius:12px;padding:0 12px;display:flex;align-items:center;justify-content:space-between"><span>Anthropic</span><span style="color:#6a6a6a">▾</span></div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">API key</span><div style="display:flex;gap:8px"><div style="flex:1;height:36px;border:1px solid #d6d0bf;border-radius:12px;padding:0 12px;display:flex;align-items:center;font-family:ui-monospace,Menlo,monospace;font-size:12px">sk-ant-••••••••••••3f9A</div><span style="height:36px;padding:0 14px;border-radius:12px;border:1px solid #d6d0bf;display:flex;align-items:center;font-weight:600">Test</span></div><span style="font-size:11.5px;color:#1f7a4d">Key valid · last used 14:09 today</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Monthly spend cap</span><div style="height:36px;width:160px;border:1px solid #d6d0bf;border-radius:12px;padding:0 12px;display:flex;align-items:center">USD 300</div></div></div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><h2 style="font-size:15px;font-weight:600;margin:0">Crawler</h2>
+<div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Page timeout</span><div style="height:36px;border:1px solid #d6d0bf;border-radius:12px;padding:0 12px;display:flex;align-items:center">30 s</div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Concurrent sites</span><div style="height:36px;border:1px solid #d6d0bf;border-radius:12px;padding:0 12px;display:flex;align-items:center">6</div></div>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">User agent</span><div style="height:36px;border:1px solid #d6d0bf;border-radius:12px;padding:0 12px;display:flex;align-items:center;font-family:ui-monospace,Menlo,monospace;font-size:12px">BvositaBot/1.0 (+https://bvosita.uz/bot)</div></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Blocked domains</span><div style="min-height:36px;border:1px solid #d6d0bf;border-radius:12px;padding:6px 8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center"><span style="padding:3px 10px;border-radius:999px;background:#ebe6d6;font-size:12px">topuniversities.com ×</span><span style="padding:3px 10px;border-radius:999px;background:#ebe6d6;font-size:12px">facebook.com ×</span><span style="padding:3px 10px;border-radius:999px;background:#ebe6d6;font-size:12px">linkedin.com ×</span><span style="color:#9a9a9a;font-size:12px">Add domain…</span></div><span style="font-size:11.5px;color:#6a6a6a">Only official university domains count as sources.</span></div></div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><h2 style="font-size:15px;font-weight:600;margin:0">Freshness & notifications</h2>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Mark data stale after</span><div style="display:flex;gap:8px;align-items:center"><div style="height:36px;width:70px;border:1px solid #d6d0bf;border-radius:12px;padding:0 12px;display:flex;align-items:center">12</div><span>months since Last Verified</span></div><span style="font-size:11.5px;color:#6a6a6a">228 values are stale at this threshold.</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Email when a scheduled run finishes</span><div style="height:36px;border:1px solid #d6d0bf;border-radius:12px;padding:0 12px;display:flex;align-items:center">admin@bvosita.uz</div></div></div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><h2 style="font-size:15px;font-weight:600;margin:0">Data retention</h2>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600">Keep fetched pages for</span><div style="height:36px;width:200px;border:1px solid #d6d0bf;border-radius:12px;padding:0 12px;display:flex;align-items:center;justify-content:space-between"><span>24 months</span><span style="color:#6a6a6a">▾</span></div><span style="font-size:11.5px;color:#6a6a6a">Pages cited as a source are kept while the value is current. Storage: 6.2 GB.</span></div>
+<span style="font-size:12px;font-weight:600;color:#b3261e;text-decoration:underline">Purge uncited pages now</span></div>
+</div>
+<div style="display:flex;justify-content:flex-end"><div style="display:inline-flex;align-items:center;height:40px;padding:0 20px;border-radius:12px;background:#0a0a0a;color:#fff;font-weight:600">Save settings</div></div>
+</div>
+</div>
+</div></div>
+
+<div class="dv-opt" id="1n"><div class="dv-olabel"><a class="dv-oid" href="#1n">1n</a>Empty, loading and error states — Universities, Schedules, Review</div><div class="dv-card" style="width:1280px">
+<div style="width:1280px;box-sizing:border-box;padding:28px 32px;background:#faf5e8;font-family:Inter,sans-serif;color:#0a0a0a;font-size:13px;display:grid;grid-template-columns:90px repeat(3,minmax(0,1fr));gap:14px;align-items:stretch">
+<span></span><span style="font-weight:600">Universities</span><span style="font-weight:600">Schedules</span><span style="font-weight:600">Review</span>
+<span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a;padding-top:8px">Empty</span>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;min-height:170px"><div style="width:40px;height:40px;border-radius:12px;background:#ebe6d6"></div><span style="font-weight:600">No universities yet</span><span style="font-size:12px;color:#3a3a3a">Import a QS subject workbook to create university and programme rows.</span><span style="height:32px;padding:0 14px;border-radius:10px;background:#0a0a0a;color:#fff;display:flex;align-items:center;font-weight:600;font-size:12px">Import workbook</span></div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px;align-items:flex-start"><div style="width:40px;height:40px;border-radius:12px;background:#ebe6d6"></div><span style="font-weight:600">No schedules</span><span style="font-size:12px;color:#3a3a3a">Set up a yearly fees & deadlines refresh so data stays under the 12-month threshold.</span><span style="height:32px;padding:0 14px;border-radius:10px;background:#0a0a0a;color:#fff;display:flex;align-items:center;font-weight:600;font-size:12px">New schedule</span></div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px;align-items:flex-start"><div style="width:40px;height:40px;border-radius:12px;background:#a4d4c5"></div><span style="font-weight:600">Nothing to review</span><span style="font-size:12px;color:#3a3a3a">All 1,212 values from R-0142 are approved or auto-confirmed.</span><span style="height:32px;padding:0 14px;border-radius:10px;border:1px solid #d6d0bf;display:flex;align-items:center;font-weight:600;font-size:12px">Go to Export</span></div>
+<span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a;padding-top:8px">Loading</span>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px;min-height:150px"><div style="height:10px;width:60%;border-radius:5px;background:#ebe6d6"></div><div style="height:10px;border-radius:5px;background:#f0ebdb"></div><div style="height:10px;border-radius:5px;background:#f0ebdb"></div><div style="height:10px;width:80%;border-radius:5px;background:#f0ebdb"></div><div style="height:10px;border-radius:5px;background:#f0ebdb"></div><span style="font-size:11.5px;color:#6a6a6a;margin-top:auto">Loading 486 universities…</span></div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:10px"><div style="height:10px;width:50%;border-radius:5px;background:#ebe6d6"></div><div style="height:28px;border-radius:8px;background:#f0ebdb"></div><div style="height:28px;border-radius:8px;background:#f0ebdb"></div><div style="height:28px;border-radius:8px;background:#f0ebdb"></div></div>
+<div style="background:#fffaf0;border:1px solid #e5e5e5;border-radius:16px;padding:18px;display:grid;grid-template-columns:50px minmax(0,1fr) 60px;gap:8px"><div style="display:flex;flex-direction:column;gap:6px"><div style="height:24px;border-radius:6px;background:#f0ebdb"></div><div style="height:24px;border-radius:6px;background:#f0ebdb"></div><div style="height:24px;border-radius:6px;background:#f0ebdb"></div></div><div style="display:flex;flex-direction:column;gap:6px"><div style="height:46px;border-radius:8px;background:#f0ebdb"></div><div style="height:46px;border-radius:8px;background:#f0ebdb"></div></div><div style="border-radius:8px;background:repeating-linear-gradient(135deg,#f5f0e0 0 6px,#fffaf0 6px 12px);display:flex;align-items:center;justify-content:center;font-family:ui-monospace,Menlo,monospace;font-size:9.5px;color:#6a6a6a;text-align:center">loading page</div></div>
+<span style="font-size:10.5px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6a6a6a;padding-top:8px">Error</span>
+<div style="background:#fffaf0;border:1px solid #ff6b5a;border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px;align-items:flex-start;min-height:150px"><span style="font-weight:600;color:#b3261e">Couldn't load universities</span><span style="font-size:12px;color:#3a3a3a">Database timeout after 30 s. Filters were kept.</span><span style="height:32px;padding:0 14px;border-radius:10px;border:1px solid #d6d0bf;display:flex;align-items:center;font-weight:600;font-size:12px">Retry</span></div>
+<div style="background:#fffaf0;border:1px solid #ff6b5a;border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px;align-items:flex-start"><span style="font-weight:600;color:#b3261e">Scheduled run didn't start</span><span style="font-size:12px;color:#3a3a3a">"Stale rows sweep" on 28 Sep: API key rejected (401). Schedule left enabled.</span><span style="height:32px;padding:0 14px;border-radius:10px;border:1px solid #d6d0bf;display:flex;align-items:center;font-weight:600;font-size:12px">Open Settings</span></div>
+<div style="background:#fffaf0;border:1px solid #ff6b5a;border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:10px;align-items:flex-start"><span style="font-weight:600;color:#b3261e">Source page unavailable</span><span style="font-size:12px;color:#3a3a3a">Stored capture expired (retention 24 months) and the live page returns 404.</span><span style="height:32px;padding:0 14px;border-radius:10px;border:1px solid #d6d0bf;display:flex;align-items:center;font-weight:600;font-size:12px">Replace source URL</span></div>
+</div>
+</div></div>
+
+</div>
+<p class="dv-next">Try next: "explore 3 alternative layouts for Review <a class="dv-oid" href="#1i">1i</a>" · "make the changes view <a class="dv-oid" href="#1j">1j</a> a single diff table" · "add a run-history list screen"</p>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  moreData(chip) {
+    const SUB = { ME: 'Mech. Eng.', CS: 'Comp. Sci.', CE: 'Civil Eng.' };
+    const unis = [
+      [1, 1, 'Massachusetts Institute of Technology', 'United States', 'North America', ['ME', 'CS', 'CE'], 7, 'Researched', '12 Mar 2026', 'Fresh', false],
+      [2, 2, 'Imperial College London', 'United Kingdom', 'Europe', ['ME', 'CE'], 5, 'Researched', '02 Feb 2026', 'Fresh', false],
+      [3, 3, 'ETH Zurich', 'Switzerland', 'Europe', ['ME', 'CS', 'CE'], 6, 'Needs recheck', '18 Aug 2025', 'Stale', true],
+      [4, 4, 'National University of Singapore', 'Singapore', 'Asia', ['ME', 'CS'], 4, 'Researched', '20 Jan 2026', 'Fresh', false],
+      [5, 5, 'University of Cambridge', 'United Kingdom', 'Europe', ['ME', 'CS', 'CE'], 3, 'Researched', '09 Apr 2026', 'Fresh', false],
+      [6, 6, 'Delft University of Technology', 'Netherlands', 'Europe', ['ME', 'CE'], 4, 'Pending', 'Never', '—', true],
+      [7, 8, 'Tsinghua University', 'China (Mainland)', 'Asia', ['ME', 'CS', 'CE'], 6, 'Needs recheck', '30 Jun 2025', 'Stale', true],
+      [8, 12, 'KTH Royal Institute of Technology', 'Sweden', 'Europe', ['ME', 'CS'], 4, 'Researched', '08 Oct 2026', 'Fresh', false],
+      [9, 14, 'Politecnico di Milano', 'Italy', 'Europe', ['ME', 'CE'], 5, 'Pending', 'Never', '—', false],
+      [10, 41, 'The University of Queensland', 'Australia', 'Oceania', ['ME', 'CS', 'CE'], 6, 'Researched', '08 Oct 2026', 'Fresh', false],
+    ].map(([idx, qs, name, country, region, subs, progs, status, ver, fresh, sel]) => ({
+      idx, qs, name, country, region, progs, ver, sel,
+      subs: subs.map(t => ({ t })), st: chip(status),
+      fr: fresh === '—' ? { t: '—', bg: 'transparent', fg: '#9a9a9a', bd: '1px solid transparent' } : chip(fresh),
+      cb: sel ? '#0a0a0a' : 'transparent', rowBg: sel ? '#f5f0e0' : 'transparent',
+    }));
+    const mitProgs = [
+      { s: 'Mechanical Engineering', p: [['SB in Mechanical Engineering (Course 2)', 'Bachelor', '5/5', 'Researched'], ['SM in Mechanical Engineering', 'Master', '5/5', 'Researched']] },
+      { s: 'Computer Science', p: [['SB in Computer Science and Engineering (6-3)', 'Bachelor', '5/5', 'Researched'], ['MEng in Electrical Engineering and Computer Science', 'Master', '4/5', 'Needs recheck']] },
+      { s: 'Civil Engineering', p: [['SB in Civil and Environmental Engineering (Course 1)', 'Bachelor', '5/5', 'Researched'], ['SM in Civil and Environmental Engineering', 'Master', '4/5', 'Researched'], ['MEng in Civil and Environmental Engineering', 'Master', '5/5', 'Researched']] },
+    ].map(g => ({ s: g.s, p: g.p.map(([n, l, f, st]) => ({ n, l, f, st: chip(st) })) }));
+    const mitRuns = [
+      ['R-0142', '08 Oct 2026', 'Scheduled', '38 pages', '3 changed'], ['R-0128', '12 Mar 2026', 'Manual', '41 pages', '7 changed'], ['R-0097', '14 Sep 2025', 'Manual', '36 pages', 'First run'],
+    ].map(([id, d, t, p, c]) => ({ id, d, t, p, c }));
+    const mitChanges = [
+      ['08 Oct 2026', 'SB Mechanical Engineering', 'Tuition Fee (Intl.)', 'USD 60,156 / year', 'USD 62,396 / year', 'R-0142 · approved'],
+      ['08 Oct 2026', 'SM Mechanical Engineering', 'Application Deadline', '15 Dec 2025', '15 Dec 2026', 'R-0142 · approved'],
+      ['14 Mar 2026', 'MEng EECS', 'Entry Requirements', 'MIT SB in Course 6', 'MIT SB in Course 6; admitted by end of junior year', 'Edited manually'],
+      ['12 Mar 2026', 'SB Civil & Env. Eng.', 'Scholarships', 'Not found', 'MIT Need-based aid (intl. eligible)', 'R-0128 · approved'],
+    ].map(([d, p, f, o, n, by]) => ({ d, p, f, o, n, by }));
+
+    const runSubjects = [['Mechanical Engineering', true], ['Computer Science', true], ['Civil Engineering', false]].map(([t, on]) => ({ t, bg: on ? '#0a0a0a' : 'transparent' }));
+    const runFields = [['Application Deadline', true], ['Tuition Fee (International)', true], ['Entry Requirements', true], ['Scholarships', false], ['Study Subjects', true]].map(([t, on]) => ({ t, bg: on ? '#0a0a0a' : 'transparent' }));
+    const runOptions = [
+      ['Max pages per university', '40', 'input'], ['Render JavaScript pages', 'On', 'tog'], ['Re-scrape researched rows', 'Off', 'tog'], ['Only stale rows', 'Off', 'tog'],
+    ].map(([t, v, k]) => ({ t, v, isTog: k === 'tog', isInput: k === 'input', tbg: v === 'On' ? '#0a0a0a' : '#d6d0bf', tj: v === 'On' ? 'flex-end' : 'flex-start' }));
+    const breakdown = [
+      ['Mechanical Engineering', '40', '38', '78'], ['Computer Science', '40', '35', '75'],
+    ].map(([s, b, m, j]) => ({ s, b, m, j }));
+
+    const togg = on => ({ tbg: on ? '#0a0a0a' : '#d6d0bf', tj: on ? 'flex-end' : 'flex-start' });
+    const schedules = [
+      ['Annual fees & deadlines', 'Top 150, all subjects', 'ME · CS · CE', 'Yearly on 01 Nov', '01 Nov 2026', '01 Nov 2025', 'Completed', '112 changed', true, false],
+      ['Entry requirements & study subjects', 'All universities', 'ME · CS', 'Every 18 months', '15 Jan 2027', '15 Jul 2025', 'Completed', '64 changed', true, true],
+      ['Stale rows sweep', 'Freshness: stale', 'ME · CS · CE', 'Every 3 months', '01 Dec 2026', '28 Sep 2026', 'Cancelled', 'by user', true, false],
+      ['Scholarships check', 'Top 50, Computer Science', 'CS', 'Custom: 1 Mar, 1 Sep', 'Paused', '01 Mar 2026', 'Completed', '4 failed', false, false],
+    ].map(([name, scope, subj, freq, next, last, res, resD, on, sel]) => ({ name, scope, subj, freq, next, last, st: chip(res), resD, ...togg(on), rowBg: sel ? '#f5f0e0' : 'transparent' }));
+    const schedFields = [
+      ['Application Deadline', 'Every run', true], ['Tuition Fee (International)', 'Every run', true],
+      ['Entry Requirements', 'Every run', true], ['Scholarships', 'Skip', false], ['Study Subjects', 'Every run', true],
+    ].map(([t, v, on]) => ({ t, v, bg: on ? '#0a0a0a' : 'transparent' }));
+
+    const SC = { d: '#0a0a0a', a: '#b8a4ed', f: '#ff6b5a', t: '#ebe6d6' };
+    const stg = s => s.split('').map(k => ({ bg: SC[k] }));
+    const monitor = [
+      { name: 'Massachusetts Institute of Technology', stage: 'Done', stg: stg('dddd'), pages: '38', fields: '5 / 5', err: '0', time: '6m 12s', st: chip('Completed'), subs: [], hasSubs: false, hasLog: false, caret: '▸' },
+      { name: 'ETH Zurich', stage: 'Extract', stg: stg('ddat'), pages: '54', fields: '3 / 5', err: '0', time: '9m 40s', st: chip('Running'), hasSubs: true, hasLog: false, caret: '▾',
+        subs: [['Mechanical Engineering · Bachelor', 'Validate', '5 / 5', 'Completed'], ['Mechanical Engineering · Master', 'Extract', '3 / 5', 'Running'], ['Computer Science · Bachelor', 'Extract', '2 / 5', 'Running'], ['Computer Science · Master', 'Queued', '—', 'Queued']].map(([t, s, f, st]) => ({ t, s, f, st: chip(st) })) },
+      { name: 'National University of Singapore', stage: 'Fetch / render', stg: stg('datt'), pages: '17', fields: '—', err: '0', time: '3m 05s', st: chip('Running'), subs: [], hasSubs: false, hasLog: false, caret: '▸' },
+      { name: 'The University of Queensland', stage: 'Validate', stg: stg('ddda'), pages: '41', fields: '5 / 5', err: '0', time: '7m 51s', st: chip('Running'), subs: [], hasSubs: false, hasLog: false, caret: '▸' },
+      { name: 'Tsinghua University', stage: 'Fetch failed', stg: stg('dftt'), pages: '2', fields: '0 / 5', err: '3', time: '1m 48s', st: chip('Failed'), subs: [], hasSubs: false, hasLog: true, caret: '▾' },
+      { name: 'Delft University of Technology', stage: 'Queued', stg: stg('tttt'), pages: '—', fields: '—', err: '—', time: '—', st: chip('Queued'), subs: [], hasSubs: false, hasLog: false, caret: '▸' },
+    ];
+    const log = [
+      ['14:09:02', 'INFO', 'Discover: sitemap.xml → 212 URLs, 31 match "mechanical|computer|admission|fee"'],
+      ['14:09:05', 'INFO', 'Fetch https://www.tsinghua.edu.cn/en/Admissions.htm → 200 (render JS)'],
+      ['14:09:11', 'ERROR', 'Fetch https://yz.tsinghua.edu.cn/en/… → 403 Forbidden'],
+      ['14:09:14', 'ERROR', 'Retry 1/2 → 403 Forbidden (user agent BvositaBot/1.0)'],
+      ['14:09:20', 'ERROR', 'Retry 2/2 → 403 Forbidden. Marking site failed.'],
+    ].map(([t, l, m]) => ({ t, l, m, lc: l === 'ERROR' ? '#ff8a7a' : '#a4d4c5' }));
+
+    const reviewUnis = [
+      ['The University of Queensland', 'Researched', '2 issues', true], ['ETH Zurich', 'Conflict', '3 issues', false], ['University of Cambridge', 'Closest equivalent', '1 note', false],
+      ['KTH Royal Institute of Technology', 'Changed', '4 changed', false], ['Massachusetts Institute of Technology', 'Approved', '0', false], ['National University of Singapore', 'Found', '0', false], ['Tsinghua University', 'Failed', 'site failed', false],
+    ].map(([n, s, i, sel]) => ({ n, st: chip(s), i, bg: sel ? '#ebe6d6' : 'transparent', fw: sel ? 600 : 500 }));
+    const F = (label, value, src, ver, state, opt = {}) => ({ label, value, src, ver, st: chip(state), sel: !!opt.sel, warn: opt.warn || '', hasWarn: !!opt.warn, rowBd: opt.sel ? '1.5px solid #0a0a0a' : '1px solid #f0f0f0', rowBg: opt.sel ? '#fffaf0' : 'transparent', srcFg: src.startsWith('No source') ? '#b3261e' : '#0a0a0a', valFg: value.startsWith('Not found') ? '#6a6a6a' : '#0a0a0a', valStyle: value.startsWith('Not found') ? 'italic' : 'normal' });
+    const reviewProgs = [
+      { name: 'Bachelor of Engineering (Honours) — Mechanical Engineering', lvl: 'Bachelor', subj: 'Mechanical Engineering', status: chip('Researched'), fields: [
+        F('Application Deadline', 'Semester 1, 2027: applications close 30 Nov 2026', 'study.uq.edu.au/…/2342#apply', '08 Oct 2026', 'Approved'),
+        F('Tuition Fee (International)', 'AUD 58,384 per year (2027, indicative)', 'study.uq.edu.au/…/2342#fees', '08 Oct 2026', 'Found', { sel: true }),
+        F('Entry Requirements', 'Year 12 equivalent; Mathematical Methods + Physics; IELTS 6.5 (no band below 6)', 'study.uq.edu.au/…/2342#entry', '08 Oct 2026', 'Edited'),
+        F('Scholarships', 'UQ Excellence Scholarship (international): 25% tuition reduction', 'No source URL', '08 Oct 2026', 'No source', { warn: 'Cannot approve: add a source URL from the fetched pages.' }),
+        F('Study Subjects', 'Engineering Design, Thermodynamics, Fluid Mechanics, Dynamics, Mechanical Design', 'my.uq.edu.au/…/MECHAX2342', '08 Oct 2026', 'Found'),
+      ] },
+      { name: 'Master of Engineering (Mechanical Engineering)', lvl: 'Master', subj: 'Mechanical Engineering', status: chip('Pending'), fields: [
+        F('Application Deadline', 'Semester 1: 30 Nov 2026 · Semester 2: 31 May 2027', 'study.uq.edu.au/…/5577#apply', '08 Oct 2026', 'Found'),
+        F('Tuition Fee (International)', 'AUD 57,120 per year (2027, indicative)', 'study.uq.edu.au/…/5577#fees', '08 Oct 2026', 'Found'),
+        F('Entry Requirements', 'Bachelor in mechanical engineering, GPA 4.5 / 7; IELTS 6.5', 'uq.edu.au/…/entry-requirements', '08 Oct 2026', 'Found', { warn: 'Source URL was not among the 41 fetched pages for this run.' }),
+        F('Scholarships', 'Not found — searched 41 pages', 'Searched: study.uq.edu.au/…/scholarships', '08 Oct 2026', 'Not found'),
+        F('Study Subjects', 'Advanced Thermofluids, Computational Mechanics, Robotics, Thesis', 'my.uq.edu.au/…/5577', '08 Oct 2026', 'Found'),
+      ] },
+    ];
+    const changes = [
+      { prog: 'MSc Engineering Design', subj: 'Mechanical Engineering · Master', field: 'Tuition Fee (International)', o: 'SEK 310,000 total (2 years)', oSrc: 'kth.se/en/studies/master/engineering-design · fetched 14 Sep 2025', n: 'SEK 335,000 total (2 years)', nSrc: 'kth.se/en/studies/master/engineering-design · fetched 08 Oct 2026', sel: true },
+      { prog: 'MSc Engineering Design', subj: 'Mechanical Engineering · Master', field: 'Application Deadline', o: '16 Oct 2025 – 15 Jan 2026', oSrc: 'kth.se/en/studies/master/admission · 14 Sep 2025', n: '15 Oct 2026 – 15 Jan 2027', nSrc: 'kth.se/en/studies/master/admission · 08 Oct 2026', sel: false },
+      { prog: 'MSc Computer Science', subj: 'Computer Science · Master', field: 'Entry Requirements', o: 'Bachelor ≥ 180 ECTS incl. 30 ECTS programming', oSrc: 'kth.se/…/computer-science/entry · 14 Sep 2025', n: 'Bachelor ≥ 180 ECTS incl. 30 ECTS CS and 20 ECTS maths', nSrc: 'kth.se/…/computer-science/entry · 08 Oct 2026', sel: false },
+      { prog: 'MSc Computer Science', subj: 'Computer Science · Master', field: 'Scholarships', o: 'KTH Scholarship — full tuition, 2 years', oSrc: 'kth.se/en/studies/master/scholarships · 14 Sep 2025', n: 'Not found — previous page returns 404', nSrc: 'Searched 36 pages', sel: false },
+    ].map(c => ({ ...c, bd: c.sel ? '1.5px solid #0a0a0a' : '1px solid #e5e5e5' }));
+
+    const exportCols = ['Index', 'QS Rank', 'University', 'Country/Territory', 'Subject', 'Study Level', 'Degree Program', 'Tuition Fee (Intl.)', 'Tuition Fee source', 'Research Status', 'Last Verified'].map(t => ({ t }));
+    const exportRows = [
+      ['1', '1', 'Massachusetts Institute of Technology', 'United States', 'Mechanical Engineering', 'Bachelor', 'SB in Mechanical Engineering', 'USD 62,396 / year', 'mitadmissions.org/…/cost', 'Researched', '08 Oct 2026'],
+      ['2', '1', 'Massachusetts Institute of Technology', 'United States', 'Computer Science', 'Bachelor', 'SB in Computer Science and Eng.', 'USD 62,396 / year', 'mitadmissions.org/…/cost', 'Researched', '08 Oct 2026'],
+      ['3', '3', 'ETH Zurich', 'Switzerland', 'Mechanical Engineering', 'Bachelor', 'BSc Mechanical Engineering', 'CHF 730 / semester', 'ethz.ch/…/tuition-fees', 'Needs recheck', '18 Aug 2025'],
+      ['4', '41', 'The University of Queensland', 'Australia', 'Mechanical Engineering', 'Bachelor', 'BE (Hons) Mechanical Eng.', 'AUD 58,384 / year', 'study.uq.edu.au/…/2342#fees', 'Researched', '08 Oct 2026'],
+    ].map(r => ({ c: r.map(t => ({ t })) }));
+    const exportHistory = [
+      ['bvosita_mechanical-engineering_2026-10-08.xlsx', 'Run R-0142', 'One file per subject', 'XLSX', '1,186', '08 Oct 2026 17:40'],
+      ['bvosita_computer-science_2026-10-08.xlsx', 'Run R-0142', 'One file per subject', 'XLSX', '1,302', '08 Oct 2026 17:40'],
+      ['bvosita_all-subjects_2026-09-30.csv', 'Everything', 'Combined + Subject column', 'CSV', '3,301', '30 Sep 2026 09:12'],
+    ].map(([f, s, l, fmt, n, d]) => ({ f, s, l, fmt, n, d }));
+
+    return { unis, mitProgs, mitRuns, mitChanges, runSubjects, runFields, runOptions, breakdown, schedules, schedFields, monitor, log, reviewUnis, reviewProgs, changes, exportCols, exportRows, exportHistory };
+  }
+  renderVals() {
+    const C = {
+      Found: ['#a4d4c5', '#0a0a0a'], 'Not found': ['#fffaf0', '#3a3a3a', '1px dashed #6a6a6a'],
+      Conflict: ['#ff6b5a', '#0a0a0a'], Changed: ['#e8b94a', '#0a0a0a'], Edited: ['#b8a4ed', '#0a0a0a'],
+      Approved: ['#0a0a0a', '#ffffff'], Pending: ['#ebe6d6', '#3a3a3a'], Researched: ['#a4d4c5', '#0a0a0a'],
+      'Needs recheck': ['#ffb084', '#0a0a0a'], Stale: ['#fffaf0', '#7a5200', '1px solid #e8b94a'],
+      Fresh: ['transparent', '#3a3a3a', '1px solid #d6d0bf'], 'No source': ['#fffaf0', '#b3261e', '1px solid #ff6b5a'],
+      Completed: ['#a4d4c5', '#0a0a0a'], Running: ['#b8a4ed', '#0a0a0a'], Failed: ['#ff6b5a', '#0a0a0a'],
+      Cancelled: ['#ebe6d6', '#3a3a3a'], Queued: ['transparent', '#6a6a6a', '1px solid #d6d0bf'],
+      'Closest equivalent': ['#ffb084', '#0a0a0a'], Unchanged: ['transparent', '#3a3a3a', '1px solid #d6d0bf'],
+    };
+    const chip = s => { const c = C[s] || ['#ebe6d6', '#3a3a3a']; return { t: s, bg: c[0], fg: c[1], bd: c[2] || '1px solid transparent' }; };
+    this.chip = chip;
+    const legend = ['Found', 'Not found', 'Conflict', 'Changed', 'Edited', 'Approved', 'Pending', 'Researched', 'Needs recheck', 'Stale', 'No source', 'Closest equivalent'].map(chip);
+
+    const kpis = [
+      { l: 'Universities', n: '486', d: 'across 3 subjects' },
+      { l: 'Programmes', n: '3,392', d: '1,804 Bachelor · 1,588 Master' },
+      { l: 'Stale values', n: '228', d: 'older than 12 months' },
+      { l: 'Awaiting review', n: '74', d: '47 changed by last re-run' },
+    ];
+    const subjTotals = [
+      { name: 'Mechanical Engineering', unis: '412', progs: '1,186', f: [78, 71, 64, 52, 59] },
+      { name: 'Computer Science', unis: '455', progs: '1,302', f: [81, 74, 69, 48, 63] },
+      { name: 'Civil Engineering', unis: '301', progs: '904', f: [62, 58, 51, 37, 44] },
+    ].map(s => ({ ...s, f: s.f.map(p => ({ p: p + '%' })) }));
+    const statusCounts = [['Pending', '1,204'], ['Researched', '1,872'], ['Needs recheck', '316']].map(([s, n]) => ({ st: chip(s), n }));
+    const attention = [
+      { n: '6', kind: 'Failed sites', d: 'Tsinghua University — HTTP 403 on 3 pages (R-0142)', cta: 'Retry', bg: '#ff6b5a' },
+      { n: '12', kind: 'Provenance violations', d: 'Value without a source, or source not among fetched pages', cta: 'Review', bg: '#ffb084' },
+      { n: '9', kind: 'Conflicts', d: 'e.g. ETH Zurich — deadline 30 Nov vs 15 Dec on two official pages', cta: 'Resolve', bg: '#ff6b5a' },
+      { n: '47', kind: 'Changed by last re-run', d: 'R-0142 · old → new values need approval', cta: 'Review changes', bg: '#e8b94a' },
+    ];
+    const upcoming = [
+      { name: 'Annual fees & deadlines', scope: 'Top 150 · all subjects', when: '01 Nov 2026', rel: 'in 22 days' },
+      { name: 'Stale rows sweep', scope: 'Freshness: stale · all subjects', when: '01 Dec 2026', rel: 'in 52 days' },
+      { name: 'Entry requirements & study subjects', scope: 'All · ME, CS', when: '15 Jan 2027', rel: 'in 3 months' },
+    ];
+    const recent = [
+      { id: 'R-0143', type: 'Manual', scope: '42 unis · ME, CS · Bachelor + Master', when: 'Today 14:02', st: chip('Running'), failed: '1' },
+      { id: 'R-0142', type: 'Scheduled', scope: 'Top 150 · ME, CS, CE', when: '08 Oct 2026', st: chip('Completed'), failed: '6' },
+      { id: 'R-0141', type: 'Manual', scope: '12 unis · CE · Master', when: '02 Oct 2026', st: chip('Completed'), failed: '0' },
+      { id: 'R-0140', type: 'Scheduled', scope: 'Stale rows sweep', when: '28 Sep 2026', st: chip('Cancelled'), failed: '—' },
+    ];
+
+    const files = [
+      { name: 'QS_2026_Mechanical_Engineering.xlsx', size: '412 KB', subject: 'Mechanical Engineering', how: 'Detected from file name', sheets: 'Bachelor (412 rows) · Masters (398 rows)', ok: true },
+      { name: 'QS_2026_Computer_Science.xlsx', size: '455 KB', subject: 'Computer Science', how: 'Detected from sheet title', sheets: 'Bachelor (455) · Masters (447)', ok: true },
+      { name: 'subject_rankings_export (3).xlsx', size: '301 KB', subject: 'Assign subject…', how: 'Not detected — choose a subject', sheets: 'Bachelor (301) · Masters (287)', ok: false },
+    ].map(f => ({ ...f, selBd: f.ok ? '1px solid #d6d0bf' : '1.5px solid #ff6b5a', howFg: f.ok ? '#6a6a6a' : '#b3261e' }));
+    const warnings = [
+      { t: 'Duplicates', n: '4', d: '"Imperial College London" appears twice in Computer Science / Bachelor (rows 2, 214).', cta: 'Keep first · show all' },
+      { t: 'Missing official website', n: '17', d: 'e.g. Universidad de Chile, row 188. Runs skip these until a URL is added.', cta: 'Add URLs' },
+      { t: 'Unmatched universities', n: '9', d: '"Univ. of Queensland" — merge with The University of Queensland?', cta: 'Match 9' },
+    ];
+    const mapping = [
+      ['Rank', 'QS Rank', '1'], ['Institution', 'University', 'Massachusetts Institute of Technology'],
+      ['Location', 'Country/Territory', 'United States'], ['Region', 'Region', 'North America'],
+      ['Website', 'Official Website', 'https://web.mit.edu'], ['(sheet name)', 'Study Level', 'Bachelor'],
+      ['(file)', 'Subject', 'Mechanical Engineering'], ['Overall Score', '— Ignore —', '98.4'],
+    ].map(([src, dst, sample]) => ({ src, dst, sample, srcFg: src.startsWith('(') ? '#6a6a6a' : '#0a0a0a' }));
+    const importSummary = [
+      { s: 'Mechanical Engineering', unis: '412', nw: '38', merged: '374', rows: '412 / 398', skip: '2 duplicates' },
+      { s: 'Computer Science', unis: '455', nw: '61', merged: '394', rows: '455 / 447', skip: '4 duplicates' },
+      { s: 'Civil Engineering', unis: '301', nw: '22', merged: '279', rows: '301 / 287', skip: '0' },
+    ];
+
+    const D = this.moreData ? this.moreData(chip) : {};
+    return { legend, kpis, subjTotals, statusCounts, attention, upcoming, recent, files, warnings, mapping, importSummary, ...D };
+  }
+}
+</script>
+</body>
+</html>

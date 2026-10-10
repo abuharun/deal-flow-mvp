@@ -1,0 +1,1 @@
+export function PageHeader({title,eyebrow,actions}:{title:string;eyebrow?:string;actions?:React.ReactNode}){return <header className="pageheader"><div>{eyebrow&&<p>{eyebrow}</p>}<h1>{title}</h1></div>{actions&&<div className="headeractions">{actions}</div>}</header>}

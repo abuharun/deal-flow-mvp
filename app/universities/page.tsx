@@ -1,0 +1,2 @@
+import {Suspense} from "react";import {AppShell} from "@/components/AppShell";import {PageHeader} from "@/components/PageHeader";import {Skeleton} from "@/components/Skeleton";import {UniversitiesContent} from "./universities-content";
+export default function Page(){return <AppShell><PageHeader title="Universities" eyebrow="486 universities · 3,392 programmes"/><Suspense fallback={<Skeleton rows={6}/>}><UniversitiesContent/></Suspense></AppShell>}

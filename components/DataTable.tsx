@@ -1,0 +1,1 @@
+export function DataTable({headers,children,label}:{headers:string[];children:React.ReactNode;label:string}){return <div className="tablewrap"><table><caption className="sr-only">{label}</caption><thead><tr>{headers.map(h=><th key={h}>{h}</th>)}</tr></thead><tbody>{children}</tbody></table></div>}

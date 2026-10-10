@@ -1,0 +1,1 @@
+export function Skeleton({rows=5}:{rows?:number}){return <div className="skeleton" role="status" aria-live="polite"><p className="sr-only">Loading…</p><span/><span/>{Array.from({length:rows}).map((_,i)=><i key={i}/>)}</div>}

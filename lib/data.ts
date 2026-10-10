@@ -1,0 +1,10 @@
+import { exportsData, programmes, runs, schedules, universities, universityIds } from "@/lib/mock/data";
+export const getUniversities=()=>universities;
+export const getUniversityIds=()=>universityIds;
+export const getUniversity=(id:string)=>universities[(universityIds as readonly string[]).indexOf(id)];
+export const getProgrammes=(universityId?:string)=>universityId?programmes.filter(p=>p.universityId===universityId):programmes;
+export const getRuns=()=>runs;
+export const getRun=(id:string)=>runs.find(r=>r.id===id);
+export const getRunIds=()=>runs.map(r=>r.id);
+export const getSchedules=()=>schedules;
+export const getExports=()=>exportsData;

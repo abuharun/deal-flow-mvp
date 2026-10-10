@@ -1,0 +1,2 @@
+const map:Record<string,string>={Found:"mint",Researched:"mint",Completed:"mint",Running:"lavender",Conflict:"coral",Failed:"coral",Changed:"ochre",Edited:"lavender",Approved:"dark",Pending:"gray","Not found":"outline","Needs recheck":"peach","Researched – needs recheck":"peach",Stale:"stale",Queued:"outline",Cancelled:"gray","Closest equivalent":"peach"};
+export function StatusBadge({children}:{children:string}){return <span className={`badge ${map[children]||"gray"}`}>{children}</span>}
