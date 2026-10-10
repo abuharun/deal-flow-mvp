@@ -22,8 +22,8 @@ export function UniversitiesTable() {
     return matchesSearch
       && (!filters.country || ["United Kingdom", "Switzerland", "Netherlands", "Sweden", "Italy", "Germany"].includes(university.country))
       && (!filters.region || university.region === "Asia")
-      && (!filters.rank || university.qsRank <= 10)
-      && (!filters.subject || (university.subjects.includes("Mechanical Engineering") && university.subjects.includes("Computer Science")))
+      && (!filters.rank || university.qsRank <= 150)
+      && (!filters.subject || university.subjects.some((subject) => subject === "Mechanical Engineering" || subject === "Computer Science"))
       && (!filters.level || university.subjects.length === 3)
       && (!filters.status || pending);
   }), [filters, ids, q]);
@@ -40,8 +40,8 @@ export function UniversitiesTable() {
     <FilterBar search={q} onSearch={setQ}>
       {filterButton("country", "Country: Any⌄", "Country: Europe")}
       {filterButton("region", "Region: Any⌄", "Region: Asia")}
-      {filterButton("rank", "QS rank: Any⌄", "QS rank 1–10")}
-      {filterButton("subject", "Subject: Any⌄", "Subject: Mech. Eng. + Comp. Sci.")}
+      {filterButton("rank", "QS rank: Any⌄", "QS rank 1–150")}
+      {filterButton("subject", "Subject: Any⌄", "Subject: Mech. Eng., Comp. Sci.")}
       {filterButton("level", "Level: Any⌄", "Level: Bachelor + Master")}
       {filterButton("status", "Status: Any⌄", "Status: Pending")}
     </FilterBar>
